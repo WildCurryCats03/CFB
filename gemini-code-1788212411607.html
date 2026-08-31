@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curry, College Football.</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #151e2e;
+            --card-hover: #1e293b;
+            --accent: #f59e0b;
+            --accent-blue: #3b82f6;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #233044;
+            --success: #10b981;
+            --live-red: #ef4444;
+            --fav-gold: #fbbf24;
+            --redzone-glow: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+        .container { max-width: 1320px; margin: 0 auto; }
+        
+        /* Header & Nav */
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        h1 { font-size: 1.55rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        nav { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tab-btn { background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem; transition: 0.2s; }
+        .tab-btn.active, .tab-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+        .user-account-btn { display: flex; align-items: center; gap: 6px; background: #1e293b; border: 1px solid var(--border); color: #fff; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+        .user-account-btn:hover { border-color: var(--accent); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Controls & Filter Bar */
+        .controls-bar { display: flex; flex-direction: column; gap: 12px; background: var(--card-bg); padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .controls-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+        .filter-btn { background: #0b0f19; border: 1px solid var(--border); color: var(--text); padding: 6px 11px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+        .filter-btn.active { background: var(--accent); color: #000; font-weight: 700; border-color: var(--accent); }
+
+        .select-filter { background: #0b0f19; border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; outline: none; cursor: pointer; }
+        .toggle-wrapper { display: flex; align-items: center; gap: 8px; }
+        .spoiler-btn { background: #1e293b; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+        .spoiler-btn.active { background: #6366f1; border-color: #6366f1; }
+
+        /* Broadcast Badges */
+        .net-tag { font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+        .net-abc { background: #111827; color: #fbbf24; border: 1px solid #374151; }
+        .net-fox { background: #1e3a8a; color: #fff; }
+        .net-cbs { background: #0369a1; color: #fff; }
+        .net-espn { background: #b91c1c; color: #fff; }
+        .net-nbc { background: #4338ca; color: #fff; }
+        .net-other { background: #334155; color: #cbd5e1; }
+
+        /* Game Cards & Redzone Effects */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
+        .game-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.2s; cursor: pointer; }
+        .game-card:hover { transform: translateY(-2px); border-color: var(--accent-blue); }
+        .game-card.is-favorite-match { border: 1.5px solid var(--fav-gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.15); }
+        
+        .game-card.in-redzone {
+            border: 1.5px solid var(--redzone-glow) !important;
+            box-shadow: 0 0 16px rgba(220, 38, 38, 0.45);
+            animation: redzonePulse 2s infinite ease-in-out;
+        }
+
+        @keyframes redzonePulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(220, 38, 38, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.7); }
+        }
+
+        .redzone-banner { background: linear-gradient(90deg, #dc2626, #991b1b); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; animation: blink 1.2s infinite; }
+        .upset-banner { background: linear-gradient(90deg, #ea580c, #c2410c); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        .fav-badge { position: absolute; top: -10px; right: 12px; background: var(--fav-gold); color: #000; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .game-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+        .status-badge { font-weight: 700; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
+        .status-in { background: rgba(239, 68, 68, 0.2); color: var(--live-red); }
+        .status-pre { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .status-post { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
+
+        .team-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 4px 6px; border-radius: 6px; transition: background 0.3s; }
+        .team-row.has-possession { background: rgba(255, 255, 255, 0.04); }
+        .team-row.team-in-redzone { background: rgba(220, 38, 38, 0.15); border-left: 3px solid var(--live-red); }
+
+        .team-meta { display: flex; align-items: center; gap: 8px; }
+        .team-logo { width: 24px; height: 24px; object-fit: contain; }
+        .team-name { font-weight: 700; font-size: 1rem; }
+        .team-name.highlight-fav { color: var(--fav-gold); text-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
+        .team-rank { color: var(--accent); font-size: 0.8rem; font-weight: 800; margin-right: 4px; }
+        .possession-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
+        
+        .score { font-size: 1.2rem; font-weight: 800; transition: transform 0.2s; }
+        .score.score-updated { animation: scorePop 1.2s ease-out; }
+        @keyframes scorePop {
+            0% { transform: scale(1.4); color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+            100% { transform: scale(1); color: inherit; }
+        }
+        
+        .hide-spoilers .score, .hide-spoilers .live-clock, .hide-spoilers .situation-text {
+            filter: blur(5px);
+            user-select: none;
+            transition: filter 0.2s;
+        }
+        .hide-spoilers .game-card:hover .score,
+        .hide-spoilers .game-card:hover .live-clock,
+        .hide-spoilers .game-card:hover .situation-text {
+            filter: blur(0);
+        }
+
+        .situation-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+        .click-hint { font-size: 0.7rem; color: var(--accent-blue); text-align: right; margin-top: 4px; }
+
+        .game-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+        .fire-rating { color: var(--accent); font-weight: bold; }
+
+        /* BOXSCORE MODAL STYLES (CENTERED & BIGGER) */
+        .boxscore-modal-card { max-width: 820px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .boxscore-header-score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; padding: 20px; background: var(--bg); border-radius: 12px; margin-bottom: 20px; text-align: center; }
+        .box-team { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .box-team img { width: 52px; height: 52px; object-fit: contain; }
+        .box-team-name { font-weight: 800; font-size: 1.25rem; }
+        .box-score-center { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .box-score-num { font-size: 2.3rem; font-weight: 900; color: #fff; }
+        
+        .drive-intel-box { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.95rem; text-align: center; }
+        .drive-intel-box.redzone { background: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.3); }
+
+        .linescore-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.95rem; text-align: center; background: var(--bg); border-radius: 8px; overflow: hidden; }
+        .linescore-table th, .linescore-table td { padding: 10px 12px; border: 1px solid var(--border); }
+        .linescore-table th { background: #070a12; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+        .stat-comp-container { max-width: 680px; margin: 0 auto; background: var(--bg); border-radius: 12px; padding: 18px 24px; border: 1px solid var(--border); }
+        .stat-comp-table { width: 100%; border-collapse: collapse; }
+        .stat-comp-table tr { border-bottom: 1px solid var(--border); }
+        .stat-comp-table tr:last-child { border-bottom: none; }
+        .stat-comp-table td { padding: 12px 8px; }
+        .stat-label { color: var(--text-muted); text-align: center; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; width: 40%; }
+        .stat-val-left { font-weight: 800; font-size: 1.15rem; text-align: center; width: 30%; color: #fff; }
+        .stat-val-right { font-weight: 800; font-size: 1.15rem; text-align: center; width: 30%; color: #fff; }
+
+        /* Top 25 Ballot Builder (Drag & Drop Reordering) */
+        .poll-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px; }
+        @media (max-width: 950px) { .poll-layout { grid-template-columns: 1fr; } }
+        
+        .ballot-list { max-height: 720px; overflow-y: auto; padding-right: 5px; }
+        .ballot-slot { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 6px 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid var(--border); transition: border-color 0.2s, background 0.2s; cursor: grab; }
+        .ballot-slot.dragging { opacity: 0.4; border-color: var(--accent-blue); }
+        .ballot-slot.drag-over { border-top: 2px solid var(--accent); background: #1e293b; }
+        .ballot-slot.has-duplicate { border-color: var(--live-red); background: rgba(239, 68, 68, 0.08); }
+        .drag-handle { color: var(--text-muted); cursor: grab; font-size: 0.85rem; user-select: none; }
+        .rank-num { width: 28px; font-weight: 800; color: var(--accent); font-size: 0.9rem; }
+        .team-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-size: 0.95rem; outline: none; }
+        .team-input:focus { border-bottom: 1px solid var(--accent-blue); }
+        
+        .slot-actions { display: flex; gap: 2px; }
+        .slot-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 2px 4px; border-radius: 3px; }
+        .slot-btn:hover { background: var(--card-hover); color: #fff; }
+
+        .team-picker { background: var(--card-bg); padding: 16px; border-radius: 10px; border: 1px solid var(--border); height: fit-content; display: flex; flex-direction: column; gap: 12px; }
+        .picker-controls { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; }
+        @media (max-width: 500px) { .picker-controls { grid-template-columns: 1fr; } }
+        
+        .form-select { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; outline: none; font-size: 0.85rem; }
+        .team-search { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; outline: none; font-size: 0.85rem; }
+        
+        .quick-select-list { max-height: 280px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
+        .quick-team-btn { background: var(--card-hover); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: 0.15s; }
+        .quick-team-btn:hover { background: var(--accent-blue); }
+        .quick-team-btn.active-selected { border-color: var(--accent); background: #334155; }
+        .quick-team-btn.is-slotted { opacity: 0.35; text-decoration: line-through; }
+
+        .team-intel-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .team-intel-header { display: flex; justify-content: space-between; align-items: center; }
+        .team-intel-title { font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .team-intel-conf { font-size: 0.75rem; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .team-intel-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; background: var(--card-bg); padding: 8px 10px; border-radius: 6px; }
+        .team-intel-stats span { color: var(--text-muted); }
+        .team-intel-stats strong { color: #fff; margin-left: 4px; }
+        .team-prev-game { font-size: 0.85rem; color: var(--text-muted); }
+        .team-prev-game strong { color: #fff; }
+        .res-win { color: var(--success); font-weight: 800; }
+        .res-loss { color: var(--live-red); font-weight: 800; }
+
+        /* Associated BEST Poll Tables & Analytics */
+        .community-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .community-section { grid-template-columns: 1fr; } }
+
+        .poll-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+        .poll-table th, .poll-table td { padding: 10px 14px; text-align: left; }
+        .poll-table th { background: #090d16; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+        .poll-table tr { border-bottom: 1px solid var(--border); }
+        .poll-table tr:hover { background: var(--card-hover); }
+
+        .poll-metadata-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-top: 15px; }
+        .poll-metadata-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; letter-spacing: 0.5px; }
+        .poll-metadata-content { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+        .analytics-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 15px; }
+        .analytics-award { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .analytics-award:last-child { margin-bottom: 0; }
+        .award-icon { font-size: 1.4rem; }
+
+        .voter-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.15s; }
+        .voter-card:hover { border-color: var(--accent-blue); transform: translateX(3px); }
+        .voter-info { display: flex; align-items: center; gap: 10px; }
+        .voter-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .voter-tag { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* 12-TEAM CFP BRACKET STYLES */
+        .cfp-bracket-wrap { display: flex; flex-direction: column; gap: 20px; }
+        .byes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+        .bye-card { background: var(--card-bg); border: 1.5px solid var(--accent); border-radius: 10px; padding: 15px; text-align: center; }
+        .bye-badge { background: rgba(245, 158, 11, 0.2); color: var(--accent); font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; margin-bottom: 6px; display: inline-block; }
+        
+        .matchups-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .matchup-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; position: relative; }
+        .matchup-round-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+        .seed-row { display: flex; justify-content: space-between; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; background: var(--bg); font-weight: 600; font-size: 0.9rem; }
+        .seed-row.host { border-left: 3px solid var(--accent-blue); }
+
+        .btn { background: var(--accent-blue); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        .btn-success { background: var(--success); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
+
+        /* Modals */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.open { display: flex; }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; max-width: 550px; width: 100%; padding: 24px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+        .form-input { width: 100%; padding: 9px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; }
+        .fav-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .fav-chip { background: rgba(251, 191, 36, 0.15); color: var(--fav-gold); border: 1px solid rgba(251, 191, 36, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
+        .fav-chip span { cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏈 Curry, College Football.</h1>
+        <div class="header-actions">
+            <nav>
+                <button class="tab-btn active" onclick="switchTab('guide')">Live Slate</button>
+                <button class="tab-btn" onclick="switchTab('ballot')">My Ballot</button>
+                <button class="tab-btn" onclick="switchTab('community')">Associated BEST Poll</button>
+                <button class="tab-btn" onclick="switchTab('playoff')">12-Team CFP</button>
+            </nav>
+            <button class="user-account-btn" onclick="openProfileModal()">
+                <span id="userAvatarPreview">👤</span>
+                <span id="userNamePreview">My Account</span>
+            </button>
+        </div>
+    </header>
+
+    <main id="guide" class="tab-content active">
+        <div class="controls-bar">
+            <div class="controls-row">
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted);">Season / Week:</label>
+                    <select id="weekFilter" class="select-filter" onchange="fetchLiveSchedule()">
+                        <option value="current">Current Live Slate</option>
+                        <option value="1">Week 1</option>
+                        <option value="2">Week 2</option>
+                        <option value="3">Week 3</option>
+                        <option value="4">Week 4</option>
+                        <option value="5">Week 5</option>
+                        <option value="6">Week 6</option>
+                        <option value="7">Week 7</option>
+                        <option value="8">Week 8</option>
+                        <option value="9">Week 9</option>
+                        <option value="10">Week 10</option>
+                        <option value="11">Week 11</option>
+                        <option value="12">Week 12</option>
+                        <option value="13">Week 13</option>
+                        <option value="14">Week 14</option>
+                        <option value="15">Week 15 (Championships)</option>
+                    </select>
+
+                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-left: 6px;">Conference:</label>
+                    <select id="scoreConfFilter" class="select-filter" onchange="renderGames()">
+                        <option value="ALL">All Conferences</option>
+                        <option value="SEC">SEC</option>
+                        <option value="Big Ten">Big Ten</option>
+                        <option value="Big 12">Big 12</option>
+                        <option value="ACC">ACC</option>
+                        <option value="Pac-12">Pac-12</option>
+                        <option value="Mountain West">Mountain West</option>
+                        <option value="American">American (AAC)</option>
+                        <option value="Sun Belt">Sun Belt</option>
+                        <option value="MAC">MAC</option>
+                        <option value="Conference USA">Conference USA</option>
+                        <option value="FCS">FCS Matchups</option>
+                    </select>
+                </div>
+
+                <div class="toggle-wrapper">
+                    <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="fetchLiveSchedule()">🔄 Refresh</button>
+                    <button class="spoiler-btn" id="spoilerToggleBtn" onclick="toggleSpoilers()">🙈 Hide Spoilers: OFF</button>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <div class="filters">
+                    <button class="filter-btn active" onclick="setFilter('all')">All Games</button>
+                    <button class="filter-btn" onclick="setFilter('FBS')">FBS</button>
+                    <button class="filter-btn" onclick="setFilter('FCS')">FCS</button>
+                    <button class="filter-btn" onclick="setFilter('ranked')">Top 25</button>
+                    <button class="filter-btn" onclick="setFilter('favorites')">★ Favorites</button>
+                    <button class="filter-btn" onclick="setFilter('noon')">☀️ Noon</button>
+                    <button class="filter-btn" onclick="setFilter('afternoon')">⛅ 3:30 PM</button>
+                    <button class="filter-btn" onclick="setFilter('prime')">🌙 Primetime</button>
+                    <button class="filter-btn" onclick="setFilter('afterdark')">🦉 After Dark</button>
+                    <button class="filter-btn" onclick="setFilter('upset')">🚨 Upset Alert</button>
+                    <button class="filter-btn" onclick="setFilter('redzone')">🔴 Red Zone</button>
+                    <button class="filter-btn" onclick="setFilter('live')">Live Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-grid" id="gameGrid">
+            <p style="color: var(--text-muted); padding: 20px;">Fetching schedule from ESPN API...</p>
+        </div>
+    </main>
+
+    <main id="ballot" class="tab-content">
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="font-size: 0.9rem; color: var(--text-muted);">
+                Submitting Ballot as: <strong style="color: #fff;" id="ballotSubmittingAs">Anonymous</strong>
+                <span style="display: block; font-size: 0.75rem; color: var(--accent);">Drag & drop slots or use ▲ / ▼ to reorder teams. Only FBS schools allowed.</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="saveBallot()">Submit Ballot</button>
+                <button class="btn btn-outline" onclick="copyBallotShareLink()">🔗 Copy Ballot Link</button>
+                <button class="btn btn-outline" onclick="clearBallot()">Clear Fields</button>
+            </div>
+        </div>
+        
+        <div class="poll-layout">
+            <div class="ballot-list" id="ballotSlots"></div>
+            
+            <div class="team-picker">
+                <div>
+                    <h3 style="font-size: 1.05rem; margin-bottom: 4px;">FBS Team Selector & Resume Intel</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Sort by conference or click any team to inspect stats before ranking.</p>
+                </div>
+
+                <div class="picker-controls">
+                    <select id="conferenceFilter" class="form-select" onchange="filterTeamsByConference()">
+                        <option value="ALL">All FBS Conferences</option>
+                        <option value="SEC">SEC</option>
+                        <option value="Big Ten">Big Ten</option>
+                        <option value="Big 12">Big 12</option>
+                        <option value="ACC">ACC</option>
+                        <option value="Pac-12">Pac-12</option>
+                        <option value="Mountain West">Mountain West</option>
+                        <option value="American">American (AAC)</option>
+                        <option value="Sun Belt">Sun Belt</option>
+                        <option value="MAC">MAC</option>
+                        <option value="Conference USA">Conference USA</option>
+                        <option value="Independents">Independents</option>
+                    </select>
+                    <input type="text" id="searchTeam" class="team-search" placeholder="Search team..." onkeyup="filterTeamList()">
+                </div>
+
+                <div class="quick-select-list" id="quickTeamList"></div>
+
+                <div class="team-intel-card" id="teamIntelBox">
+                    <div class="team-intel-header">
+                        <div class="team-intel-title" id="intelTeamName">Select a Team</div>
+                        <div class="team-intel-conf" id="intelConfTag">FBS</div>
+                    </div>
+                    <div class="team-intel-stats">
+                        <div><span>Overall:</span> <strong id="intelOverall">--</strong></div>
+                        <div><span>Conf:</span> <strong id="intelConfRecord">--</strong></div>
+                    </div>
+                    <div class="team-prev-game">
+                        <span>Previous Result:</span> <strong id="intelPrevResult">--</strong>
+                    </div>
+                    <button class="btn btn-success" id="intelAddBtn" style="margin-top: 4px;" onclick="slotActiveIntelTeam()">Slot into Next Open Rank</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="community" class="tab-content">
+        <div class="community-section">
+            <div>
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800;">Associated BEST Poll</h2>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);" id="ballotCounter">0 ballots aggregated</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="syncWithCloud()">🔄 Sync Cloud Polls</button>
+                        <button class="btn btn-success" style="font-size: 0.78rem;" onclick="generatePollGraphic()">📸 Export Graphic for Group Chat</button>
+                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="setPreviousWeekBaseline()">Save Baseline</button>
+                    </div>
+                </div>
+                
+                <table class="poll-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Rank</th>
+                            <th>Team</th>
+                            <th style="width: 80px;">Points</th>
+                            <th style="width: 80px;">1st Votes</th>
+                            <th>Voters</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pollResultsBody"></tbody>
+                </table>
+
+                <div class="poll-metadata-box">
+                    <div class="poll-metadata-title">Others Receiving Votes (ORV)</div>
+                    <div class="poll-metadata-content" id="orvContent">None</div>
+                </div>
+
+                <div class="poll-metadata-box">
+                    <div class="poll-metadata-title">Dropped Out</div>
+                    <div class="poll-metadata-content" id="droppedOutContent">None</div>
+                </div>
+            </div>
+
+            <div>
+                <div class="analytics-card">
+                    <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--accent);">Voter Analytics & Awards</h3>
+                    <div class="analytics-award">
+                        <span class="award-icon">🎯</span>
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Consensus Champion</div>
+                            <strong style="font-size: 0.95rem;" id="consensusChampName">TBD</strong>
+                        </div>
+                    </div>
+                    <div class="analytics-award">
+                        <span class="award-icon">🌶️</span>
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Biggest Outlier / Hot Take</div>
+                            <strong style="font-size: 0.95rem;" id="outlierChampName">TBD</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 1.05rem;">Voter Directory</h3>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">Click to inspect ballot</span>
+                </div>
+                <div id="votersDirectoryList"></div>
+
+                <div class="actions">
+                    <button class="btn btn-outline" style="width: 100%;" onclick="exportData()">Export Poll Data (JSON)</button>
+                    <button class="btn btn-outline" style="width: 100%;" onclick="document.getElementById('importFile').click()">Import Friend's Ballot (JSON)</button>
+                    <button class="btn btn-outline" style="width: 100%; color: #ef4444;" onclick="resetAllBallots()">Reset All Ballots</button>
+                    <input type="file" id="importFile" style="display: none;" onchange="importData(event)">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="playoff" class="tab-content">
+        <div style="margin-bottom: 20px;">
+            <h2 style="font-size: 1.35rem; font-weight: 800;">12-Team College Football Playoff Projection</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Projected automatically from your Associated BEST Poll consensus (Top 4 Conf Champions get Byes + 1 G5 Champion + 7 At-Large Seeds).</p>
+        </div>
+
+        <div class="cfp-bracket-wrap">
+            <div>
+                <h3 style="font-size: 1.05rem; margin-bottom: 10px; color: var(--accent);">First-Round Byes (Top 4 Conference Champions)</h3>
+                <div class="byes-grid" id="cfpByesGrid"></div>
+            </div>
+
+            <div>
+                <h3 style="font-size: 1.05rem; margin-bottom: 10px; color: var(--accent-blue);">First-Round On-Campus Matchups</h3>
+                <div class="matchups-grid" id="cfpFirstRoundGrid"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal-overlay" id="boxscoreModal">
+    <div class="modal-card boxscore-modal-card">
+        <div class="modal-header">
+            <h3 id="boxModalTitle">Live Gamecast & Team Statistics</h3>
+            <button class="modal-close" onclick="closeBoxscoreModal()">&times;</button>
+        </div>
+        <div id="boxscoreBody">
+            <p style="color: var(--text-muted); text-align: center; padding: 25px;">Loading live game stats...</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="voterBallotModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 id="voterBallotTitle">Voter Ballot</h3>
+            <button class="modal-close" onclick="closeVoterBallotModal()">&times;</button>
+        </div>
+        <div id="voterBallotBody" style="max-height: 480px; overflow-y: auto;"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="graphicModal">
+    <div class="modal-card" style="max-width: 650px; text-align: center;">
+        <div class="modal-header">
+            <h3>Associated BEST Poll Graphic</h3>
+            <button class="modal-close" onclick="closeGraphicModal()">&times;</button>
+        </div>
+        <canvas id="pollCanvas" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border);"></canvas>
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <a id="downloadGraphicBtn" class="btn btn-success" download="Associated_BEST_Poll.png">⬇ Download Image</a>
+            <button class="btn btn-outline" onclick="closeGraphicModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>User Account & Preferences</h3>
+            <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+        </div>
+        <div class="form-group">
+            <label>Your Name / Handle</label>
+            <input type="text" id="profileNameInput" class="form-input" placeholder="e.g., Alex Carter">
+        </div>
+        <div class="form-group">
+            <label>Avatar Emoji</label>
+            <input type="text" id="profileAvatarInput" class="form-input" placeholder="e.g., 🐯, 🏈, 🦅" maxlength="4">
+        </div>
+        <div class="form-group">
+            <label>Add Favorite Teams</label>
+            <input type="text" id="addFavTeamInput" list="allTeamDatalist" class="form-input" placeholder="Type team name and press Enter..." onkeydown="handleFavInput(event)">
+            <datalist id="allTeamDatalist"></datalist>
+            <div class="fav-chips" id="favChipsContainer"></div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+            <button class="btn btn-outline" onclick="closeProfileModal()">Cancel</button>
+            <button class="btn btn-success" onclick="saveUserProfile()">Save Profile</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- LIVE CLOUD SYNC CONFIG (JSONBin.io) ---
+    const JSONBIN_CONFIG = {
+        BIN_ID: "6a95f2fcda38895dfe281ffb",
+        API_KEY: "$2a$10$KgzmQJaMF6kVUe1BKpgvd.E2jKa4EWVWj6tuvZRcGQ/dxWjOrfpcm"
+    };
+
+    // --- COMPREHENSIVE FBS CONFERENCE DIRECTORY ---
+    const FBS_CONFERENCE_MAP = {
+        "SEC": [
+            "Alabama", "Arkansas", "Auburn", "Florida", "Georgia", "Kentucky", "LSU", "Mississippi State", 
+            "Missouri", "Oklahoma", "Ole Miss", "South Carolina", "Tennessee", "Texas", "Texas A&M", "Vanderbilt"
+        ],
+        "Big Ten": [
+            "Illinois", "Indiana", "Iowa", "Maryland", "Michigan", "Michigan State", "Minnesota", "Nebraska", 
+            "Northwestern", "Ohio State", "Oregon", "Penn State", "Purdue", "Rutgers", "UCLA", "USC", "Washington", "Wisconsin"
+        ],
+        "Big 12": [
+            "Arizona", "Arizona State", "Baylor", "BYU", "Cincinnati", "Colorado", "Houston", "Iowa State", 
+            "Kansas", "Kansas State", "Oklahoma State", "TCU", "Texas Tech", "UCF", "Utah", "West Virginia"
+        ],
+        "ACC": [
+            "Boston College", "California", "Clemson", "Duke", "Florida State", "Georgia Tech", "Louisville", 
+            "Miami (FL)", "NC State", "North Carolina", "Pittsburgh", "SMU", "Stanford", "Syracuse", "Virginia", "Virginia Tech", "Wake Forest"
+        ],
+        "Pac-12": [
+            "Boise State", "Colorado State", "Fresno State", "Oregon State", "San Diego State", "Texas State", "Utah State", "Washington State"
+        ],
+        "Mountain West": [
+            "Air Force", "Hawaii", "Nevada", "New Mexico", "North Dakota State", "Northern Illinois", "San Jose State", "UNLV", "UTEP", "Wyoming"
+        ],
+        "American": [
+            "Army", "Charlotte", "East Carolina", "Florida Atlantic", "Memphis", "Navy", "North Texas", 
+            "Rice", "South Florida", "Temple", "Tulane", "Tulsa", "UAB", "UTSA"
+        ],
+        "Sun Belt": [
+            "Appalachian State", "Arkansas State", "Coastal Carolina", "Georgia Southern", "Georgia State", 
+            "James Madison", "Louisiana", "Louisiana Tech", "Louisiana-Monroe", "Marshall", "Old Dominion", "South Alabama", "Southern Miss", "Troy"
+        ],
+        "MAC": [
+            "Akron", "Ball State", "Bowling Green", "Buffalo", "Central Michigan", "Eastern Michigan", 
+            "Kent State", "Miami (OH)", "Ohio", "Sacramento State", "Toledo", "UMass", "Western Michigan"
+        ],
+        "Conference USA": [
+            "Delaware", "Florida International", "Jacksonville State", "Kennesaw State", "Liberty", 
+            "Middle Tennessee", "Missouri State", "New Mexico State", "Sam Houston", "Western Kentucky"
+        ],
+        "Independents": [
+            "Notre Dame", "UConn"
+        ]
+    };
+
+    const FBS_MASTER_POOL = [];
+    const TEAM_TO_CONF = {};
+
+    Object.entries(FBS_CONFERENCE_MAP).forEach(([conf, teams]) => {
+        teams.forEach(t => {
+            FBS_MASTER_POOL.push(t);
+            TEAM_TO_CONF[t] = conf;
+        });
+    });
+
+    const fbsTeamsSet = new Set(FBS_MASTER_POOL);
+
+    const teamResumes = {};
+    function getTeamResume(teamName) {
+        if (!teamResumes[teamName]) {
+            teamResumes[teamName] = {
+                overall: "0-0",
+                confRecord: "0-0",
+                prevResult: "Season Opener Pending",
+                prevOutcome: ""
+            };
+        }
+        return teamResumes[teamName];
+    }
+
+    let activeIntelTeam = null;
+    let previousScores = {};
+    let currentConsensusRanking = [];
+
+    // --- APP STATE & STORAGE ---
+    let currentUser = JSON.parse(localStorage.getItem('cfb_user_profile')) || {
+        name: "Anonymous Fan",
+        avatar: "🏈",
+        favoriteTeams: ["Georgia"]
+    };
+
+    let communityBallots = JSON.parse(localStorage.getItem('cfb_community_ballots')) || [];
+    let previousWeekTop25 = JSON.parse(localStorage.getItem('cfb_previous_week_top25')) || [];
+    let gamesData = [];
+    let currentFilter = 'all';
+    let hideSpoilers = false;
+
+    function normalize(str) {
+        return (str || '').trim().toLowerCase();
+    }
+
+    function isTeamFavorite(teamObj) {
+        if (!teamObj || !currentUser.favoriteTeams) return false;
+        const favs = currentUser.favoriteTeams.map(f => normalize(f));
+        const identifiers = [
+            normalize(teamObj.name),
+            normalize(teamObj.location),
+            normalize(teamObj.displayName),
+            normalize(teamObj.shortDisplayName)
+        ].filter(Boolean);
+
+        return favs.some(fav => identifiers.includes(fav));
+    }
+
+    // --- URL-BASED BALLOT IMPORT (FALLBACK OPTION) ---
+    function checkURLForSharedBallot() {
+        const params = new URLSearchParams(window.location.search);
+        const voterData = params.get('voter');
+        const ballotData = params.get('ballot');
+
+        if (voterData && ballotData) {
+            try {
+                const parsedBallot = JSON.parse(decodeURIComponent(atob(ballotData)));
+                const voterName = decodeURIComponent(voterData);
+
+                const existingIdx = communityBallots.findIndex(b => b.voter.toLowerCase() === voterName.toLowerCase());
+                const newEntry = {
+                    voter: voterName,
+                    avatar: params.get('avatar') || '🏈',
+                    favorites: [],
+                    submittedAt: 'Imported via Link',
+                    ballot: parsedBallot
+                };
+
+                if (existingIdx >= 0) {
+                    communityBallots[existingIdx] = newEntry;
+                } else {
+                    communityBallots.push(newEntry);
+                }
+
+                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
+                pushToCloud();
+                
+                window.history.replaceState({}, document.title, window.location.pathname);
+                alert(`Successfully added ${voterName}'s ballot to your Associated BEST Poll!`);
+                calculateCommunityPoll();
+            } catch (err) {
+                console.error("Failed to parse shared ballot URL", err);
+            }
+        }
+    }
+
+    function copyBallotShareLink() {
+        const ballot = [];
+        for (let i = 1; i <= 25; i++) {
+            const val = document.getElementById(`rank-${i}`).value.trim();
+            if (val) ballot.push({ rank: i, team: val });
+        }
+
+        if (ballot.length === 0) {
+            alert('Fill out your ballot before creating a share link.');
+            return;
+        }
+
+        const encodedBallot = btoa(encodeURIComponent(JSON.stringify(ballot)));
+        const shareURL = `${window.location.origin}${window.location.pathname}?voter=${encodeURIComponent(currentUser.name)}&avatar=${encodeURIComponent(currentUser.avatar)}&ballot=${encodedBallot}`;
+
+        navigator.clipboard.writeText(shareURL).then(() => {
+            alert('1-Click Share Link copied to clipboard! Send this link to your friend and it will auto-add your ballot to their poll.');
+        }).catch(() => {
+            prompt('Copy this share link and send it to your friend:', shareURL);
+        });
+    }
+
+    // --- CLOUD SYNC ENGINE (JSONBin.io) ---
+    async function syncWithCloud(silent = false) {
+        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
+                headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY }
+            });
+            const data = await res.json();
+            
+            if (data && data.record) {
+                const ballots = Array.isArray(data.record) ? data.record : (data.record.ballots || []);
+                communityBallots = ballots;
+                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
+                calculateCommunityPoll();
+                if (!silent) alert('Successfully synced all ballots from the cloud database!');
+            }
+        } catch (err) {
+            console.error("Cloud fetch failed", err);
+            if (!silent) alert('Failed to connect to Cloud Database.');
+        }
+    }
+
+    async function pushToCloud() {
+        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+        try {
+            await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_CONFIG.API_KEY
+                },
+                body: JSON.stringify({ ballots: communityBallots })
+            });
+        } catch (err) {
+            console.error("Cloud push failed", err);
+        }
+    }
+
+    // --- USER PROFILE SYSTEM ---
+    function updateProfileUI() {
+        document.getElementById('userNamePreview').innerText = currentUser.name;
+        document.getElementById('userAvatarPreview').innerText = currentUser.avatar;
+        document.getElementById('ballotSubmittingAs').innerText = `${currentUser.avatar} ${currentUser.name}`;
+    }
+
+    function openProfileModal() {
+        document.getElementById('profileNameInput').value = currentUser.name;
+        document.getElementById('profileAvatarInput').value = currentUser.avatar;
+        renderFavChips();
+        updateDatalist();
+        document.getElementById('profileModal').classList.add('open');
+    }
+
+    function closeProfileModal() {
+        document.getElementById('profileModal').classList.remove('open');
+    }
+
+    function updateDatalist() {
+        const datalist = document.getElementById('allTeamDatalist');
+        datalist.innerHTML = '';
+        Array.from(fbsTeamsSet).sort().forEach(team => {
+            const opt = document.createElement('option');
+            opt.value = team;
+            datalist.appendChild(opt);
+        });
+    }
+
+    function renderFavChips() {
+        const container = document.getElementById('favChipsContainer');
+        container.innerHTML = '';
+        currentUser.favoriteTeams.forEach((team, idx) => {
+            const chip = document.createElement('div');
+            chip.className = 'fav-chip';
+            chip.innerHTML = `${team} <span onclick="removeFavTeam(${idx})">&times;</span>`;
+            container.appendChild(chip);
+        });
+    }
+
+    function handleFavInput(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = e.target.value.trim();
+            if (val && !currentUser.favoriteTeams.some(t => normalize(t) === normalize(val))) {
+                currentUser.favoriteTeams.push(val);
+                e.target.value = '';
+                renderFavChips();
+            }
+        }
+    }
+
+    function removeFavTeam(index) {
+        currentUser.favoriteTeams.splice(index, 1);
+        renderFavChips();
+    }
+
+    function saveUserProfile() {
+        currentUser.name = document.getElementById('profileNameInput').value.trim() || 'Anonymous Fan';
+        currentUser.avatar = document.getElementById('profileAvatarInput').value.trim() || '🏈';
+        localStorage.setItem('cfb_user_profile', JSON.stringify(currentUser));
+        updateProfileUI();
+        closeProfileModal();
+        renderGames();
+    }
+
+    // --- TAB NAVIGATION ---
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+        if (tabId === 'community' || tabId === 'playoff') calculateCommunityPoll();
+    }
+
+    // --- SPOILERS TOGGLE ---
+    function toggleSpoilers() {
+        hideSpoilers = !hideSpoilers;
+        const btn = document.getElementById('spoilerToggleBtn');
+        const grid = document.getElementById('gameGrid');
+        if (hideSpoilers) {
+            grid.classList.add('hide-spoilers');
+            btn.classList.add('active');
+            btn.innerText = '🙈 Hide Spoilers: ON (Hover to peek)';
+        } else {
+            grid.classList.remove('hide-spoilers');
+            btn.classList.remove('active');
+            btn.innerText = '🙈 Hide Spoilers: OFF';
+        }
+    }
+
+    // --- WATCHABILITY SCORING ---
+    function calculateWatchability(game) {
+        let score = 1;
+        const rank1 = game.away.rank || 99;
+        const rank2 = game.home.rank || 99;
+
+        if (rank1 <= 25 && rank2 <= 25) score += 3;
+        else if (rank1 <= 25 || rank2 <= 25) score += 1.5;
+
+        if (game.spreadValue !== null && Math.abs(game.spreadValue) <= 4.5) score += 1;
+
+        if (game.state === 'in' && game.period >= 3 && Math.abs(game.away.score - game.home.score) <= 8) {
+            score += 1.5;
+        }
+
+        if (game.situation && game.situation.isRedZone) {
+            score += 0.5;
+        }
+
+        return Math.min(5, Math.max(1, Math.round(score)));
+    }
+
+    function getNetworkClass(net) {
+        const n = (net || '').toLowerCase();
+        if (n.includes('abc')) return 'net-abc';
+        if (n.includes('fox') || n.includes('fs1')) return 'net-fox';
+        if (n.includes('cbs') || n.includes('sec')) return 'net-cbs';
+        if (n.includes('espn')) return 'net-espn';
+        if (n.includes('nbc') || n.includes('peacock')) return 'net-nbc';
+        return 'net-other';
+    }
+
+    // --- LIVE SCHEDULE FETCH (ESPN API) ---
+    async function fetchLiveSchedule() {
+        const grid = document.getElementById('gameGrid');
+        const weekVal = document.getElementById('weekFilter').value;
+        const currentYear = new Date().getFullYear();
+        
+        const queryParams = (weekVal !== 'current') 
+            ? `&dates=${currentYear}&week=${weekVal}&seasontype=2` 
+            : '';
+
+        try {
+            const [fbsRes, fcsRes, standingsRes] = await Promise.all([
+                fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=150${queryParams}`),
+                fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=150${queryParams}`),
+                fetch('https://site.api.espn.com/apis/v2/sports/football/college-football/standings').catch(() => null)
+            ]);
+
+            const fbsData = await fbsRes.json();
+            const fcsData = await fcsRes.json();
+
+            if (standingsRes && standingsRes.ok) {
+                const sData = await standingsRes.json();
+                if (sData && sData.children) {
+                    sData.children.forEach(conf => {
+                        (conf.standings ? conf.standings.entries : []).forEach(entry => {
+                            const tName = entry.team.location || entry.team.name;
+                            const stats = entry.stats || [];
+                            const ovr = stats.find(s => s.name === 'overall' || s.type === 'total');
+                            const confStat = stats.find(s => s.name === 'vsConf' || s.type === 'vsconf');
+                            
+                            const res = getTeamResume(tName);
+                            if (ovr) res.overall = ovr.displayValue || res.overall;
+                            if (confStat) res.confRecord = confStat.displayValue || res.confRecord;
+                        });
+                    });
+                }
+            }
+
+            const parseEvents = (events, div) => (events || []).map(ev => {
+                const comp = ev.competitions[0];
+                const away = comp.competitors.find(c => c.homeAway === 'away');
+                const home = comp.competitors.find(c => c.homeAway === 'home');
+                const odds = comp.odds ? comp.odds[0] : null;
+                const situation = comp.situation || null;
+
+                let isRedZone = false;
+                let downDistanceText = '';
+
+                if (situation) {
+                    const yardLine = situation.yardLine || 99;
+                    if (situation.isRedZone || (situation.possession && yardLine <= 20)) {
+                        isRedZone = true;
+                    }
+                    if (situation.down && situation.distance) {
+                        downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance} at ${situation.possessionText || ''}`;
+                    }
+                }
+
+                const extractTeam = (competitor, isAway) => {
+                    const loc = competitor.team.location || competitor.team.name;
+                    const opp = isAway ? home.team.location : away.team.location;
+
+                    if (comp.status.type.state === 'post') {
+                        const win = competitor.winner;
+                        const tRes = getTeamResume(loc);
+                        tRes.prevOutcome = win ? 'W' : 'L';
+                        tRes.prevResult = `${win ? 'W' : 'L'} ${competitor.score}-${(isAway ? home.score : away.score)} vs ${opp}`;
+                    }
+
+                    const hasPossession = situation && situation.possession === competitor.id;
+                    const teamInRedZone = isRedZone && situation && situation.possession === competitor.id;
+
+                    return {
+                        id: competitor.id,
+                        name: loc,
+                        conference: TEAM_TO_CONF[loc] || (div === 'FCS' ? 'FCS' : 'FBS'),
+                        location: competitor.team.location,
+                        displayName: competitor.team.displayName,
+                        shortDisplayName: competitor.team.shortDisplayName,
+                        rank: competitor.curatedRank ? competitor.curatedRank.current : null,
+                        score: competitor.score || '0',
+                        linescores: competitor.linescores || [],
+                        logo: competitor.team.logo,
+                        hasPossession: hasPossession,
+                        inRedZone: teamInRedZone
+                    };
+                };
+
+                const gameDate = new Date(ev.date);
+                const hour = gameDate.getHours();
+
+                const awayScore = parseInt(away.score || '0');
+                const homeScore = parseInt(home.score || '0');
+                const isUnderdogLeading = (comp.status.type.state === 'in' && comp.status.period >= 3 && (
+                    (away.curatedRank && away.curatedRank.current <= 15 && (!home.curatedRank || home.curatedRank.current > 25) && homeScore >= awayScore - 7) ||
+                    (home.curatedRank && home.curatedRank.current <= 15 && (!away.curatedRank || away.curatedRank.current > 25) && awayScore >= homeScore - 7)
+                ));
+
+                const parsed = {
+                    id: ev.id,
+                    div: (ev.name.includes("Sacramento State") || ev.name.includes("North Dakota State")) ? 'FBS' : div,
+                    dateRaw: gameDate,
+                    hour: hour,
+                    date: gameDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    network: comp.broadcasts && comp.broadcasts[0] ? comp.broadcasts[0].names[0] : 'TBD',
+                    state: comp.status.type.state,
+                    clock: comp.status.type.detail,
+                    period: comp.status.period,
+                    spread: odds ? odds.details : 'N/A',
+                    spreadValue: odds && odds.spread ? parseFloat(odds.spread) : null,
+                    isUpsetAlert: isUnderdogLeading,
+                    situation: {
+                        isRedZone: isRedZone,
+                        text: downDistanceText,
+                        raw: situation
+                    },
+                    away: extractTeam(away, true),
+                    home: extractTeam(home, false)
+                };
+
+                parsed.rating = calculateWatchability(parsed);
+                return parsed;
+            });
+
+            gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
+            renderGames();
+            populateFBSQuickSelectPool();
+        } catch (err) {
+            console.error(err);
+            grid.innerHTML = `<p style="color: var(--live-red); padding: 20px;">Failed to fetch live API data.</p>`;
+        }
+    }
+
+    // --- RENDER MATCHUPS WITH FILTER SLOTS & UPSET ALERTS ---
+    function renderGames() {
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = '';
+
+        const confFilter = document.getElementById('scoreConfFilter').value;
+
+        const filtered = gamesData.filter(g => {
+            const hasFav = isTeamFavorite(g.away) || isTeamFavorite(g.home);
+            
+            if (confFilter !== 'ALL') {
+                if (confFilter === 'FCS') {
+                    if (g.div !== 'FCS') return false;
+                } else {
+                    const awayConf = TEAM_TO_CONF[g.away.name];
+                    const homeConf = TEAM_TO_CONF[g.home.name];
+                    if (awayConf !== confFilter && homeConf !== confFilter) return false;
+                }
+            }
+
+            if (currentFilter === 'FBS') return g.div === 'FBS';
+            if (currentFilter === 'FCS') return g.div === 'FCS';
+            if (currentFilter === 'ranked') return (g.away.rank && g.away.rank <= 25) || (g.home.rank && g.home.rank <= 25);
+            if (currentFilter === 'favorites') return hasFav;
+            if (currentFilter === 'redzone') return g.situation && g.situation.isRedZone;
+            if (currentFilter === 'upset') return g.isUpsetAlert;
+            if (currentFilter === 'noon') return g.hour >= 11 && g.hour < 15;
+            if (currentFilter === 'afternoon') return g.hour >= 15 && g.hour < 18;
+            if (currentFilter === 'prime') return g.hour >= 18 && g.hour < 22;
+            if (currentFilter === 'afterdark') return g.hour >= 22 || g.hour < 5;
+            if (currentFilter === 'live') return g.state === 'in';
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<p style="color: var(--text-muted); padding: 20px;">No games match the current filters.</p>`;
+            return;
+        }
+
+        filtered.forEach(g => {
+            const card = document.createElement('div');
+            const isAwayFav = isTeamFavorite(g.away);
+            const isHomeFav = isTeamFavorite(g.home);
+            const isFavMatch = isAwayFav || isHomeFav;
+            const hasRedZone = g.situation && g.situation.isRedZone && g.state === 'in';
+
+            const prevAway = previousScores[`${g.id}_away`];
+            const prevHome = previousScores[`${g.id}_home`];
+            const awayUpdated = prevAway !== undefined && prevAway !== g.away.score;
+            const homeUpdated = prevHome !== undefined && prevHome !== g.home.score;
+            
+            previousScores[`${g.id}_away`] = g.away.score;
+            previousScores[`${g.id}_home`] = g.home.score;
+
+            card.className = `game-card ${isFavMatch ? 'is-favorite-match' : ''} ${hasRedZone ? 'in-redzone' : ''}`;
+            card.onclick = () => openBoxscoreModal(g.id);
+
+            let statusClass = 'status-pre';
+            if (g.state === 'in') statusClass = 'status-in';
+            if (g.state === 'post') statusClass = 'status-post';
+
+            card.innerHTML = `
+                ${isFavMatch ? `<div class="fav-badge">★ Favorite</div>` : ''}
+                <div>
+                    <div class="game-header">
+                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                            <span class="net-tag ${getNetworkClass(g.network)}">${g.network}</span>
+                            <span>${g.date} (${g.div})</span>
+                            ${hasRedZone ? `<span class="redzone-banner">🔴 Red Zone</span>` : ''}
+                            ${g.isUpsetAlert ? `<span class="upset-banner">🚨 Upset Alert</span>` : ''}
+                        </div>
+                        <span class="status-badge ${statusClass} live-clock">${g.clock}</span>
+                    </div>
+                    
+                    <div class="team-row ${g.away.hasPossession ? 'has-possession' : ''} ${g.away.inRedZone ? 'team-in-redzone' : ''}">
+                        <div class="team-meta">
+                            ${g.away.hasPossession ? `<span class="possession-dot" title="Has possession"></span>` : ''}
+                            ${g.away.logo ? `<img src="${g.away.logo}" class="team-logo">` : ''}
+                            <span class="team-name ${isAwayFav ? 'highlight-fav' : ''}">
+                                ${g.away.rank && g.away.rank <= 25 ? `<span class="team-rank">#${g.away.rank}</span>` : ''}${g.away.name}
+                            </span>
+                        </div>
+                        <span class="score ${awayUpdated ? 'score-updated' : ''}">${g.state === 'pre' ? '-' : g.away.score}</span>
+                    </div>
+
+                    <div class="team-row ${g.home.hasPossession ? 'has-possession' : ''} ${g.home.inRedZone ? 'team-in-redzone' : ''}">
+                        <div class="team-meta">
+                            ${g.home.hasPossession ? `<span class="possession-dot" title="Has possession"></span>` : ''}
+                            ${g.home.logo ? `<img src="${g.home.logo}" class="team-logo">` : ''}
+                            <span class="team-name ${isHomeFav ? 'highlight-fav' : ''}">
+                                ${g.home.rank && g.home.rank <= 25 ? `<span class="team-rank">#${g.home.rank}</span>` : ''}${g.home.name}
+                            </span>
+                        </div>
+                        <span class="score ${homeUpdated ? 'score-updated' : ''}">${g.state === 'pre' ? '-' : g.home.score}</span>
+                    </div>
+
+                    ${g.situation && g.situation.text ? `<div class="situation-text">🏈 ${g.situation.text}</div>` : ''}
+                    <div class="click-hint">Click for boxscore & team stats ↗</div>
+                </div>
+
+                <div class="game-footer">
+                    <span>Spread: ${g.spread}</span>
+                    <span class="fire-rating">${'🔥'.repeat(g.rating)} (${g.rating}/5)</span>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function setFilter(type) {
+        currentFilter = type;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        renderGames();
+    }
+
+    // --- LIVE BOXSCORE & SUMMARY LOADER ---
+    async function openBoxscoreModal(gameId) {
+        const modal = document.getElementById('boxscoreModal');
+        const body = document.getElementById('boxscoreBody');
+        modal.classList.add('open');
+        body.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 25px;">Loading live gamecast & team stats...</p>`;
+
+        try {
+            const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event=${gameId}`);
+            const data = await res.json();
+
+            const header = data.header;
+            const comp = header.competitions[0];
+            const away = comp.competitors.find(c => c.homeAway === 'away');
+            const home = comp.competitors.find(c => c.homeAway === 'home');
+            const situation = data.situation || comp.situation;
+            const drives = data.drives;
+            const boxscore = data.boxscore;
+
+            const awayLines = away.linescores || [];
+            const homeLines = home.linescores || [];
+            const periodsCount = Math.max(4, awayLines.length, homeLines.length);
+            
+            let lineScoreHeaders = '<th>Team</th>';
+            let awayLineCells = `<td><strong>${away.team.abbreviation || away.team.location}</strong></td>`;
+            let homeLineCells = `<td><strong>${home.team.abbreviation || home.team.location}</strong></td>`;
+
+            for (let i = 1; i <= periodsCount; i++) {
+                lineScoreHeaders += `<th>${i <= 4 ? 'Q' + i : 'OT' + (i - 4 || '')}</th>`;
+                awayLineCells += `<td>${awayLines[i - 1] ? awayLines[i - 1].displayValue : (comp.status.type.state === 'pre' ? '-' : '0')}</td>`;
+                homeLineCells += `<td>${homeLines[i - 1] ? homeLines[i - 1].displayValue : (comp.status.type.state === 'pre' ? '-' : '0')}</td>`;
+            }
+            lineScoreHeaders += '<th>TOTAL</th>';
+            awayLineCells += `<td><strong>${away.score || '0'}</strong></td>`;
+            homeLineCells += `<td><strong>${home.score || '0'}</strong></td>`;
+
+            let liveDriveHTML = '';
+            if (situation) {
+                const isRz = situation.isRedZone || (situation.yardLine && situation.yardLine <= 20);
+                const possTeam = situation.possession === away.id ? away.team.location : home.team.location;
+                const downDist = situation.down ? `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance} at ${situation.possessionText || ''}` : 'Between Plays';
+                
+                let currentDriveStats = '';
+                if (drives && drives.current) {
+                    const cd = drives.current;
+                    currentDriveStats = ` • Current Drive: ${cd.plays || 0} plays, ${cd.yards || 0} yds (${cd.displayClock || cd.timeOfPossession || ''})`;
+                }
+
+                liveDriveHTML = `
+                    <div class="drive-intel-box ${isRz ? 'redzone' : ''}">
+                        <strong>🏈 Live Possession:</strong> ${possTeam} (${downDist})${isRz ? ' — <strong style="color: var(--live-red);">🔴 IN THE RED ZONE</strong>' : ''}
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 3px;">${currentDriveStats}</div>
+                    </div>
+                `;
+            }
+
+            let teamStatsHTML = '';
+            if (boxscore && boxscore.teams && boxscore.teams.length >= 2) {
+                const t1 = boxscore.teams[0];
+                const t2 = boxscore.teams[1];
+                const s1 = t1.statistics || [];
+                const s2 = t2.statistics || [];
+
+                const getStat = (statsArr, name) => {
+                    const s = statsArr.find(x => x.name === name || x.label === name);
+                    return s ? s.displayValue : '--';
+                };
+
+                const statRows = [
+                    { label: "1st Downs", k: "firstDowns" },
+                    { label: "Total Yards", k: "totalYards" },
+                    { label: "Passing Yards", k: "netPassingYards" },
+                    { label: "Rushing Yards", k: "rushingYards" },
+                    { label: "Yards Per Play", k: "yardsPerPlay" },
+                    { label: "3rd Down Eff.", k: "thirdDownEff" },
+                    { label: "Red Zone Scores", k: "redZoneAttempts" },
+                    { label: "Turnovers", k: "turnovers" },
+                    { label: "Penalties - Yards", k: "totalPenaltiesYards" },
+                    { label: "Time of Possession", k: "possessionTime" }
+                ];
+
+                let rowsHTML = statRows.map(row => `
+                    <tr>
+                        <td class="stat-val-left">${getStat(s1, row.k)}</td>
+                        <td class="stat-label">${row.label}</td>
+                        <td class="stat-val-right">${getStat(s2, row.k)}</td>
+                    </tr>
+                `).join('');
+
+                teamStatsHTML = `
+                    <div class="stat-comp-container">
+                        <h4 style="font-size: 1.1rem; text-align: center; margin-bottom: 12px; color: var(--accent);">Team Statistics</h4>
+                        <table class="stat-comp-table">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border); font-size: 1rem; color: var(--text);">
+                                    <th style="text-align: center; padding: 6px; font-weight: 800;">${t1.team.abbreviation}</th>
+                                    <th style="text-align: center; padding: 6px; font-size: 0.8rem; color: var(--text-muted);">CATEGORY</th>
+                                    <th style="text-align: center; padding: 6px; font-weight: 800;">${t2.team.abbreviation}</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rowsHTML}</tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = `
+                <div class="boxscore-header-score">
+                    <div class="box-team">
+                        ${away.team.logo ? `<img src="${away.team.logo}">` : ''}
+                        <div class="box-team-name">${away.team.location}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">${away.team.recordSummary || ''}</div>
+                    </div>
+                    
+                    <div class="box-score-center">
+                        <div class="box-score-num">${comp.status.type.state === 'pre' ? 'VS' : `${away.score} - ${home.score}`}</div>
+                        <span class="status-badge ${comp.status.type.state === 'in' ? 'status-in' : 'status-pre'}">${comp.status.type.detail}</span>
+                    </div>
+
+                    <div class="box-team">
+                        ${home.team.logo ? `<img src="${home.team.logo}">` : ''}
+                        <div class="box-team-name">${home.team.location}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">${home.team.recordSummary || ''}</div>
+                    </div>
+                </div>
+
+                ${liveDriveHTML}
+
+                <table class="linescore-table">
+                    <thead><tr>${lineScoreHeaders}</tr></thead>
+                    <tbody>
+                        <tr>${awayLineCells}</tr>
+                        <tr>${homeLineCells}</tr>
+                    </tbody>
+                </table>
+
+                ${teamStatsHTML || '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Team stats will populate when game begins.</p>'}
+            `;
+        } catch (err) {
+            console.error(err);
+            body.innerHTML = `<p style="color: var(--live-red); text-align: center; padding: 20px;">Failed to load live boxscore details.</p>`;
+        }
+    }
+
+    function closeBoxscoreModal() {
+        document.getElementById('boxscoreModal').classList.remove('open');
+    }
+
+    // --- BALLOT BUILDER (DRAG & DROP REORDERING) ---
+    function initBallotSlots() {
+        const container = document.getElementById('ballotSlots');
+        container.innerHTML = '';
+        for (let i = 1; i <= 25; i++) {
+            container.innerHTML += `
+                <div class="ballot-slot" id="slot-wrap-${i}" draggable="true" ondragstart="handleDragStart(event, ${i})" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, ${i})">
+                    <span class="drag-handle">⠿</span>
+                    <span class="rank-num">#${i}</span>
+                    <input type="text" class="team-input" id="rank-${i}" placeholder="Enter FBS team..." oninput="validateBallotDuplicates()" list="fbsDatalist">
+                    <div class="slot-actions">
+                        <button class="slot-btn" title="Move Up" onclick="shiftRank(${i}, -1)">▲</button>
+                        <button class="slot-btn" title="Move Down" onclick="shiftRank(${i}, 1)">▼</button>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    let draggedSlotIndex = null;
+    function handleDragStart(e, index) {
+        draggedSlotIndex = index;
+        e.currentTarget.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', index);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e, targetIndex) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        document.querySelectorAll('.ballot-slot').forEach(s => s.classList.remove('dragging'));
+
+        if (draggedSlotIndex !== null && draggedSlotIndex !== targetIndex) {
+            const srcVal = document.getElementById(`rank-${draggedSlotIndex}`).value;
+            const tgtVal = document.getElementById(`rank-${targetIndex}`).value;
+            document.getElementById(`rank-${draggedSlotIndex}`).value = tgtVal;
+            document.getElementById(`rank-${targetIndex}`).value = srcVal;
+            validateBallotDuplicates();
+        }
+    }
+
+    function shiftRank(index, dir) {
+        const targetIndex = index + dir;
+        if (targetIndex < 1 || targetIndex > 25) return;
+        const curVal = document.getElementById(`rank-${index}`).value;
+        const tgtVal = document.getElementById(`rank-${targetIndex}`).value;
+        document.getElementById(`rank-${index}`).value = tgtVal;
+        document.getElementById(`rank-${targetIndex}`).value = curVal;
+        validateBallotDuplicates();
+    }
+
+    function populateFBSQuickSelectPool() {
+        const quickList = document.getElementById('quickTeamList');
+        quickList.innerHTML = '';
+
+        let datalist = document.getElementById('fbsDatalist');
+        if (!datalist) {
+            datalist = document.createElement('datalist');
+            datalist.id = 'fbsDatalist';
+            document.body.appendChild(datalist);
+        }
+        datalist.innerHTML = '';
+
+        Array.from(fbsTeamsSet).sort().forEach(team => {
+            const opt = document.createElement('option');
+            opt.value = team;
+            datalist.appendChild(opt);
+
+            const btn = document.createElement('button');
+            btn.className = 'quick-team-btn';
+            btn.id = `qbtn-${normalize(team).replace(/[^a-z0-9]/g, '')}`;
+            btn.innerText = team;
+            btn.onclick = () => showTeamIntel(team);
+            quickList.appendChild(btn);
+        });
+
+        showTeamIntel("Georgia");
+        validateBallotDuplicates();
+    }
+
+    function showTeamIntel(teamName) {
+        activeIntelTeam = teamName;
+        const res = getTeamResume(teamName);
+        const conf = TEAM_TO_CONF[teamName] || "FBS";
+
+        document.getElementById('intelTeamName').innerText = teamName;
+        document.getElementById('intelConfTag').innerText = conf;
+        document.getElementById('intelOverall').innerText = res.overall;
+        document.getElementById('intelConfRecord').innerText = res.confRecord;
+        
+        const prevEl = document.getElementById('intelPrevResult');
+        if (res.prevOutcome === 'W') {
+            prevEl.innerHTML = `<span class="res-win">W</span> ${res.prevResult.replace('W ', '')}`;
+        } else if (res.prevOutcome === 'L') {
+            prevEl.innerHTML = `<span class="res-loss">L</span> ${res.prevResult.replace('L ', '')}`;
+        } else {
+            prevEl.innerText = res.prevResult;
+        }
+
+        document.querySelectorAll('.quick-team-btn').forEach(b => b.classList.remove('active-selected'));
+        const activeBtn = document.getElementById(`qbtn-${normalize(teamName).replace(/[^a-z0-9]/g, '')}`);
+        if (activeBtn) activeBtn.classList.add('active-selected');
+    }
+
+    function slotActiveIntelTeam() {
+        if (!activeIntelTeam) return;
+        
+        const currentRanked = getCurrentRankedTeams();
+        if (currentRanked.some(t => normalize(t.name) === normalize(activeIntelTeam))) {
+            alert(`"${activeIntelTeam}" is already slotted on your ballot.`);
+            return;
+        }
+
+        for (let i = 1; i <= 25; i++) {
+            const input = document.getElementById(`rank-${i}`);
+            if (!input.value.trim()) {
+                input.value = activeIntelTeam;
+                validateBallotDuplicates();
+                break;
+            }
+        }
+    }
+
+    function filterTeamsByConference() {
+        const conf = document.getElementById('conferenceFilter').value;
+        const query = document.getElementById('searchTeam').value.toLowerCase();
+
+        document.querySelectorAll('.quick-team-btn').forEach(btn => {
+            const teamName = btn.innerText;
+            const teamConf = TEAM_TO_CONF[teamName] || "Independents";
+            
+            const matchesConf = (conf === 'ALL' || teamConf === conf);
+            const matchesQuery = teamName.toLowerCase().includes(query);
+
+            btn.style.display = (matchesConf && matchesQuery) ? 'inline-block' : 'none';
+        });
+    }
+
+    function filterTeamList() {
+        filterTeamsByConference();
+    }
+
+    function getCurrentRankedTeams() {
+        const list = [];
+        for (let i = 1; i <= 25; i++) {
+            const val = document.getElementById(`rank-${i}`).value.trim();
+            if (val) list.push({ rank: i, name: val });
+        }
+        return list;
+    }
+
+    function validateBallotDuplicates() {
+        const counts = {};
+        const slots = {};
+
+        for (let i = 1; i <= 25; i++) {
+            const input = document.getElementById(`rank-${i}`);
+            const wrap = document.getElementById(`slot-wrap-${i}`);
+            const val = normalize(input.value);
+
+            wrap.classList.remove('has-duplicate');
+
+            if (val) {
+                counts[val] = (counts[val] || 0) + 1;
+                if (!slots[val]) slots[val] = [];
+                slots[val].push(wrap);
+            }
+        }
+
+        Object.keys(counts).forEach(val => {
+            if (counts[val] > 1) {
+                slots[val].forEach(w => w.classList.add('has-duplicate'));
+            }
+        });
+
+        const currentNorms = Object.keys(counts);
+        Array.from(fbsTeamsSet).forEach(team => {
+            const btnId = `qbtn-${normalize(team).replace(/[^a-z0-9]/g, '')}`;
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                if (currentNorms.includes(normalize(team))) {
+                    btn.classList.add('is-slotted');
+                } else {
+                    btn.classList.remove('is-slotted');
+                }
+            }
+        });
+    }
+
+    function saveBallot() {
+        const ballot = [];
+        const seenTeams = new Set();
+        const duplicates = new Set();
+        const nonFBSTeams = [];
+
+        for (let i = 1; i <= 25; i++) {
+            const rawVal = document.getElementById(`rank-${i}`).value.trim();
+            if (rawVal) {
+                const norm = normalize(rawVal);
+
+                if (seenTeams.has(norm)) {
+                    duplicates.add(rawVal);
+                }
+                seenTeams.add(norm);
+
+                let canonicalName = Array.from(fbsTeamsSet).find(t => normalize(t) === norm);
+                if (!canonicalName) {
+                    nonFBSTeams.push(rawVal);
+                } else {
+                    ballot.push({ rank: i, team: canonicalName });
+                }
+            }
+        }
+
+        if (ballot.length === 0 && nonFBSTeams.length === 0) {
+            alert('Please rank at least one team before submitting.');
+            return;
+        }
+
+        if (duplicates.size > 0) {
+            alert(`Duplicate rule violation: The following team(s) were voted for more than once:\n• ${Array.from(duplicates).join('\n• ')}\n\nEach team can only appear once per ballot.`);
+            return;
+        }
+
+        if (nonFBSTeams.length > 0) {
+            alert(`FBS rule violation: Only FBS schools can receive votes.\nThe following are not recognized as FBS teams:\n• ${nonFBSTeams.join('\n• ')}`);
+            return;
+        }
+
+        const ballotEntry = {
+            voter: currentUser.name,
+            avatar: currentUser.avatar,
+            favorites: currentUser.favoriteTeams,
+            submittedAt: new Date().toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            ballot: ballot
+        };
+
+        const existingIdx = communityBallots.findIndex(b => b.voter.toLowerCase() === currentUser.name.toLowerCase());
+        if (existingIdx >= 0) {
+            communityBallots[existingIdx] = ballotEntry;
+        } else {
+            communityBallots.push(ballotEntry);
+        }
+
+        localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
+        pushToCloud();
+        alert(`Ballot successfully submitted to Associated BEST Poll under "${currentUser.name}"!`);
+    }
+
+    function clearBallot() {
+        for (let i = 1; i <= 25; i++) {
+            document.getElementById(`rank-${i}`).value = '';
+        }
+        validateBallotDuplicates();
+    }
+
+    // --- ASSOCIATED BEST POLL ENGINE & VOTER ANALYTICS ---
+    function calculateCommunityPoll() {
+        const scores = {};
+        const teamVoters = {};
+
+        communityBallots.forEach(entry => {
+            entry.ballot.forEach(item => {
+                const team = item.team;
+                const points = 26 - item.rank;
+                
+                if (!scores[team]) scores[team] = { points: 0, firstPlace: 0, ballots: 0 };
+                if (!teamVoters[team]) teamVoters[team] = [];
+
+                scores[team].points += points;
+                scores[team].ballots += 1;
+                teamVoters[team].push(`${entry.voter} (#${item.rank})`);
+                if (item.rank === 1) scores[team].firstPlace += 1;
+            });
+        });
+
+        const sorted = Object.keys(scores).map(team => ({
+            team,
+            voters: teamVoters[team],
+            ...scores[team]
+        })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
+
+        currentConsensusRanking = sorted;
+        document.getElementById('ballotCounter').innerText = `${communityBallots.length} Ballot(s) Aggregated in Associated BEST Poll`;
+        
+        const tbody = document.getElementById('pollResultsBody');
+        tbody.innerHTML = '';
+
+        const currentTop25Teams = sorted.slice(0, 25);
+        const orvTeams = sorted.slice(25);
+
+        if (sorted.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No ballots submitted to Associated BEST Poll yet.</td></tr>`;
+        } else {
+            currentTop25Teams.forEach((entry, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${idx + 1}</strong></td>
+                    <td><strong>${entry.team}</strong></td>
+                    <td><strong>${entry.points}</strong></td>
+                    <td>${entry.firstPlace > 0 ? `🥇 ${entry.firstPlace}` : '-'}</td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted);">${entry.voters.join(', ')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 1. Others Receiving Votes (ORV)
+        const orvContainer = document.getElementById('orvContent');
+        if (orvTeams.length === 0) {
+            orvContainer.innerText = "None";
+        } else {
+            orvContainer.innerHTML = orvTeams.map(t => {
+                const fp = t.firstPlace > 0 ? ` (${t.firstPlace})` : '';
+                return `<strong>${t.team}</strong> ${t.points}${fp}`;
+            }).join(', ');
+        }
+
+        // 2. Dropped Out Tracking
+        const droppedContainer = document.getElementById('droppedOutContent');
+        if (!previousWeekTop25 || previousWeekTop25.length === 0) {
+            droppedContainer.innerHTML = `<em>No previous week baseline saved. Click "Save Baseline" above to begin tracking.</em>`;
+        } else {
+            const currentNames = currentTop25Teams.map(t => normalize(t.team));
+            const droppedOut = previousWeekTop25.filter(prev => !currentNames.includes(normalize(prev.team)));
+
+            if (droppedOut.length === 0) {
+                droppedContainer.innerText = "None";
+            } else {
+                droppedContainer.innerHTML = droppedOut.map(t => `No. ${t.rank} <strong>${t.team}</strong>`).join(', ');
+            }
+        }
+
+        // 3. Voter Analytics
+        calculateVoterAnalytics(currentTop25Teams);
+
+        // 4. Voter Directory
+        const vContainer = document.getElementById('votersDirectoryList');
+        vContainer.innerHTML = '';
+        if (communityBallots.length === 0) {
+            vContainer.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">No voters yet.</p>`;
+        } else {
+            communityBallots.forEach((b, idx) => {
+                const div = document.createElement('div');
+                div.className = 'voter-card';
+                div.onclick = () => openVoterBallotModal(idx);
+                div.innerHTML = `
+                    <div class="voter-info">
+                        <div class="voter-avatar">${b.avatar || '👤'}</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.95rem;">${b.voter}</div>
+                            <div class="voter-tag">★ ${(b.favorites || []).join(', ') || 'None'}</div>
+                            <div class="voter-tag">🕒 ${b.submittedAt || 'Recent'}</div>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--accent-blue);">Inspect ↗</span>
+                `;
+                vContainer.appendChild(div);
+            });
+        }
+
+        // 5. Build 12-Team CFP Bracket
+        project12TeamPlayoff(sorted);
+    }
+
+    function calculateVoterAnalytics(consensusTop25) {
+        if (communityBallots.length < 2 || consensusTop25.length === 0) {
+            document.getElementById('consensusChampName').innerText = "Requires 2+ Ballots";
+            document.getElementById('outlierChampName').innerText = "Requires 2+ Ballots";
+            return;
+        }
+
+        const consensusRankMap = {};
+        consensusTop25.forEach((t, i) => consensusRankMap[t.team] = i + 1);
+
+        let lowestDiff = 999999;
+        let highestDiff = -1;
+        let champ = "";
+        let outlier = "";
+
+        communityBallots.forEach(b => {
+            let diff = 0;
+            b.ballot.forEach(item => {
+                const consensusRank = consensusRankMap[item.team] || 35;
+                diff += Math.abs(item.rank - consensusRank);
+            });
+
+            if (diff < lowestDiff) {
+                lowestDiff = diff;
+                champ = `${b.avatar || '👤'} ${b.voter}`;
+            }
+            if (diff > highestDiff) {
+                highestDiff = diff;
+                outlier = `${b.avatar || '👤'} ${b.voter}`;
+            }
+        });
+
+        document.getElementById('consensusChampName').innerText = champ || "TBD";
+        document.getElementById('outlierChampName').innerText = outlier || "TBD";
+    }
+
+    // --- 12-TEAM CFP BRACKET PROJECTOR ---
+    function project12TeamPlayoff(sortedTeams) {
+        const byesGrid = document.getElementById('cfpByesGrid');
+        const firstRoundGrid = document.getElementById('cfpFirstRoundGrid');
+
+        byesGrid.innerHTML = '';
+        firstRoundGrid.innerHTML = '';
+
+        if (sortedTeams.length < 12) {
+            byesGrid.innerHTML = `<p style="color: var(--text-muted);">Requires at least 12 ranked teams to generate playoff bracket.</p>`;
+            return;
+        }
+
+        const seenConfs = new Set();
+        const confChamps = [];
+        const nonChamps = [];
+
+        sortedTeams.forEach(t => {
+            const conf = TEAM_TO_CONF[t.team] || "Independents";
+            if (!seenConfs.has(conf) && conf !== "Independents" && confChamps.length < 5) {
+                seenConfs.add(conf);
+                confChamps.push({ ...t, conf });
+            } else {
+                nonChamps.push(t);
+            }
+        });
+
+        const top4Byes = confChamps.slice(0, 4);
+        const fifthChamp = confChamps[4] || null;
+
+        let remainingPool = [...nonChamps];
+        if (fifthChamp) remainingPool.push(fifthChamp);
+        remainingPool.sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
+
+        const playoffField = [...top4Byes, ...remainingPool.slice(0, 8)];
+
+        // Render Byes
+        top4Byes.forEach((t, i) => {
+            const card = document.createElement('div');
+            card.className = 'bye-card';
+            card.innerHTML = `
+                <div class="bye-badge">#${i + 1} Seed • Bye</div>
+                <div style="font-weight: 800; font-size: 1.15rem; color: #fff;">${t.team}</div>
+                <div style="font-size: 0.8rem; color: var(--accent); font-weight: 600;">${t.conf} Champion</div>
+            `;
+            byesGrid.appendChild(card);
+        });
+
+        // Render First-Round Matchups
+        const matchups = [
+            { hostSeed: 5, host: playoffField[4], awaySeed: 12, away: playoffField[11], winnerPlays: "#4 Seed" },
+            { hostSeed: 6, host: playoffField[5], awaySeed: 11, away: playoffField[10], winnerPlays: "#3 Seed" },
+            { hostSeed: 7, host: playoffField[6], awaySeed: 10, away: playoffField[9], winnerPlays: "#2 Seed" },
+            { hostSeed: 8, host: playoffField[7], awaySeed: 9, away: playoffField[8], winnerPlays: "#1 Seed" }
+        ];
+
+        matchups.forEach(m => {
+            const box = document.createElement('div');
+            box.className = 'matchup-box';
+            box.innerHTML = `
+                <div class="matchup-round-title">On-Campus First Round (Winner to ${m.winnerPlays})</div>
+                <div class="seed-row host">
+                    <span>#${m.hostSeed} ${m.host ? m.host.team : 'TBD'}</span>
+                    <span style="font-size: 0.75rem; color: var(--accent-blue);">HOST</span>
+                </div>
+                <div class="seed-row">
+                    <span>#${m.awaySeed} ${m.away ? m.away.team : 'TBD'}</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">AWAY</span>
+                </div>
+            `;
+            firstRoundGrid.appendChild(box);
+        });
+    }
+
+    // --- INDIVIDUAL BALLOT INSPECTOR MODAL ---
+    function openVoterBallotModal(index) {
+        const b = communityBallots[index];
+        if (!b) return;
+
+        document.getElementById('voterBallotTitle').innerText = `${b.avatar || '👤'} ${b.voter}'s Ballot`;
+        const body = document.getElementById('voterBallotBody');
+        body.innerHTML = '';
+
+        b.ballot.forEach(item => {
+            const div = document.createElement('div');
+            div.style.cssText = "display: flex; justify-content: space-between; padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem;";
+            div.innerHTML = `
+                <span><strong style="color: var(--accent); width: 30px; display: inline-block;">#${item.rank}</strong> ${item.team}</span>
+                <span style="color: var(--text-muted); font-size: 0.8rem;">${26 - item.rank} pts</span>
+            `;
+            body.appendChild(div);
+        });
+
+        document.getElementById('voterBallotModal').classList.add('open');
+    }
+
+    function closeVoterBallotModal() {
+        document.getElementById('voterBallotModal').classList.remove('open');
+    }
+
+    // --- HTML5 CANVAS GRAPHIC EXPORT GENERATOR ---
+    function generatePollGraphic() {
+        const modal = document.getElementById('graphicModal');
+        const canvas = document.getElementById('pollCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = 1000;
+        canvas.height = 1350;
+
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grad.addColorStop(0, '#0f172a');
+        grad.addColorStop(1, '#020617');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 38px -apple-system, sans-serif';
+        ctx.fillText('ASSOCIATED BEST POLL', 50, 70);
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '20px -apple-system, sans-serif';
+        ctx.fillText(`Curry, College Football. • ${communityBallots.length} Ballots Aggregated • ${new Date().toLocaleDateString()}`, 50, 110);
+
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(50, 130);
+        ctx.lineTo(950, 130);
+        ctx.stroke();
+
+        const col1 = currentConsensusRanking.slice(0, 13);
+        const col2 = currentConsensusRanking.slice(13, 25);
+
+        const drawList = (items, startX, startY, startRank) => {
+            let y = startY;
+            items.forEach((item, i) => {
+                const rank = startRank + i;
+
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(startX, y - 28, 420, 56);
+
+                ctx.fillStyle = '#f59e0b';
+                ctx.font = 'bold 24px -apple-system, sans-serif';
+                ctx.fillText(`#${rank}`, startX + 15, y + 8);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 22px -apple-system, sans-serif';
+                ctx.fillText(item.team, startX + 75, y + 8);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '18px -apple-system, sans-serif';
+                const ptsText = `${item.points} pts${item.firstPlace > 0 ? ` (${item.firstPlace})` : ''}`;
+                ctx.fillText(ptsText, startX + 320, y + 8);
+
+                y += 68;
+            });
+        };
+
+        drawList(col1, 50, 190, 1);
+        drawList(col2, 530, 190, 14);
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '16px -apple-system, sans-serif';
+        const votersList = communityBallots.map(b => b.voter).join(', ') || 'No voters';
+        ctx.fillText(`VOTERS: ${votersList}`, 50, 1290);
+
+        const dlBtn = document.getElementById('downloadGraphicBtn');
+        dlBtn.href = canvas.toDataURL('image/png');
+        modal.classList.add('open');
+    }
+
+    function closeGraphicModal() {
+        document.getElementById('graphicModal').classList.remove('open');
+    }
+
+    function setPreviousWeekBaseline() {
+        const scores = {};
+        communityBallots.forEach(entry => {
+            entry.ballot.forEach(item => {
+                const team = item.team;
+                const points = 26 - item.rank;
+                if (!scores[team]) scores[team] = { points: 0, firstPlace: 0 };
+                scores[team].points += points;
+                if (item.rank === 1) scores[team].firstPlace += 1;
+            });
+        });
+
+        const sorted = Object.keys(scores).map(team => ({
+            team,
+            ...scores[team]
+        })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
+
+        if (sorted.length === 0) {
+            alert('Cannot set baseline: No ballots submitted yet.');
+            return;
+        }
+
+        previousWeekTop25 = sorted.slice(0, 25).map((t, idx) => ({
+            rank: idx + 1,
+            team: t.team
+        }));
+
+        localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
+        alert('Current Associated BEST Poll consensus saved as baseline!');
+        calculateCommunityPoll();
+    }
+
+    // --- JSON IMPORT / EXPORT ---
+    function exportData() {
+        const exportPayload = {
+            communityBallots,
+            previousWeekTop25
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "associated_best_poll_data.json");
+        dlAnchor.click();
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                    communityBallots = imported;
+                } else if (imported.communityBallots) {
+                    communityBallots = imported.communityBallots;
+                    if (imported.previousWeekTop25) previousWeekTop25 = imported.previousWeekTop25;
+                }
+                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
+                localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
+                pushToCloud();
+                calculateCommunityPoll();
+                alert('Associated BEST Poll data loaded successfully!');
+            } catch (err) {
+                alert('Invalid JSON file format.');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function resetAllBallots() {
+        if (confirm('Clear all submitted ballots and baselines from the Associated BEST Poll?')) {
+            communityBallots = [];
+            previousWeekTop25 = [];
+            localStorage.removeItem('cfb_community_ballots');
+            localStorage.removeItem('cfb_previous_week_top25');
+            pushToCloud();
+            calculateCommunityPoll();
+        }
+    }
+
+    // Initialize
+    updateProfileUI();
+    initBallotSlots();
+    populateFBSQuickSelectPool();
+    checkURLForSharedBallot();
+    fetchLiveSchedule();
+    syncWithCloud(true); // Silent cloud pull on initial load
+    setInterval(fetchLiveSchedule, 30000);
+</script>
+</body>
+</html>
