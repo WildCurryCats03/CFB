@@ -222,7 +222,7 @@
         .voter-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .voter-tag { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* 12-TEAM CFP BRACKET (FULL MULTI-ROUND PIPELINE) */
+        /* 12-TEAM CFP BRACKET */
         .cfp-bracket-wrap { display: flex; flex-direction: column; gap: 25px; }
         .bracket-round-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
         .bracket-round-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 6px; }
@@ -280,7 +280,6 @@
         </div>
     </header>
 
-    <!-- SECTION 1: LIVE WATCHABILITY GUIDE & SCORES -->
     <main id="guide" class="tab-content active">
         <div class="controls-bar">
             <div class="controls-row">
@@ -351,7 +350,6 @@
         </div>
     </main>
 
-    <!-- SECTION 2: TOP 25 BALLOT BUILDER -->
     <main id="ballot" class="tab-content">
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div style="font-size: 0.9rem; color: var(--text-muted);">
@@ -412,7 +410,6 @@
         </div>
     </main>
 
-    <!-- SECTION 3: ASSOCIATED BEST POLL RESULTS & WEEKLY ARCHIVES -->
     <main id="community" class="tab-content">
         <div class="community-section">
             <div>
@@ -510,7 +507,6 @@
         </div>
     </main>
 
-    <!-- SECTION 4: 12-TEAM CFP BRACKET (FULL MULTI-ROUND PIPELINE WITH NY6 BOWLS) -->
     <main id="playoff" class="tab-content">
         <div style="margin-bottom: 20px;">
             <h2 style="font-size: 1.35rem; font-weight: 800;">12-Team College Football Playoff Official Bracket</h2>
@@ -518,7 +514,6 @@
         </div>
 
         <div class="cfp-bracket-wrap">
-            <!-- ROUND 1: FIRST ROUND (ON-CAMPUS) -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🏈 First Round (On-Campus at Higher Seeds)</div>
@@ -527,7 +522,6 @@
                 <div class="games-grid" id="cfpFirstRoundGrid"></div>
             </div>
 
-            <!-- ROUND 2: QUARTERFINALS (NEW YEAR'S SIX BOWLS) -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🏆 Quarterfinals (New Year's Six Bowls)</div>
@@ -536,7 +530,6 @@
                 <div class="games-grid" id="cfpQuarterfinalsGrid"></div>
             </div>
 
-            <!-- ROUND 3: SEMIFINALS -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🌟 Semifinals</div>
@@ -545,7 +538,6 @@
                 <div class="games-grid" id="cfpSemifinalsGrid"></div>
             </div>
 
-            <!-- ROUND 4: NATIONAL CHAMPIONSHIP -->
             <div class="bracket-round-section" style="border-color: var(--accent);">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title" style="color: var(--accent);">👑 CFP National Championship Game</div>
@@ -557,7 +549,6 @@
     </main>
 </div>
 
-<!-- LIVE BOXSCORE / GAMECAST MODAL -->
 <div class="modal-overlay" id="boxscoreModal">
     <div class="modal-card boxscore-modal-card">
         <div class="modal-header">
@@ -570,7 +561,6 @@
     </div>
 </div>
 
-<!-- INDIVIDUAL BALLOT INSPECTOR MODAL -->
 <div class="modal-overlay" id="voterBallotModal">
     <div class="modal-card">
         <div class="modal-header">
@@ -581,7 +571,6 @@
     </div>
 </div>
 
-<!-- GRAPHIC EXPORT MODAL -->
 <div class="modal-overlay" id="graphicModal">
     <div class="modal-card" style="max-width: 650px; text-align: center;">
         <div class="modal-header">
@@ -596,7 +585,6 @@
     </div>
 </div>
 
-<!-- ACCOUNT / PROFILE MODAL -->
 <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
         <div class="modal-header">
@@ -746,6 +734,43 @@
         return favs.some(fav => identifiers.includes(fav));
     }
 
+    // --- UNIVERSAL BALLOT PARSER (BACKWARDS COMPATIBLE) ---
+    function parseAnyBallotPayload(data) {
+        let ballots = [];
+        let archives = {};
+        let prevTop25 = [];
+
+        if (Array.isArray(data)) {
+            if (data.length > 0 && data[0].rank && data[0].team) {
+                ballots = [{
+                    voter: "Imported Voter",
+                    avatar: "🏈",
+                    favorites: [],
+                    submittedAt: new Date().toLocaleDateString(),
+                    ballot: data
+                }];
+            } else {
+                ballots = data;
+            }
+        } else if (typeof data === 'object' && data !== null) {
+            if (data.record) {
+                return parseAnyBallotPayload(data.record);
+            }
+            if (data.communityBallots && Array.isArray(data.communityBallots)) {
+                ballots = data.communityBallots;
+            } else if (data.ballots && Array.isArray(data.ballots)) {
+                ballots = data.ballots;
+            } else if (data.ballot && Array.isArray(data.ballot)) {
+                ballots = [data];
+            }
+
+            if (data.archivedPolls) archives = data.archivedPolls;
+            if (data.previousWeekTop25) prevTop25 = data.previousWeekTop25;
+        }
+
+        return { ballots, archives, prevTop25 };
+    }
+
     // --- URL-BASED BALLOT IMPORT ---
     function checkURLForSharedBallot() {
         const params = new URLSearchParams(window.location.search);
@@ -816,11 +841,11 @@
             });
             const data = await res.json();
             
-            if (data && data.record) {
-                const ballots = Array.isArray(data.record) ? data.record : (data.record.ballots || []);
-                communityBallots = ballots;
-                if (data.record.archivedPolls) archivedPolls = data.record.archivedPolls;
-                if (data.record.previousWeekTop25) previousWeekTop25 = data.record.previousWeekTop25;
+            const parsed = parseAnyBallotPayload(data);
+            if (parsed.ballots.length > 0 || Object.keys(parsed.archives).length > 0) {
+                communityBallots = parsed.ballots;
+                if (Object.keys(parsed.archives).length > 0) archivedPolls = parsed.archives;
+                if (parsed.prevTop25.length > 0) previousWeekTop25 = parsed.prevTop25;
 
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
                 localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
@@ -1017,93 +1042,106 @@
                 }
             }
 
-            const parseEvents = (events, div) => (events || []).map(ev => {
-                const comp = ev.competitions[0];
-                const away = comp.competitors.find(c => c.homeAway === 'away');
-                const home = comp.competitors.find(c => c.homeAway === 'home');
-                const odds = comp.odds ? comp.odds[0] : null;
-                const situation = comp.situation || null;
+            const seenEventIds = new Set();
 
-                let isRedZone = false;
-                let downDistanceText = '';
+            const parseEvents = (events, defaultDiv) => {
+                const parsedList = [];
+                (events || []).forEach(ev => {
+                    if (seenEventIds.has(ev.id)) return;
+                    seenEventIds.add(ev.id);
 
-                if (situation) {
-                    const yardLine = situation.yardLine || 99;
-                    if (situation.isRedZone || (situation.possession && yardLine <= 20)) {
-                        isRedZone = true;
-                    }
-                    if (situation.down && situation.distance) {
-                        downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance} at ${situation.possessionText || ''}`;
-                    }
-                }
+                    const comp = ev.competitions[0];
+                    const away = comp.competitors.find(c => c.homeAway === 'away');
+                    const home = comp.competitors.find(c => c.homeAway === 'home');
+                    const odds = comp.odds ? comp.odds[0] : null;
+                    const situation = comp.situation || null;
 
-                const extractTeam = (competitor, isAway) => {
-                    const loc = competitor.team.location || competitor.team.name;
-                    const opp = isAway ? home.team.location : away.team.location;
+                    let isRedZone = false;
+                    let downDistanceText = '';
 
-                    allDivOneTeamsSet.add(loc);
-
-                    if (comp.status.type.state === 'post') {
-                        const win = competitor.winner;
-                        const tRes = getTeamResume(loc);
-                        tRes.prevOutcome = win ? 'W' : 'L';
-                        tRes.prevResult = `${win ? 'W' : 'L'} ${competitor.score}-${(isAway ? home.score : away.score)} vs ${opp}`;
+                    if (situation) {
+                        const yardLine = situation.yardLine || 99;
+                        if (situation.isRedZone || (situation.possession && yardLine <= 20)) {
+                            isRedZone = true;
+                        }
+                        if (situation.down && situation.distance) {
+                            downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance} at ${situation.possessionText || ''}`;
+                        }
                     }
 
-                    const hasPossession = situation && situation.possession === competitor.id;
-                    const teamInRedZone = isRedZone && situation && situation.possession === competitor.id;
+                    const extractTeam = (competitor, isAway) => {
+                        const loc = competitor.team.location || competitor.team.name;
+                        const opp = isAway ? home.team.location : away.team.location;
 
-                    return {
-                        id: competitor.id,
-                        name: loc,
-                        conference: TEAM_TO_CONF[loc] || (div === 'FCS' ? 'FCS' : 'FBS'),
-                        location: competitor.team.location,
-                        displayName: competitor.team.displayName,
-                        shortDisplayName: competitor.team.shortDisplayName,
-                        rank: competitor.curatedRank ? competitor.curatedRank.current : null,
-                        score: competitor.score || '0',
-                        linescores: competitor.linescores || [],
-                        logo: competitor.team.logo,
-                        hasPossession: hasPossession,
-                        inRedZone: teamInRedZone
+                        allDivOneTeamsSet.add(loc);
+
+                        if (comp.status.type.state === 'post') {
+                            const win = competitor.winner;
+                            const tRes = getTeamResume(loc);
+                            tRes.prevOutcome = win ? 'W' : 'L';
+                            tRes.prevResult = `${win ? 'W' : 'L'} ${competitor.score}-${(isAway ? home.score : away.score)} vs ${opp}`;
+                        }
+
+                        const hasPossession = situation && situation.possession === competitor.id;
+                        const teamInRedZone = isRedZone && situation && situation.possession === competitor.id;
+
+                        return {
+                            id: competitor.id,
+                            name: loc,
+                            conference: TEAM_TO_CONF[loc] || (defaultDiv === 'FCS' ? 'FCS' : 'FBS'),
+                            location: competitor.team.location,
+                            displayName: competitor.team.displayName,
+                            shortDisplayName: competitor.team.shortDisplayName,
+                            rank: competitor.curatedRank ? competitor.curatedRank.current : null,
+                            score: competitor.score || '0',
+                            linescores: competitor.linescores || [],
+                            logo: competitor.team.logo,
+                            hasPossession: hasPossession,
+                            inRedZone: teamInRedZone
+                        };
                     };
-                };
 
-                const gameDate = new Date(ev.date);
-                const hour = gameDate.getHours();
+                    const gameDate = new Date(ev.date);
+                    const hour = gameDate.getHours();
 
-                const awayScore = parseInt(away.score || '0');
-                const homeScore = parseInt(home.score || '0');
-                const isUnderdogLeading = (comp.status.type.state === 'in' && comp.status.period >= 3 && (
-                    (away.curatedRank && away.curatedRank.current <= 15 && (!home.curatedRank || home.curatedRank.current > 25) && homeScore >= awayScore - 7) ||
-                    (home.curatedRank && home.curatedRank.current <= 15 && (!away.curatedRank || away.curatedRank.current > 25) && awayScore >= homeScore - 7)
-                ));
+                    const awayScore = parseInt(away.score || '0');
+                    const homeScore = parseInt(home.score || '0');
+                    const isUnderdogLeading = (comp.status.type.state === 'in' && comp.status.period >= 3 && (
+                        (away.curatedRank && away.curatedRank.current <= 15 && (!home.curatedRank || home.curatedRank.current > 25) && homeScore >= awayScore - 7) ||
+                        (home.curatedRank && home.curatedRank.current <= 15 && (!away.curatedRank || away.curatedRank.current > 25) && awayScore >= homeScore - 7)
+                    ));
 
-                const parsed = {
-                    id: ev.id,
-                    div: (ev.name.includes("Sacramento State") || ev.name.includes("North Dakota State")) ? 'FBS' : div,
-                    dateRaw: gameDate,
-                    hour: hour,
-                    date: gameDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    network: comp.broadcasts && comp.broadcasts[0] ? comp.broadcasts[0].names[0] : 'TBD',
-                    state: comp.status.type.state,
-                    clock: comp.status.type.detail,
-                    period: comp.status.period,
-                    spread: odds ? odds.details : 'N/A',
-                    spreadValue: odds && odds.spread ? parseFloat(odds.spread) : null,
-                    isUpsetAlert: isUnderdogLeading,
-                    situation: {
-                        isRedZone: isRedZone,
-                        text: downDistanceText,
-                        raw: situation
-                    },
-                    away: extractTeam(away, true),
-                    home: extractTeam(home, false)
-                };
+                    const isAwayFBS = fbsTeamsSet.has(away.team.location);
+                    const isHomeFBS = fbsTeamsSet.has(home.team.location);
+                    let finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
 
-                parsed.rating = calculateWatchability(parsed);
-                return parsed;
-            });
+                    const parsed = {
+                        id: ev.id,
+                        div: finalDiv,
+                        dateRaw: gameDate,
+                        hour: hour,
+                        date: gameDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        network: comp.broadcasts && comp.broadcasts[0] ? comp.broadcasts[0].names[0] : 'TBD',
+                        state: comp.status.type.state,
+                        clock: comp.status.type.detail,
+                        period: comp.status.period,
+                        spread: odds ? odds.details : 'N/A',
+                        spreadValue: odds && odds.spread ? parseFloat(odds.spread) : null,
+                        isUpsetAlert: isUnderdogLeading,
+                        situation: {
+                            isRedZone: isRedZone,
+                            text: downDistanceText,
+                            raw: situation
+                        },
+                        away: extractTeam(away, true),
+                        home: extractTeam(home, false)
+                    };
+
+                    parsed.rating = calculateWatchability(parsed);
+                    parsedList.push(parsed);
+                });
+                return parsedList;
+            };
 
             gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
             renderGames();
@@ -1699,13 +1737,11 @@
         let voterCountText = "";
 
         if (selectedArchiveWeek !== 'current' && archivedPolls[selectedArchiveWeek]) {
-            // Viewing historical archive
             const archive = archivedPolls[selectedArchiveWeek];
             displayTop25 = archive.top25;
             displayORV = archive.orv || [];
             voterCountText = `Archived ${selectedArchiveWeek} (${archive.voters.length} Ballots • ${archive.date})`;
         } else {
-            // Viewing live consensus
             const scores = {};
             const teamVoters = {};
 
@@ -1741,7 +1777,6 @@
         const tbody = document.getElementById('pollResultsBody');
         tbody.innerHTML = '';
 
-        // Previous Week Lookup Map
         const prevRankMap = {};
         previousWeekTop25.forEach(p => prevRankMap[normalize(p.team)] = p.rank);
 
@@ -1914,7 +1949,7 @@
 
         const playoffField = [...top4Byes, ...remainingPool.slice(0, 8)];
 
-        // --- ROUND 1: FIRST ROUND (ON-CAMPUS) ---
+        // ROUND 1: FIRST ROUND (ON-CAMPUS)
         const firstRoundMatchups = [
             { id: "G1", hostSeed: 5, host: playoffField[4], awaySeed: 12, away: playoffField[11], winnerTo: "Peach Bowl vs #4" },
             { id: "G2", hostSeed: 6, host: playoffField[5], awaySeed: 11, away: playoffField[10], winnerTo: "Rose Bowl vs #3" },
@@ -1942,7 +1977,7 @@
             firstRoundGrid.appendChild(card);
         });
 
-        // --- ROUND 2: QUARTERFINALS (NEW YEAR'S SIX) ---
+        // ROUND 2: QUARTERFINALS (NEW YEAR'S SIX)
         const quarterfinalBowls = [
             { bowl: "Vrbo Fiesta Bowl", loc: "Glendale, AZ • State Farm Stadium", date: "Dec 31 • Evening", seed: 1, team: top4Byes[0], opp: "Winner #9 vs #8" },
             { bowl: "Chick-fil-A Peach Bowl", loc: "Atlanta, GA • Mercedes-Benz Stadium", date: "Jan 1 • 1:00 PM ET", seed: 4, team: top4Byes[3], opp: "Winner #12 vs #5" },
@@ -1971,7 +2006,7 @@
             quartersGrid.appendChild(card);
         });
 
-        // --- ROUND 3: SEMIFINALS ---
+        // ROUND 3: SEMIFINALS
         const semifinalBowls = [
             { bowl: "Capital One Orange Bowl", loc: "Miami Gardens, FL • Hard Rock Stadium", date: "Jan 8 • 7:30 PM ET", matchup: "Fiesta Bowl Winner vs. Peach Bowl Winner" },
             { bowl: "Goodyear Cotton Bowl Classic", loc: "Arlington, TX • AT&T Stadium", date: "Jan 9 • 7:30 PM ET", matchup: "Sugar Bowl Winner vs. Rose Bowl Winner" }
@@ -1998,7 +2033,7 @@
             semisGrid.appendChild(card);
         });
 
-        // --- ROUND 4: NATIONAL CHAMPIONSHIP ---
+        // ROUND 4: NATIONAL CHAMPIONSHIP
         const champCard = document.createElement('div');
         champCard.className = 'playoff-game-card';
         champCard.style.cssText = "background: linear-gradient(180deg, #151e2e, #0b0f19); border: 1.5px solid var(--accent);";
@@ -2118,7 +2153,7 @@
         document.getElementById('graphicModal').classList.remove('open');
     }
 
-    // --- JSON IMPORT / EXPORT ---
+    // --- JSON IMPORT / EXPORT (MERGE + BACKWARD COMPATIBLE) ---
     function exportData() {
         const exportPayload = {
             communityBallots,
@@ -2138,25 +2173,44 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const imported = JSON.parse(e.target.result);
-                if (Array.isArray(imported)) {
-                    communityBallots = imported;
-                } else if (imported.communityBallots) {
-                    communityBallots = imported.communityBallots;
-                    if (imported.archivedPolls) archivedPolls = imported.archivedPolls;
-                    if (imported.previousWeekTop25) previousWeekTop25 = imported.previousWeekTop25;
+                const rawJson = JSON.parse(e.target.result);
+                const parsed = parseAnyBallotPayload(rawJson);
+
+                if (parsed.ballots.length === 0) {
+                    alert('No valid ballots found in this JSON file.');
+                    return;
                 }
+
+                parsed.ballots.forEach(inBallot => {
+                    const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === (inBallot.voter || '').toLowerCase());
+                    if (idx >= 0) {
+                        communityBallots[idx] = inBallot;
+                    } else {
+                        communityBallots.push(inBallot);
+                    }
+                });
+
+                if (Object.keys(parsed.archives).length > 0) {
+                    archivedPolls = { ...archivedPolls, ...parsed.archives };
+                }
+                if (parsed.prevTop25.length > 0) {
+                    previousWeekTop25 = parsed.prevTop25;
+                }
+
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
                 localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
                 localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
+
                 pushToCloud();
                 calculateCommunityPoll();
-                alert('Associated BEST Poll data loaded successfully!');
+                alert(`Successfully imported & merged ${parsed.ballots.length} ballot(s)!`);
             } catch (err) {
-                alert('Invalid JSON file format.');
+                console.error(err);
+                alert('Invalid JSON file format. Make sure you selected a valid ballot JSON file.');
             }
         };
         reader.readAsText(file);
+        event.target.value = '';
     }
 
     function resetAllBallots() {
