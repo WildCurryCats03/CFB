@@ -191,21 +191,15 @@
         .res-win { color: var(--success); font-weight: 800; }
         .res-loss { color: var(--live-red); font-weight: 800; }
 
-        /* Associated BEST Poll Tables & Movement Badges */
+        /* Associated BEST Poll Tables */
         .community-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
         @media (max-width: 900px) { .community-section { grid-template-columns: 1fr; } }
 
         .poll-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-        .poll-table th, .poll-table td { padding: 10px 12px; text-align: left; }
+        .poll-table th, .poll-table td { padding: 10px 14px; text-align: left; }
         .poll-table th { background: #090d16; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
         .poll-table tr { border-bottom: 1px solid var(--border); }
         .poll-table tr:hover { background: var(--card-hover); }
-
-        .movement-badge { font-size: 0.75rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 2px; }
-        .move-up { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-        .move-down { background: rgba(239, 68, 68, 0.15); color: var(--live-red); }
-        .move-same { background: rgba(148, 163, 184, 0.1); color: var(--text-muted); }
-        .move-new { background: rgba(245, 158, 11, 0.15); color: var(--accent); }
 
         .poll-metadata-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-top: 15px; }
         .poll-metadata-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; letter-spacing: 0.5px; }
@@ -222,17 +216,13 @@
         .voter-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .voter-tag { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* 12-TEAM CFP BRACKET */
+        /* 12-TEAM CFP BRACKET (FULL MULTI-ROUND PIPELINE WITH NY6 BOWLS) */
         .cfp-bracket-wrap { display: flex; flex-direction: column; gap: 25px; }
         .bracket-round-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
         .bracket-round-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 6px; }
         .bracket-round-title { font-size: 1.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
         .bracket-round-dates { font-size: 0.8rem; color: var(--accent); font-weight: 700; background: rgba(245, 158, 11, 0.1); padding: 3px 8px; border-radius: 6px; }
 
-        .byes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-        .bye-card { background: var(--bg); border: 1.5px solid var(--accent); border-radius: 10px; padding: 14px; position: relative; }
-        .bye-badge { background: rgba(245, 158, 11, 0.2); color: var(--accent); font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; margin-bottom: 6px; display: inline-block; }
-        
         .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
         .playoff-game-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
         .game-meta-info { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 600; }
@@ -280,6 +270,7 @@
         </div>
     </header>
 
+    <!-- SECTION 1: LIVE WATCHABILITY GUIDE & SCORES -->
     <main id="guide" class="tab-content active">
         <div class="controls-bar">
             <div class="controls-row">
@@ -350,8 +341,9 @@
         </div>
     </main>
 
+    <!-- SECTION 2: TOP 25 BALLOT BUILDER -->
     <main id="ballot" class="tab-content">
-        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 10px;">
             <div style="font-size: 0.9rem; color: var(--text-muted);">
                 Submitting Ballot as: <strong style="color: #fff;" id="ballotSubmittingAs">Anonymous</strong>
                 <span style="display: block; font-size: 0.75rem; color: var(--accent);">Drag & drop slots or use ▲ / ▼ to reorder teams. Only FBS schools allowed in Top 25.</span>
@@ -410,51 +402,29 @@
         </div>
     </main>
 
+    <!-- SECTION 3: ASSOCIATED BEST POLL RESULTS -->
     <main id="community" class="tab-content">
         <div class="community-section">
             <div>
                 <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <h2 style="font-size: 1.35rem; font-weight: 800;">Associated BEST Poll</h2>
-                        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
-                            <label style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">Viewing Poll:</label>
-                            <select id="archiveWeekSelect" class="select-filter" style="padding: 4px 8px; font-size: 0.8rem;" onchange="handleArchiveWeekChange()">
-                                <option value="current">Current Live Consensus</option>
-                                <option value="Preseason">Preseason</option>
-                                <option value="Week 1">Week 1</option>
-                                <option value="Week 2">Week 2</option>
-                                <option value="Week 3">Week 3</option>
-                                <option value="Week 4">Week 4</option>
-                                <option value="Week 5">Week 5</option>
-                                <option value="Week 6">Week 6</option>
-                                <option value="Week 7">Week 7</option>
-                                <option value="Week 8">Week 8</option>
-                                <option value="Week 9">Week 9</option>
-                                <option value="Week 10">Week 10</option>
-                                <option value="Week 11">Week 11</option>
-                                <option value="Week 12">Week 12</option>
-                                <option value="Week 13">Week 13</option>
-                                <option value="Week 14">Week 14</option>
-                                <option value="Week 15">Week 15 (Championships)</option>
-                                <option value="Final">Final Postseason</option>
-                            </select>
-                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);" id="ballotCounter">0 ballots aggregated</p>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="syncWithCloud()">🔄 Sync Cloud</button>
-                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="archiveCurrentWeekPoll()">📦 Archive Current Week</button>
-                        <button class="btn btn-success" style="font-size: 0.78rem;" onclick="generatePollGraphic()">📸 Export Graphic</button>
+                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="syncWithCloud()">🔄 Sync Cloud Polls</button>
+                        <button class="btn btn-success" style="font-size: 0.78rem;" onclick="generatePollGraphic()">📸 Export Graphic for Group Chat</button>
+                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="setPreviousWeekBaseline()">Save Baseline</button>
                     </div>
                 </div>
                 
                 <table class="poll-table">
                     <thead>
                         <tr>
-                            <th style="width: 45px;">Rank</th>
-                            <th style="width: 55px;">Prev</th>
+                            <th style="width: 50px;">Rank</th>
                             <th>Team</th>
-                            <th style="width: 70px;">Points</th>
-                            <th style="width: 70px;">1st</th>
+                            <th style="width: 80px;">Points</th>
+                            <th style="width: 80px;">1st Votes</th>
                             <th>Voters</th>
                         </tr>
                     </thead>
@@ -507,6 +477,7 @@
         </div>
     </main>
 
+    <!-- SECTION 4: 12-TEAM CFP BRACKET -->
     <main id="playoff" class="tab-content">
         <div style="margin-bottom: 20px;">
             <h2 style="font-size: 1.35rem; font-weight: 800;">12-Team College Football Playoff Official Bracket</h2>
@@ -514,6 +485,7 @@
         </div>
 
         <div class="cfp-bracket-wrap">
+            <!-- ROUND 1: FIRST ROUND (ON-CAMPUS) -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🏈 First Round (On-Campus at Higher Seeds)</div>
@@ -522,6 +494,7 @@
                 <div class="games-grid" id="cfpFirstRoundGrid"></div>
             </div>
 
+            <!-- ROUND 2: QUARTERFINALS (NEW YEAR'S SIX BOWLS) -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🏆 Quarterfinals (New Year's Six Bowls)</div>
@@ -530,6 +503,7 @@
                 <div class="games-grid" id="cfpQuarterfinalsGrid"></div>
             </div>
 
+            <!-- ROUND 3: SEMIFINALS -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🌟 Semifinals</div>
@@ -538,6 +512,7 @@
                 <div class="games-grid" id="cfpSemifinalsGrid"></div>
             </div>
 
+            <!-- ROUND 4: NATIONAL CHAMPIONSHIP -->
             <div class="bracket-round-section" style="border-color: var(--accent);">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title" style="color: var(--accent);">👑 CFP National Championship Game</div>
@@ -549,6 +524,7 @@
     </main>
 </div>
 
+<!-- LIVE BOXSCORE / GAMECAST MODAL -->
 <div class="modal-overlay" id="boxscoreModal">
     <div class="modal-card boxscore-modal-card">
         <div class="modal-header">
@@ -561,6 +537,7 @@
     </div>
 </div>
 
+<!-- INDIVIDUAL BALLOT INSPECTOR MODAL -->
 <div class="modal-overlay" id="voterBallotModal">
     <div class="modal-card">
         <div class="modal-header">
@@ -571,6 +548,7 @@
     </div>
 </div>
 
+<!-- GRAPHIC EXPORT MODAL -->
 <div class="modal-overlay" id="graphicModal">
     <div class="modal-card" style="max-width: 650px; text-align: center;">
         <div class="modal-header">
@@ -585,6 +563,7 @@
     </div>
 </div>
 
+<!-- ACCOUNT / PROFILE MODAL -->
 <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
         <div class="modal-header">
@@ -711,7 +690,6 @@
     };
 
     let communityBallots = JSON.parse(localStorage.getItem('cfb_community_ballots')) || [];
-    let archivedPolls = JSON.parse(localStorage.getItem('cfb_archived_polls')) || {};
     let previousWeekTop25 = JSON.parse(localStorage.getItem('cfb_previous_week_top25')) || [];
     let gamesData = [];
     let currentFilter = 'all';
@@ -805,17 +783,15 @@
             const data = await res.json();
             
             if (data && data.record) {
-                const ballots = Array.isArray(data.record) ? data.record : (data.record.ballots || []);
+                const ballots = Array.isArray(data.record) ? data.record : (data.record.communityBallots || data.record.ballots || []);
                 communityBallots = ballots;
-                if (data.record.archivedPolls) archivedPolls = data.record.archivedPolls;
                 if (data.record.previousWeekTop25) previousWeekTop25 = data.record.previousWeekTop25;
 
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
-                localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
                 localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
 
                 calculateCommunityPoll();
-                if (!silent) alert('Successfully synced all ballots and archives from cloud database!');
+                if (!silent) alert('Successfully synced all ballots from cloud database!');
             }
         } catch (err) {
             console.error("Cloud fetch failed", err);
@@ -833,8 +809,7 @@
                     'X-Master-Key': JSONBIN_CONFIG.API_KEY
                 },
                 body: JSON.stringify({
-                    ballots: communityBallots,
-                    archivedPolls: archivedPolls,
+                    communityBallots: communityBallots,
                     previousWeekTop25: previousWeekTop25
                 })
             });
@@ -967,7 +942,7 @@
         return 'net-other';
     }
 
-    // --- LIVE SCHEDULE FETCH (ESPN API WITH FBS/FCS DEDUPLICATION) ---
+    // --- LIVE SCHEDULE FETCH (ESPN API) ---
     async function fetchLiveSchedule() {
         const grid = document.getElementById('gameGrid');
         const weekVal = document.getElementById('weekFilter').value;
@@ -1010,7 +985,6 @@
             const parseEvents = (events, defaultDiv) => {
                 const parsedList = [];
                 (events || []).forEach(ev => {
-                    // Stop duplicate FBS-FCS games returned by both endpoints
                     if (seenEventIds.has(ev.id)) return;
                     seenEventIds.add(ev.id);
 
@@ -1075,7 +1049,6 @@
                         (home.curatedRank && home.curatedRank.current <= 15 && (!away.curatedRank || away.curatedRank.current > 25) && awayScore >= homeScore - 7)
                     ));
 
-                    // Categorize division properly (FBS if either team is FBS)
                     const isAwayFBS = fbsTeamsSet.has(away.team.location);
                     const isHomeFBS = fbsTeamsSet.has(home.team.location);
                     let finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
@@ -1108,7 +1081,6 @@
                 return parsedList;
             };
 
-            // Parse FBS first, then FCS (duplicates skipped automatically)
             gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
             renderGames();
             
@@ -1654,128 +1626,85 @@
         validateBallotDuplicates();
     }
 
-    // --- ARCHIVING & PREV RANK CALCULATION ---
-    function archiveCurrentWeekPoll() {
-        const weekName = document.getElementById('archiveWeekSelect').value;
-        if (weekName === 'current') {
-            alert('Please select a specific week (e.g. Week 1, Week 2) to archive into.');
+    function setPreviousWeekBaseline() {
+        const scores = {};
+        communityBallots.forEach(entry => {
+            entry.ballot.forEach(item => {
+                const team = item.team;
+                const points = 26 - item.rank;
+                if (!scores[team]) scores[team] = { points: 0, firstPlace: 0 };
+                scores[team].points += points;
+                if (item.rank === 1) scores[team].firstPlace += 1;
+            });
+        });
+
+        const sorted = Object.keys(scores).map(team => ({
+            team,
+            ...scores[team]
+        })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
+
+        if (sorted.length === 0) {
+            alert('Cannot set baseline: No ballots submitted yet.');
             return;
         }
 
-        if (currentConsensusRanking.length === 0) {
-            alert('Cannot archive: No ballots currently submitted.');
-            return;
-        }
-
-        const top25Snapshot = currentConsensusRanking.slice(0, 25).map((t, idx) => ({
+        previousWeekTop25 = sorted.slice(0, 25).map((t, idx) => ({
             rank: idx + 1,
-            team: t.team,
-            points: t.points,
-            firstPlace: t.firstPlace
+            team: t.team
         }));
 
-        archivedPolls[weekName] = {
-            date: new Date().toLocaleDateString(),
-            voters: communityBallots.map(b => b.voter),
-            top25: top25Snapshot,
-            orv: currentConsensusRanking.slice(25).map(t => ({ team: t.team, points: t.points, firstPlace: t.firstPlace }))
-        };
-
-        previousWeekTop25 = top25Snapshot;
-
-        localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
         localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
         pushToCloud();
-        alert(`Successfully archived current poll as "${weekName}"!`);
-        calculateCommunityPoll();
-    }
-
-    function handleArchiveWeekChange() {
+        alert('Current Associated BEST Poll consensus saved as baseline!');
         calculateCommunityPoll();
     }
 
     // --- ASSOCIATED BEST POLL ENGINE & VOTER ANALYTICS ---
     function calculateCommunityPoll() {
-        const selectedArchiveWeek = document.getElementById('archiveWeekSelect').value;
-        
-        let displayTop25 = [];
-        let displayORV = [];
-        let voterCountText = "";
+        const scores = {};
+        const teamVoters = {};
 
-        if (selectedArchiveWeek !== 'current' && archivedPolls[selectedArchiveWeek]) {
-            const archive = archivedPolls[selectedArchiveWeek];
-            displayTop25 = archive.top25;
-            displayORV = archive.orv || [];
-            voterCountText = `Archived ${selectedArchiveWeek} (${archive.voters.length} Ballots • ${archive.date})`;
-        } else {
-            const scores = {};
-            const teamVoters = {};
+        communityBallots.forEach(entry => {
+            entry.ballot.forEach(item => {
+                const team = item.team;
+                const points = 26 - item.rank;
+                
+                if (!scores[team]) scores[team] = { points: 0, firstPlace: 0, ballots: 0 };
+                if (!teamVoters[team]) teamVoters[team] = [];
 
-            communityBallots.forEach(entry => {
-                entry.ballot.forEach(item => {
-                    const team = item.team;
-                    const points = 26 - item.rank;
-                    
-                    if (!scores[team]) scores[team] = { points: 0, firstPlace: 0, ballots: 0 };
-                    if (!teamVoters[team]) teamVoters[team] = [];
-
-                    scores[team].points += points;
-                    scores[team].ballots += 1;
-                    teamVoters[team].push(`${entry.voter} (#${item.rank})`);
-                    if (item.rank === 1) scores[team].firstPlace += 1;
-                });
+                scores[team].points += points;
+                scores[team].ballots += 1;
+                teamVoters[team].push(`${entry.voter} (#${item.rank})`);
+                if (item.rank === 1) scores[team].firstPlace += 1;
             });
+        });
 
-            const sorted = Object.keys(scores).map(team => ({
-                team,
-                voters: teamVoters[team],
-                ...scores[team]
-            })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
+        const sorted = Object.keys(scores).map(team => ({
+            team,
+            voters: teamVoters[team],
+            ...scores[team]
+        })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
 
-            currentConsensusRanking = sorted;
-            displayTop25 = sorted.slice(0, 25);
-            displayORV = sorted.slice(25);
-            voterCountText = `${communityBallots.length} Ballot(s) Aggregated in Associated BEST Poll`;
-        }
-
-        document.getElementById('ballotCounter').innerText = voterCountText;
+        currentConsensusRanking = sorted;
+        document.getElementById('ballotCounter').innerText = `${communityBallots.length} Ballot(s) Aggregated in Associated BEST Poll`;
         
         const tbody = document.getElementById('pollResultsBody');
         tbody.innerHTML = '';
 
-        const prevRankMap = {};
-        previousWeekTop25.forEach(p => prevRankMap[normalize(p.team)] = p.rank);
+        const currentTop25Teams = sorted.slice(0, 25);
+        const orvTeams = sorted.slice(25);
 
-        if (displayTop25.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 20px;">No poll data available.</td></tr>`;
+        if (sorted.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 20px;">No ballots submitted to Associated BEST Poll yet.</td></tr>`;
         } else {
-            displayTop25.forEach((entry, idx) => {
-                const curRank = idx + 1;
-                const prevRank = prevRankMap[normalize(entry.team)];
-                
-                let prevDisplay = 'NR';
-                let movementBadge = `<span class="movement-badge move-new">NEW</span>`;
-
-                if (prevRank) {
-                    prevDisplay = prevRank;
-                    const diff = prevRank - curRank;
-                    if (diff > 0) {
-                        movementBadge = `<span class="movement-badge move-up">▲${diff}</span>`;
-                    } else if (diff < 0) {
-                        movementBadge = `<span class="movement-badge move-down">▼${Math.abs(diff)}</span>`;
-                    } else {
-                        movementBadge = `<span class="movement-badge move-same">-</span>`;
-                    }
-                }
-
+            currentTop25Teams.forEach((entry, idx) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><strong>#${curRank}</strong></td>
-                    <td style="font-size: 0.82rem; color: var(--text-muted);">${prevDisplay} ${movementBadge}</td>
+                    <td><strong>#${idx + 1}</strong></td>
                     <td><strong>${entry.team}</strong></td>
                     <td><strong>${entry.points}</strong></td>
                     <td>${entry.firstPlace > 0 ? `🥇 ${entry.firstPlace}` : '-'}</td>
-                    <td style="font-size: 0.8rem; color: var(--text-muted);">${(entry.voters || []).join(', ') || '-'}</td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted);">${(entry.voters || []).join(', ')}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1783,10 +1712,10 @@
 
         // 1. Others Receiving Votes (ORV)
         const orvContainer = document.getElementById('orvContent');
-        if (displayORV.length === 0) {
+        if (orvTeams.length === 0) {
             orvContainer.innerText = "None";
         } else {
-            orvContainer.innerHTML = displayORV.map(t => {
+            orvContainer.innerHTML = orvTeams.map(t => {
                 const fp = t.firstPlace > 0 ? ` (${t.firstPlace})` : '';
                 return `<strong>${t.team}</strong> ${t.points}${fp}`;
             }).join(', ');
@@ -1795,9 +1724,9 @@
         // 2. Dropped Out Tracking
         const droppedContainer = document.getElementById('droppedOutContent');
         if (!previousWeekTop25 || previousWeekTop25.length === 0) {
-            droppedContainer.innerHTML = `<em>No previous week baseline saved. Click "Archive Current Week" or "Save Baseline" above to begin tracking.</em>`;
+            droppedContainer.innerHTML = `<em>No previous week baseline saved. Click "Save Baseline" above to begin tracking.</em>`;
         } else {
-            const currentNames = displayTop25.map(t => normalize(t.team));
+            const currentNames = currentTop25Teams.map(t => normalize(t.team));
             const droppedOut = previousWeekTop25.filter(prev => !currentNames.includes(normalize(prev.team)));
 
             if (droppedOut.length === 0) {
@@ -1808,7 +1737,7 @@
         }
 
         // 3. Voter Analytics
-        calculateVoterAnalytics(displayTop25);
+        calculateVoterAnalytics(currentTop25Teams);
 
         // 4. Voter Directory
         const vContainer = document.getElementById('votersDirectoryList');
@@ -1836,7 +1765,7 @@
         }
 
         // 5. Build 12-Team CFP Bracket
-        project12TeamPlayoff(displayTop25);
+        project12TeamPlayoff(sorted);
     }
 
     function calculateVoterAnalytics(consensusTop25) {
@@ -2119,11 +2048,10 @@
         document.getElementById('graphicModal').classList.remove('open');
     }
 
-    // --- JSON IMPORT / EXPORT ---
+    // --- JSON IMPORT / EXPORT (CLEAN ORIGINAL LOGIC WITH COMPATIBILITY) ---
     function exportData() {
         const exportPayload = {
             communityBallots,
-            archivedPolls,
             previousWeekTop25
         };
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPayload, null, 2));
@@ -2144,11 +2072,16 @@
                     communityBallots = imported;
                 } else if (imported.communityBallots) {
                     communityBallots = imported.communityBallots;
-                    if (imported.archivedPolls) archivedPolls = imported.archivedPolls;
                     if (imported.previousWeekTop25) previousWeekTop25 = imported.previousWeekTop25;
+                } else if (imported.ballot && Array.isArray(imported.ballot)) {
+                    const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === (imported.voter || '').toLowerCase());
+                    if (idx >= 0) {
+                        communityBallots[idx] = imported;
+                    } else {
+                        communityBallots.push(imported);
+                    }
                 }
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
-                localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
                 localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
                 pushToCloud();
                 calculateCommunityPoll();
@@ -2158,15 +2091,14 @@
             }
         };
         reader.readAsText(file);
+        event.target.value = '';
     }
 
     function resetAllBallots() {
         if (confirm('Clear all submitted ballots and baselines from the Associated BEST Poll?')) {
             communityBallots = [];
-            archivedPolls = {};
             previousWeekTop25 = [];
             localStorage.removeItem('cfb_community_ballots');
-            localStorage.removeItem('cfb_archived_polls');
             localStorage.removeItem('cfb_previous_week_top25');
             pushToCloud();
             calculateCommunityPoll();
