@@ -615,7 +615,7 @@
 <script>
     // --- LIVE CLOUD SYNC CONFIG (JSONBin.io) ---
     const JSONBIN_CONFIG = {
-        BIN_ID: "6a95f2fcda38895dfe281ffb",
+        BIN_ID: "6a9733d5da38895dfe2c963f",
         API_KEY: "$2a$10$KgzmQJaMF6kVUe1BKpgvd.E2jKa4EWVWj6tuvZRcGQ/dxWjOrfpcm"
     };
 
@@ -734,43 +734,6 @@
         return favs.some(fav => identifiers.includes(fav));
     }
 
-    // --- UNIVERSAL BALLOT PARSER (BACKWARDS COMPATIBLE) ---
-    function parseAnyBallotPayload(data) {
-        let ballots = [];
-        let archives = {};
-        let prevTop25 = [];
-
-        if (Array.isArray(data)) {
-            if (data.length > 0 && data[0].rank && data[0].team) {
-                ballots = [{
-                    voter: "Imported Voter",
-                    avatar: "🏈",
-                    favorites: [],
-                    submittedAt: new Date().toLocaleDateString(),
-                    ballot: data
-                }];
-            } else {
-                ballots = data;
-            }
-        } else if (typeof data === 'object' && data !== null) {
-            if (data.record) {
-                return parseAnyBallotPayload(data.record);
-            }
-            if (data.communityBallots && Array.isArray(data.communityBallots)) {
-                ballots = data.communityBallots;
-            } else if (data.ballots && Array.isArray(data.ballots)) {
-                ballots = data.ballots;
-            } else if (data.ballot && Array.isArray(data.ballot)) {
-                ballots = [data];
-            }
-
-            if (data.archivedPolls) archives = data.archivedPolls;
-            if (data.previousWeekTop25) prevTop25 = data.previousWeekTop25;
-        }
-
-        return { ballots, archives, prevTop25 };
-    }
-
     // --- URL-BASED BALLOT IMPORT ---
     function checkURLForSharedBallot() {
         const params = new URLSearchParams(window.location.search);
@@ -841,11 +804,11 @@
             });
             const data = await res.json();
             
-            const parsed = parseAnyBallotPayload(data);
-            if (parsed.ballots.length > 0 || Object.keys(parsed.archives).length > 0) {
-                communityBallots = parsed.ballots;
-                if (Object.keys(parsed.archives).length > 0) archivedPolls = parsed.archives;
-                if (parsed.prevTop25.length > 0) previousWeekTop25 = parsed.prevTop25;
+            if (data && data.record) {
+                const ballots = Array.isArray(data.record) ? data.record : (data.record.ballots || []);
+                communityBallots = ballots;
+                if (data.record.archivedPolls) archivedPolls = data.record.archivedPolls;
+                if (data.record.previousWeekTop25) previousWeekTop25 = data.record.previousWeekTop25;
 
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
                 localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
@@ -1004,7 +967,7 @@
         return 'net-other';
     }
 
-    // --- LIVE SCHEDULE FETCH (ESPN API) ---
+    // --- LIVE SCHEDULE FETCH (ESPN API WITH FBS/FCS DEDUPLICATION) ---
     async function fetchLiveSchedule() {
         const grid = document.getElementById('gameGrid');
         const weekVal = document.getElementById('weekFilter').value;
@@ -1047,6 +1010,7 @@
             const parseEvents = (events, defaultDiv) => {
                 const parsedList = [];
                 (events || []).forEach(ev => {
+                    // Stop duplicate FBS-FCS games returned by both endpoints
                     if (seenEventIds.has(ev.id)) return;
                     seenEventIds.add(ev.id);
 
@@ -1111,6 +1075,7 @@
                         (home.curatedRank && home.curatedRank.current <= 15 && (!away.curatedRank || away.curatedRank.current > 25) && awayScore >= homeScore - 7)
                     ));
 
+                    // Categorize division properly (FBS if either team is FBS)
                     const isAwayFBS = fbsTeamsSet.has(away.team.location);
                     const isHomeFBS = fbsTeamsSet.has(home.team.location);
                     let finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
@@ -1143,6 +1108,7 @@
                 return parsedList;
             };
 
+            // Parse FBS first, then FCS (duplicates skipped automatically)
             gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
             renderGames();
             
@@ -2153,7 +2119,7 @@
         document.getElementById('graphicModal').classList.remove('open');
     }
 
-    // --- JSON IMPORT / EXPORT (MERGE + BACKWARD COMPATIBLE) ---
+    // --- JSON IMPORT / EXPORT ---
     function exportData() {
         const exportPayload = {
             communityBallots,
@@ -2173,44 +2139,25 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const rawJson = JSON.parse(e.target.result);
-                const parsed = parseAnyBallotPayload(rawJson);
-
-                if (parsed.ballots.length === 0) {
-                    alert('No valid ballots found in this JSON file.');
-                    return;
+                const imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                    communityBallots = imported;
+                } else if (imported.communityBallots) {
+                    communityBallots = imported.communityBallots;
+                    if (imported.archivedPolls) archivedPolls = imported.archivedPolls;
+                    if (imported.previousWeekTop25) previousWeekTop25 = imported.previousWeekTop25;
                 }
-
-                parsed.ballots.forEach(inBallot => {
-                    const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === (inBallot.voter || '').toLowerCase());
-                    if (idx >= 0) {
-                        communityBallots[idx] = inBallot;
-                    } else {
-                        communityBallots.push(inBallot);
-                    }
-                });
-
-                if (Object.keys(parsed.archives).length > 0) {
-                    archivedPolls = { ...archivedPolls, ...parsed.archives };
-                }
-                if (parsed.prevTop25.length > 0) {
-                    previousWeekTop25 = parsed.prevTop25;
-                }
-
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
                 localStorage.setItem('cfb_archived_polls', JSON.stringify(archivedPolls));
                 localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
-
                 pushToCloud();
                 calculateCommunityPoll();
-                alert(`Successfully imported & merged ${parsed.ballots.length} ballot(s)!`);
+                alert('Associated BEST Poll data loaded successfully!');
             } catch (err) {
-                console.error(err);
-                alert('Invalid JSON file format. Make sure you selected a valid ballot JSON file.');
+                alert('Invalid JSON file format.');
             }
         };
         reader.readAsText(file);
-        event.target.value = '';
     }
 
     function resetAllBallots() {
