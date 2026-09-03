@@ -17,7 +17,6 @@
             --success: #10b981;
             --live-red: #ef4444;
             --fav-gold: #fbbf24;
-            --redzone-glow: #dc2626;
             --heisman-bronze: #cd7f32;
         }
 
@@ -25,33 +24,24 @@
         body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
         .container { max-width: 1320px; margin: 0 auto; }
         
-        /* Header & Nav */
         header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        h1 { font-size: 1.55rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        h1 { font-size: 1.55rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; }
         .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         nav { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tab-btn { background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+        .tab-btn { background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem; transition: 0.2s; text-decoration: none; }
         .tab-btn.active, .tab-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
         .user-account-btn { display: flex; align-items: center; gap: 6px; background: #1e293b; border: 1px solid var(--border); color: #fff; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
-        .user-account-btn:hover { border-color: var(--accent); }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Controls & Filter Bar */
         .controls-bar { display: flex; flex-direction: column; gap: 12px; background: var(--card-bg); padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
         .controls-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .filters { display: flex; gap: 6px; flex-wrap: wrap; }
         .filter-btn { background: #0b0f19; border: 1px solid var(--border); color: var(--text); padding: 6px 11px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
         .filter-btn.active { background: var(--accent); color: #000; font-weight: 700; border-color: var(--accent); }
-
         .select-filter { background: #0b0f19; border: 1px solid var(--border); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; outline: none; cursor: pointer; }
-        .toggle-wrapper { display: flex; align-items: center; gap: 8px; }
-        .spoiler-btn { background: #1e293b; border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
-        .spoiler-btn.active { background: #6366f1; border-color: #6366f1; }
 
-        /* Broadcast Badges */
         .net-tag { font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
         .net-abc { background: #111827; color: #fbbf24; border: 1px solid #374151; }
         .net-fox { background: #1e3a8a; color: #fff; }
@@ -60,211 +50,104 @@
         .net-nbc { background: #4338ca; color: #fff; }
         .net-other { background: #334155; color: #cbd5e1; }
 
-        /* Game Cards & Redzone Effects */
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; }
-        .game-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.2s; cursor: pointer; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px; }
+        .game-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform 0.15s; }
         .game-card:hover { transform: translateY(-2px); border-color: var(--accent-blue); }
-        .game-card.is-favorite-match { border: 1.5px solid var(--fav-gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.15); }
-        
-        .game-card.in-redzone {
-            border: 1.5px solid var(--redzone-glow) !important;
-            box-shadow: 0 0 16px rgba(220, 38, 38, 0.45);
-            animation: redzonePulse 2s infinite ease-in-out;
-        }
+        .game-card.is-favorite-match { border: 1.5px solid var(--fav-gold); }
+        .game-card.in-redzone { border: 1.5px solid var(--live-red); box-shadow: 0 0 12px rgba(220, 38, 38, 0.4); }
 
-        @keyframes redzonePulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(220, 38, 38, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.7); }
-        }
+        .redzone-banner { background: #dc2626; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
+        .upset-banner { background: #ea580c; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
+        .fav-badge { font-size: 0.7rem; font-weight: 800; color: var(--fav-gold); }
 
-        .redzone-banner { background: linear-gradient(90deg, #dc2626, #991b1b); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; animation: blink 1.2s infinite; }
-        .upset-banner { background: linear-gradient(90deg, #ea580c, #c2410c); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-
-        .fav-badge { position: absolute; top: -10px; right: 12px; background: var(--fav-gold); color: #000; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .game-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+        .game-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
         .status-badge { font-weight: 700; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
         .status-in { background: rgba(239, 68, 68, 0.2); color: var(--live-red); }
         .status-pre { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
         .status-post { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); }
 
-        .team-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 4px 6px; border-radius: 6px; transition: background 0.3s; }
-        .team-row.has-possession { background: rgba(255, 255, 255, 0.04); }
-        .team-row.team-in-redzone { background: rgba(220, 38, 38, 0.15); border-left: 3px solid var(--live-red); }
-
+        .team-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding: 4px 6px; border-radius: 6px; }
         .team-meta { display: flex; align-items: center; gap: 8px; }
-        .team-logo { width: 24px; height: 24px; object-fit: contain; }
-        .team-name { font-weight: 700; font-size: 1rem; }
-        .team-name.highlight-fav { color: var(--fav-gold); text-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
+        .team-logo { width: 22px; height: 22px; object-fit: contain; }
+        .team-name { font-weight: 700; font-size: 0.95rem; }
+        .team-name.highlight-fav { color: var(--fav-gold); }
         .team-rank { color: var(--accent); font-size: 0.8rem; font-weight: 800; margin-right: 4px; }
-        .possession-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
+        .possession-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; }
+        .score { font-size: 1.15rem; font-weight: 800; }
+
+        .hide-spoilers .score, .hide-spoilers .live-clock { filter: blur(5px); user-select: none; transition: filter 0.2s; }
+        .hide-spoilers .game-card:hover .score, .hide-spoilers .game-card:hover .live-clock { filter: blur(0); }
+
+        .poll-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
+        @media (max-width: 900px) { .poll-layout { grid-template-columns: 1fr; } }
         
-        .score { font-size: 1.2rem; font-weight: 800; transition: transform 0.2s; }
-        .score.score-updated { animation: scorePop 1.2s ease-out; }
-        @keyframes scorePop {
-            0% { transform: scale(1.4); color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-            100% { transform: scale(1); color: inherit; }
-        }
-        
-        .hide-spoilers .score, .hide-spoilers .live-clock, .hide-spoilers .situation-text {
-            filter: blur(5px);
-            user-select: none;
-            transition: filter 0.2s;
-        }
-        .hide-spoilers .game-card:hover .score,
-        .hide-spoilers .game-card:hover .live-clock,
-        .hide-spoilers .game-card:hover .situation-text {
-            filter: blur(0);
-        }
-
-        .situation-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-        .click-hint { font-size: 0.7rem; color: var(--accent-blue); text-align: right; margin-top: 4px; }
-
-        .game-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
-        .fire-rating { color: var(--accent); font-weight: bold; }
-
-        /* BOXSCORE MODAL STYLES */
-        .boxscore-modal-card { max-width: 820px; width: 100%; max-height: 90vh; overflow-y: auto; }
-        .boxscore-header-score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; padding: 20px; background: var(--bg); border-radius: 12px; margin-bottom: 20px; text-align: center; }
-        .box-team { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .box-team img { width: 52px; height: 52px; object-fit: contain; }
-        .box-team-name { font-weight: 800; font-size: 1.25rem; }
-        .box-score-center { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .box-score-num { font-size: 2.3rem; font-weight: 900; color: #fff; }
-        
-        .drive-intel-box { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.95rem; text-align: center; }
-        .drive-intel-box.redzone { background: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.3); }
-
-        .linescore-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.95rem; text-align: center; background: var(--bg); border-radius: 8px; overflow: hidden; }
-        .linescore-table th, .linescore-table td { padding: 10px 12px; border: 1px solid var(--border); }
-        .linescore-table th { background: #070a12; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
-
-        .stat-comp-container { max-width: 680px; margin: 0 auto; background: var(--bg); border-radius: 12px; padding: 18px 24px; border: 1px solid var(--border); }
-        .stat-comp-table { width: 100%; border-collapse: collapse; }
-        .stat-comp-table tr { border-bottom: 1px solid var(--border); }
-        .stat-comp-table tr:last-child { border-bottom: none; }
-        .stat-comp-table td { padding: 12px 8px; }
-        .stat-label { color: var(--text-muted); text-align: center; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; width: 40%; }
-        .stat-val-left { font-weight: 800; font-size: 1.15rem; text-align: center; width: 30%; color: #fff; }
-        .stat-val-right { font-weight: 800; font-size: 1.15rem; text-align: center; width: 30%; color: #fff; }
-
-        /* Top 25 Ballot Builder Layout */
-        .poll-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: start; }
-        @media (max-width: 950px) { .poll-layout { grid-template-columns: 1fr; } }
-        
-        .ballot-list { max-height: 700px; overflow-y: auto; padding-right: 5px; }
-        .ballot-slot { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 6px 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid var(--border); transition: border-color 0.2s, background 0.2s; cursor: grab; }
-        .ballot-slot.dragging { opacity: 0.4; border-color: var(--accent-blue); }
-        .ballot-slot.drag-over { border-top: 2px solid var(--accent); background: #1e293b; }
+        .ballot-list { max-height: 680px; overflow-y: auto; padding-right: 5px; }
+        .ballot-slot { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 6px 12px; border-radius: 6px; margin-bottom: 6px; border: 1px solid var(--border); }
         .ballot-slot.has-duplicate { border-color: var(--live-red); background: rgba(239, 68, 68, 0.08); }
-        .drag-handle { color: var(--text-muted); cursor: grab; font-size: 0.85rem; user-select: none; }
-        .rank-num { width: 30px; font-weight: 800; color: var(--accent); font-size: 0.9rem; }
+        .rank-num { width: 28px; font-weight: 800; color: var(--accent); font-size: 0.9rem; }
         .team-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-size: 0.95rem; outline: none; }
         .team-input:focus { border-bottom: 1px solid var(--accent-blue); }
-        
-        .slot-actions { display: flex; gap: 2px; }
-        .slot-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 2px 4px; border-radius: 3px; }
-        .slot-btn:hover { background: var(--card-hover); color: #fff; }
+        .slot-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 2px 4px; }
 
-        /* Team Picker & Intel Box */
         .team-picker { background: var(--card-bg); padding: 16px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
         .picker-controls { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; }
-        @media (max-width: 500px) { .picker-controls { grid-template-columns: 1fr; } }
-        
-        .form-select { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; outline: none; font-size: 0.85rem; }
-        .team-search { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; outline: none; font-size: 0.85rem; }
-        
-        .quick-select-list { max-height: 250px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
-        .quick-team-btn { background: var(--card-hover); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: 0.15s; }
+        .quick-select-list { max-height: 240px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; }
+        .quick-team-btn { background: var(--card-hover); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
         .quick-team-btn:hover { background: var(--accent-blue); }
         .quick-team-btn.active-selected { border-color: var(--accent); background: #334155; }
         .quick-team-btn.is-slotted { opacity: 0.35; text-decoration: line-through; }
 
-        .team-intel-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .team-intel-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
         .team-intel-header { display: flex; justify-content: space-between; align-items: center; }
-        .team-intel-title { font-size: 1.1rem; font-weight: 800; color: #fff; }
-        .team-intel-conf { font-size: 0.75rem; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-        .team-intel-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; background: var(--card-bg); padding: 8px 10px; border-radius: 6px; }
-        .team-intel-stats span { color: var(--text-muted); }
-        .team-intel-stats strong { color: #fff; margin-left: 4px; }
-        .team-prev-game { font-size: 0.85rem; color: var(--text-muted); }
-        .team-prev-game strong { color: #fff; }
-        .res-win { color: var(--success); font-weight: 800; }
-        .res-loss { color: var(--live-red); font-weight: 800; }
+        .team-intel-title { font-size: 1.05rem; font-weight: 800; }
+        .team-intel-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; background: var(--card-bg); padding: 6px 8px; border-radius: 6px; }
 
-        /* Full-Width Heisman Ballot Card */
-        .heisman-ballot-card { background: var(--card-bg); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 18px 20px; margin-top: 25px; }
-        .heisman-title { font-size: 1.1rem; font-weight: 800; color: #f59e0b; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-        .heisman-input-row { display: grid; grid-template-columns: 140px 1.5fr 1.2fr; gap: 10px; margin-bottom: 10px; align-items: center; }
-        @media (max-width: 650px) { .heisman-input-row { grid-template-columns: 1fr; } }
-        .heisman-rank-badge { font-weight: 800; font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; text-align: center; }
+        .heisman-ballot-card { background: var(--card-bg); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 16px; margin-top: 20px; }
+        .heisman-title { font-size: 1.1rem; font-weight: 800; color: #f59e0b; margin-bottom: 6px; }
+        .heisman-input-row { display: grid; grid-template-columns: 130px 1.5fr 1.2fr; gap: 8px; margin-bottom: 8px; align-items: center; }
+        @media (max-width: 600px) { .heisman-input-row { grid-template-columns: 1fr; } }
+        .heisman-rank-badge { font-weight: 800; font-size: 0.8rem; padding: 6px; border-radius: 6px; text-align: center; }
         .h-gold { background: rgba(245, 158, 11, 0.15); color: var(--accent); border: 1px solid var(--accent); }
         .h-silver { background: rgba(148, 163, 184, 0.15); color: #e2e8f0; border: 1px solid #94a3b8; }
         .h-bronze { background: rgba(205, 127, 50, 0.15); color: var(--heisman-bronze); border: 1px solid var(--heisman-bronze); }
-        .heisman-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-top: 15px; }
+        .heisman-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border); margin-top: 15px; }
         .heisman-table th, .heisman-table td { padding: 8px 12px; text-align: left; }
         .heisman-table th { background: #090d16; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
         .heisman-table tr { border-bottom: 1px solid var(--border); }
 
-        /* Associated BEST Poll Tables */
         .community-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
         @media (max-width: 900px) { .community-section { grid-template-columns: 1fr; } }
-
-        .poll-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-        .poll-table th, .poll-table td { padding: 10px 14px; text-align: left; }
+        .poll-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border); }
+        .poll-table th, .poll-table td { padding: 10px 12px; text-align: left; }
         .poll-table th { background: #090d16; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
         .poll-table tr { border-bottom: 1px solid var(--border); }
-        .poll-table tr:hover { background: var(--card-hover); }
-
-        .poll-metadata-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-top: 15px; }
-        .poll-metadata-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; letter-spacing: 0.5px; }
-        .poll-metadata-content { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+        .poll-metadata-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 0.85rem; }
 
         .analytics-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 15px; }
-        .analytics-award { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .analytics-award:last-child { margin-bottom: 0; }
-        .award-icon { font-size: 1.4rem; }
+        .voter-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
 
-        .voter-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.15s; }
-        .voter-card:hover { border-color: var(--accent-blue); transform: translateX(3px); }
-        .voter-info { display: flex; align-items: center; gap: 10px; }
-        .voter-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-        .voter-tag { font-size: 0.75rem; color: var(--text-muted); }
+        .cfp-bracket-wrap { display: flex; flex-direction: column; gap: 20px; }
+        .bracket-round-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+        .bracket-round-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+        .playoff-game-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .bracket-team-slot { display: flex; justify-content: space-between; padding: 6px 8px; background: var(--card-bg); border-radius: 4px; font-size: 0.85rem; font-weight: 600; }
+        .bracket-team-slot.higher-seed { border-left: 3px solid var(--accent-blue); }
+        .bracket-team-slot.bye-seed { border-left: 3px solid var(--accent); }
 
-        /* 12-TEAM CFP BRACKET */
-        .cfp-bracket-wrap { display: flex; flex-direction: column; gap: 25px; }
-        .bracket-round-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
-        .bracket-round-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 6px; }
-        .bracket-round-title { font-size: 1.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .bracket-round-dates { font-size: 0.8rem; color: var(--accent); font-weight: 700; background: rgba(245, 158, 11, 0.1); padding: 3px 8px; border-radius: 6px; }
-
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
-        .playoff-game-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
-        .game-meta-info { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 600; }
-        .bowl-name { color: var(--accent-blue); font-weight: 800; }
-        
-        .bracket-team-slot { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; background: var(--card-bg); border-radius: 6px; margin-bottom: 4px; font-size: 0.9rem; }
-        .bracket-team-slot.higher-seed { border-left: 3px solid var(--accent-blue); font-weight: 700; }
-        .bracket-team-slot.bye-seed { border-left: 3px solid var(--accent); font-weight: 700; }
-
-        .btn { background: var(--accent-blue); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        .btn { background: var(--accent-blue); color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
         .btn-success { background: var(--success); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-        .actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
+        .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
 
-        /* Modals */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.open { display: flex; }
-        .modal-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; max-width: 550px; width: 100%; padding: 24px; }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; max-width: 600px; width: 100%; padding: 20px; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
-        .form-input { width: 100%; padding: 9px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; }
+        .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.9rem; }
         .fav-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .fav-chip { background: rgba(251, 191, 36, 0.15); color: var(--fav-gold); border: 1px solid rgba(251, 191, 36, 0.3); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
-        .fav-chip span { cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -274,11 +157,11 @@
         <h1>🏈 Curry, College Football.</h1>
         <div class="header-actions">
             <nav>
-                <button class="tab-btn active" onclick="switchTab('guide')">Live Slate</button>
-                <button class="tab-btn" onclick="switchTab('ballot')">My Ballot</button>
-                <button class="tab-btn" onclick="switchTab('community')">Associated BEST Poll</button>
-                <button class="tab-btn" onclick="switchTab('playoff')">12-Team CFP Bracket</button>
-                <button class="tab-btn" onclick="switchTab('suggestions')">💡 Suggestions</button>
+                <button class="tab-btn active" onclick="switchTab('guide', this)">Live Slate</button>
+                <button class="tab-btn" onclick="switchTab('ballot', this)">My Ballot</button>
+                <button class="tab-btn" onclick="switchTab('community', this)">Associated BEST Poll</button>
+                <button class="tab-btn" onclick="switchTab('playoff', this)">12-Team CFP Bracket</button>
+                <button class="tab-btn" onclick="switchTab('suggestions', this)">💡 Suggestions</button>
             </nav>
             <button class="user-account-btn" onclick="openProfileModal()">
                 <span id="userAvatarPreview">👤</span>
@@ -287,7 +170,7 @@
         </div>
     </header>
 
-    <!-- SECTION 1: LIVE WATCHABILITY GUIDE & SCORES -->
+    <!-- TAB 1: LIVE SLATE -->
     <main id="guide" class="tab-content active">
         <div class="controls-bar">
             <div class="controls-row">
@@ -295,87 +178,61 @@
                     <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted);">Season / Week:</label>
                     <select id="weekFilter" class="select-filter" onchange="fetchLiveSchedule()">
                         <option value="current">Current Live Slate</option>
-                        <option value="1">Week 1</option>
-                        <option value="2">Week 2</option>
-                        <option value="3">Week 3</option>
-                        <option value="4">Week 4</option>
-                        <option value="5">Week 5</option>
-                        <option value="6">Week 6</option>
-                        <option value="7">Week 7</option>
-                        <option value="8">Week 8</option>
-                        <option value="9">Week 9</option>
-                        <option value="10">Week 10</option>
-                        <option value="11">Week 11</option>
-                        <option value="12">Week 12</option>
-                        <option value="13">Week 13</option>
-                        <option value="14">Week 14</option>
-                        <option value="15">Week 15 (Championships)</option>
+                        <option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option>
+                        <option value="4">Week 4</option><option value="5">Week 5</option><option value="6">Week 6</option>
+                        <option value="7">Week 7</option><option value="8">Week 8</option><option value="9">Week 9</option>
+                        <option value="10">Week 10</option><option value="11">Week 11</option><option value="12">Week 12</option>
+                        <option value="13">Week 13</option><option value="14">Week 14</option><option value="15">Week 15</option>
                     </select>
-
-                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-left: 6px;">Conference:</label>
+                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted);">Conf:</label>
                     <select id="scoreConfFilter" class="select-filter" onchange="renderGames()">
                         <option value="ALL">All Conferences</option>
-                        <option value="SEC">SEC</option>
-                        <option value="Big Ten">Big Ten</option>
-                        <option value="Big 12">Big 12</option>
-                        <option value="ACC">ACC</option>
-                        <option value="Pac-12">Pac-12</option>
-                        <option value="Mountain West">Mountain West</option>
-                        <option value="American">American (AAC)</option>
-                        <option value="Sun Belt">Sun Belt</option>
-                        <option value="MAC">MAC</option>
-                        <option value="Conference USA">Conference USA</option>
+                        <option value="SEC">SEC</option><option value="Big Ten">Big Ten</option>
+                        <option value="Big 12">Big 12</option><option value="ACC">ACC</option>
+                        <option value="Pac-12">Pac-12</option><option value="Mountain West">Mountain West</option>
+                        <option value="American">American</option><option value="Sun Belt">Sun Belt</option>
+                        <option value="MAC">MAC</option><option value="Conference USA">Conference USA</option>
                         <option value="FCS">FCS Matchups</option>
                     </select>
                 </div>
-
-                <div class="toggle-wrapper">
-                    <button class="btn btn-outline" style="font-size: 0.82rem;" onclick="fetchLiveSchedule()">🔄 Refresh</button>
-                    <button class="spoiler-btn" id="spoilerToggleBtn" onclick="toggleSpoilers()">🙈 Hide Spoilers: OFF</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline" onclick="fetchLiveSchedule()">🔄 Refresh</button>
+                    <button class="btn btn-outline" id="spoilerToggleBtn" onclick="toggleSpoilers()">🙈 Spoilers: OFF</button>
                 </div>
             </div>
-
             <div class="controls-row">
                 <div class="filters">
-                    <button class="filter-btn active" onclick="setFilter('all')">All Games</button>
-                    <button class="filter-btn" onclick="setFilter('FBS')">FBS</button>
-                    <button class="filter-btn" onclick="setFilter('FCS')">FCS</button>
-                    <button class="filter-btn" onclick="setFilter('ranked')">Top 25</button>
-                    <button class="filter-btn" onclick="setFilter('favorites')">★ Favorites</button>
-                    <button class="filter-btn" onclick="setFilter('noon')">☀️ Noon</button>
-                    <button class="filter-btn" onclick="setFilter('afternoon')">⛅ 3:30 PM</button>
-                    <button class="filter-btn" onclick="setFilter('prime')">🌙 Primetime</button>
-                    <button class="filter-btn" onclick="setFilter('afterdark')">🦉 After Dark</button>
-                    <button class="filter-btn" onclick="setFilter('upset')">🚨 Upset Alert</button>
-                    <button class="filter-btn" onclick="setFilter('redzone')">🔴 Red Zone</button>
-                    <button class="filter-btn" onclick="setFilter('live')">Live Now</button>
+                    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                    <button class="filter-btn" onclick="setFilter('FBS', this)">FBS</button>
+                    <button class="filter-btn" onclick="setFilter('FCS', this)">FCS</button>
+                    <button class="filter-btn" onclick="setFilter('ranked', this)">Top 25</button>
+                    <button class="filter-btn" onclick="setFilter('favorites', this)">★ Favorites</button>
+                    <button class="filter-btn" onclick="setFilter('noon', this)">☀️ Noon</button>
+                    <button class="filter-btn" onclick="setFilter('afternoon', this)">⛅ 3:30 PM</button>
+                    <button class="filter-btn" onclick="setFilter('prime', this)">🌙 Primetime</button>
+                    <button class="filter-btn" onclick="setFilter('upset', this)">🚨 Upset Alert</button>
+                    <button class="filter-btn" onclick="setFilter('live', this)">Live Now</button>
                 </div>
             </div>
         </div>
-
-        <div class="game-grid" id="gameGrid">
-            <p style="color: var(--text-muted); padding: 20px;">Fetching schedule from ESPN API...</p>
-        </div>
+        <div class="game-grid" id="gameGrid"><p style="color: var(--text-muted); padding: 20px;">Fetching schedule from ESPN API...</p></div>
     </main>
 
-    <!-- SECTION 2: TOP 25 & HEISMAN BALLOT BUILDER -->
+    <!-- TAB 2: MY BALLOT -->
     <main id="ballot" class="tab-content">
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                 <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Voting As:</label>
-                <select id="voterSelectDropdown" class="select-filter" onchange="handleVoterSelectChange()">
-                    <option value="_currentUser_">My Profile</option>
-                </select>
-                <span style="font-size: 0.78rem; color: var(--accent);">Drag slots or click teams to rank. 25 FBS teams required.</span>
+                <select id="voterSelectDropdown" class="select-filter" onchange="handleVoterSelectChange()"></select>
+                <span style="font-size: 0.75rem; color: var(--accent);">Rank 25 FBS teams. Drag slots or click teams from directory.</span>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn btn-success" onclick="saveBallot()">Submit Ballot</button>
-                <button class="btn btn-outline" onclick="copyBallotShareLink()">🔗 Copy Share Link</button>
+                <button class="btn btn-success" onclick="saveBallot()">Save Ballot</button>
+                <button class="btn btn-outline" onclick="copyBallotShareLink()">🔗 Copy Link</button>
                 <button class="btn btn-outline" onclick="clearBallot()">Clear Fields</button>
             </div>
         </div>
         
-        <!-- SIDE-BY-SIDE: SLOTS ON LEFT, TEAM PICKER ON RIGHT -->
         <div class="poll-layout">
             <div>
                 <h3 style="font-size: 1.05rem; margin-bottom: 8px; color: #fff;">Top 25 Team Ballot</h3>
@@ -387,70 +244,55 @@
                     <h3 style="font-size: 1.05rem; margin-bottom: 4px;">FBS Team Selector & Resume Intel</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">Click any team to inspect stats, then slot into your ballot.</p>
                 </div>
-
                 <div class="picker-controls">
                     <select id="conferenceFilter" class="form-select" onchange="filterTeamsByConference()">
-                        <option value="ALL">All FBS Conferences</option>
-                        <option value="SEC">SEC</option>
-                        <option value="Big Ten">Big Ten</option>
-                        <option value="Big 12">Big 12</option>
-                        <option value="ACC">ACC</option>
-                        <option value="Pac-12">Pac-12</option>
-                        <option value="Mountain West">Mountain West</option>
-                        <option value="American">American (AAC)</option>
-                        <option value="Sun Belt">Sun Belt</option>
-                        <option value="MAC">MAC</option>
-                        <option value="Conference USA">Conference USA</option>
+                        <option value="ALL">All Conferences</option>
+                        <option value="SEC">SEC</option><option value="Big Ten">Big Ten</option>
+                        <option value="Big 12">Big 12</option><option value="ACC">ACC</option>
+                        <option value="Pac-12">Pac-12</option><option value="Mountain West">Mountain West</option>
+                        <option value="American">American</option><option value="Sun Belt">Sun Belt</option>
+                        <option value="MAC">MAC</option><option value="Conference USA">Conference USA</option>
                         <option value="Independents">Independents</option>
                     </select>
                     <input type="text" id="searchTeam" class="team-search" placeholder="Search team..." onkeyup="filterTeamList()">
                 </div>
-
                 <div class="quick-select-list" id="quickTeamList"></div>
-
                 <div class="team-intel-card" id="teamIntelBox">
                     <div class="team-intel-header">
                         <div class="team-intel-title" id="intelTeamName">Select a Team</div>
-                        <div class="team-intel-conf" id="intelConfTag">FBS</div>
+                        <div style="font-size: 0.75rem; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 2px 6px; border-radius: 4px;" id="intelConfTag">FBS</div>
                     </div>
                     <div class="team-intel-stats">
-                        <div><span>Overall:</span> <strong id="intelOverall">--</strong></div>
-                        <div><span>Conf:</span> <strong id="intelConfRecord">--</strong></div>
+                        <div><span style="color: var(--text-muted);">Overall:</span> <strong id="intelOverall">--</strong></div>
+                        <div><span style="color: var(--text-muted);">Conf:</span> <strong id="intelConfRecord">--</strong></div>
                     </div>
-                    <div class="team-prev-game">
-                        <span>Previous Result:</span> <strong id="intelPrevResult">--</strong>
-                    </div>
-                    <button class="btn btn-success" id="intelAddBtn" style="margin-top: 4px;" onclick="slotActiveIntelTeam()">Slot into Next Open Rank</button>
+                    <button class="btn btn-success" id="intelAddBtn" onclick="slotActiveIntelTeam()">Slot into Next Open Rank</button>
                 </div>
             </div>
         </div>
 
-        <!-- FULL-WIDTH HEISMAN BALLOT SECTION -->
         <div class="heisman-ballot-card">
             <div class="heisman-title">🏆 Official Heisman Trophy Ballot</div>
-            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">Vote for your top 3 individual players in college football (1st = 3 pts, 2nd = 2 pts, 3rd = 1 pt).</p>
-
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Vote for your top 3 individual players in college football (1st = 3 pts, 2nd = 2 pts, 3rd = 1 pt).</p>
             <div class="heisman-input-row">
                 <span class="heisman-rank-badge h-gold">1st Place (3 pts)</span>
-                <input type="text" id="heisman-1-player" class="form-input" placeholder="Player Name (e.g., Diego Pavia)">
-                <input type="text" id="heisman-1-team" class="form-input" placeholder="School (e.g., Vanderbilt)" list="allFavoritesDatalist">
+                <input type="text" id="heisman-1-player" class="form-input" placeholder="Player Name">
+                <input type="text" id="heisman-1-team" class="form-input" placeholder="School" list="allFavoritesDatalist">
             </div>
-
             <div class="heisman-input-row">
                 <span class="heisman-rank-badge h-silver">2nd Place (2 pts)</span>
-                <input type="text" id="heisman-2-player" class="form-input" placeholder="Player Name (e.g., Jeremiyah Love)">
-                <input type="text" id="heisman-2-team" class="form-input" placeholder="School (e.g., Notre Dame)" list="allFavoritesDatalist">
+                <input type="text" id="heisman-2-player" class="form-input" placeholder="Player Name">
+                <input type="text" id="heisman-2-team" class="form-input" placeholder="School" list="allFavoritesDatalist">
             </div>
-
             <div class="heisman-input-row">
                 <span class="heisman-rank-badge h-bronze">3rd Place (1 pt)</span>
-                <input type="text" id="heisman-3-player" class="form-input" placeholder="Player Name (e.g., Julian Sayin)">
-                <input type="text" id="heisman-3-team" class="form-input" placeholder="School (e.g., Ohio State)" list="allFavoritesDatalist">
+                <input type="text" id="heisman-3-player" class="form-input" placeholder="Player Name">
+                <input type="text" id="heisman-3-team" class="form-input" placeholder="School" list="allFavoritesDatalist">
             </div>
         </div>
     </main>
 
-    <!-- SECTION 3: ASSOCIATED BEST POLL & HEISMAN RESULTS -->
+    <!-- TAB 3: ASSOCIATED BEST POLL -->
     <main id="community" class="tab-content">
         <div class="community-section">
             <div>
@@ -460,51 +302,23 @@
                         <p style="font-size: 0.85rem; color: var(--text-muted);" id="ballotCounter">0 ballots aggregated</p>
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="syncWithCloud()">🔄 Sync Cloud</button>
-                        <button class="btn btn-success" style="font-size: 0.78rem;" onclick="generatePollGraphic()">📸 Export Graphic</button>
-                        <button class="btn btn-outline" style="font-size: 0.78rem;" onclick="setPreviousWeekBaseline()">Save Baseline</button>
+                        <button class="btn btn-outline" onclick="syncWithCloud()">🔄 Sync Cloud</button>
+                        <button class="btn btn-success" onclick="generatePollGraphic()">📸 Export Graphic</button>
+                        <button class="btn btn-outline" onclick="setPreviousWeekBaseline()">Save Baseline</button>
                     </div>
                 </div>
                 
                 <table class="poll-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">Rank</th>
-                            <th>Team</th>
-                            <th style="width: 80px;">Points</th>
-                            <th style="width: 80px;">1st Votes</th>
-                            <th>Voters</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th style="width: 45px;">Rank</th><th>Team</th><th style="width: 70px;">Points</th><th style="width: 60px;">1st</th><th>Voters</th></tr></thead>
                     <tbody id="pollResultsBody"></tbody>
                 </table>
+                <div class="poll-metadata-box"><strong>Others Receiving Votes:</strong> <span id="orvContent">None</span></div>
+                <div class="poll-metadata-box"><strong>Dropped Out:</strong> <span id="droppedOutContent">None</span></div>
 
-                <div class="poll-metadata-box">
-                    <div class="poll-metadata-title">Others Receiving Votes (ORV)</div>
-                    <div class="poll-metadata-content" id="orvContent">None</div>
-                </div>
-
-                <div class="poll-metadata-box">
-                    <div class="poll-metadata-title">Dropped Out</div>
-                    <div class="poll-metadata-content" id="droppedOutContent">None</div>
-                </div>
-
-                <!-- COMMUNITY HEISMAN RACE LEADERBOARD -->
                 <div style="margin-top: 25px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3 style="font-size: 1.15rem; font-weight: 800; color: #f59e0b; display: flex; align-items: center; gap: 6px;">🏆 Associated BEST Heisman Leaderboard</h3>
-                        <span style="font-size: 0.75rem; color: var(--text-muted);">Points: 1st (3), 2nd (2), 3rd (1)</span>
-                    </div>
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #f59e0b; margin-bottom: 8px;">🏆 Associated BEST Heisman Leaderboard</h3>
                     <table class="heisman-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 45px;">Rank</th>
-                                <th>Candidate</th>
-                                <th>School</th>
-                                <th style="width: 70px;">Pts</th>
-                                <th style="width: 70px;">1st</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th style="width: 45px;">Rank</th><th>Candidate</th><th>School</th><th style="width: 60px;">Pts</th><th style="width: 60px;">1st</th></tr></thead>
                         <tbody id="heismanResultsBody"></tbody>
                     </table>
                 </div>
@@ -512,128 +326,84 @@
 
             <div>
                 <div class="analytics-card">
-                    <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--accent);">Voter Analytics & Awards</h3>
-                    <div class="analytics-award">
-                        <span class="award-icon">🎯</span>
-                        <div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">Consensus Champion</div>
-                            <strong style="font-size: 0.95rem;" id="consensusChampName">TBD</strong>
-                        </div>
-                    </div>
-                    <div class="analytics-award">
-                        <span class="award-icon">🌶️</span>
-                        <div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">Biggest Outlier / Hot Take</div>
-                            <strong style="font-size: 0.95rem;" id="outlierChampName">TBD</strong>
-                        </div>
-                    </div>
+                    <h3 style="font-size: 0.95rem; margin-bottom: 8px; color: var(--accent);">Consensus Champion</h3>
+                    <div style="font-weight: 800; font-size: 1.1rem;" id="consensusChampName">TBD</div>
+                    <h3 style="font-size: 0.95rem; margin-top: 10px; margin-bottom: 8px; color: var(--accent);">Biggest Hot Take</h3>
+                    <div style="font-weight: 800; font-size: 1.1rem;" id="outlierChampName">TBD</div>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="font-size: 1.05rem;">Voter Directory</h3>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">Click to inspect ballot</span>
-                </div>
+                <h3 style="font-size: 1rem; margin-bottom: 8px;">Submitted Ballots</h3>
                 <div id="votersDirectoryList"></div>
 
                 <div class="actions">
-                    <button class="btn btn-outline" style="width: 100%;" onclick="exportData()">Export Poll Data (JSON)</button>
-                    <button class="btn btn-outline" style="width: 100%;" onclick="document.getElementById('importFile').click()">Import Friend's Ballot (JSON)</button>
-                    <button class="btn btn-outline" style="width: 100%; color: #ef4444;" onclick="resetAllBallots()">Reset All Ballots</button>
+                    <button class="btn btn-outline" onclick="exportData()">Export Poll Data (JSON)</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">Import Friend's Ballot (JSON)</button>
+                    <button class="btn btn-outline" style="color: var(--live-red);" onclick="resetAllBallots()">Reset All Ballots</button>
                     <input type="file" id="importFile" style="display: none;" onchange="importData(event)">
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- SECTION 4: 12-TEAM CFP BRACKET -->
+    <!-- TAB 4: 12-TEAM CFP BRACKET -->
     <main id="playoff" class="tab-content">
-        <div style="margin-bottom: 20px;">
-            <h2 style="font-size: 1.35rem; font-weight: 800;">12-Team College Football Playoff Official Bracket</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Projected automatically from your Associated BEST Poll consensus (Top 4 Conf Champions get Byes to NY6 Quarters + 1 G5 Champion + 7 At-Large Seeds).</p>
+        <div style="margin-bottom: 15px;">
+            <h2 style="font-size: 1.35rem; font-weight: 800;">12-Team CFP Playoff Bracket</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Projected automatically from your Associated BEST Poll consensus.</p>
         </div>
-
         <div class="cfp-bracket-wrap">
             <div class="bracket-round-section">
-                <div class="bracket-round-header">
-                    <div class="bracket-round-title">🏈 First Round (On-Campus at Higher Seeds)</div>
-                    <div class="bracket-round-dates">December 18–19</div>
-                </div>
+                <div class="bracket-round-header"><strong>First Round (On-Campus)</strong><span style="font-size: 0.8rem; color: var(--accent);">Dec 18–19</span></div>
                 <div class="games-grid" id="cfpFirstRoundGrid"></div>
             </div>
-
             <div class="bracket-round-section">
-                <div class="bracket-round-header">
-                    <div class="bracket-round-title">🏆 Quarterfinals (New Year's Six Bowls)</div>
-                    <div class="bracket-round-dates">December 31 – January 1</div>
-                </div>
+                <div class="bracket-round-header"><strong>Quarterfinals (NY6 Bowls)</strong><span style="font-size: 0.8rem; color: var(--accent);">Dec 31 – Jan 1</span></div>
                 <div class="games-grid" id="cfpQuarterfinalsGrid"></div>
             </div>
-
             <div class="bracket-round-section">
-                <div class="bracket-round-header">
-                    <div class="bracket-round-title">🌟 Semifinals</div>
-                    <div class="bracket-round-dates">January 8–9</div>
-                </div>
+                <div class="bracket-round-header"><strong>Semifinals</strong><span style="font-size: 0.8rem; color: var(--accent);">Jan 8–9</span></div>
                 <div class="games-grid" id="cfpSemifinalsGrid"></div>
             </div>
-
             <div class="bracket-round-section" style="border-color: var(--accent);">
-                <div class="bracket-round-header">
-                    <div class="bracket-round-title" style="color: var(--accent);">👑 CFP National Championship Game</div>
-                    <div class="bracket-round-dates" style="background: rgba(245, 158, 11, 0.2);">Mid-January</div>
-                </div>
+                <div class="bracket-round-header"><strong style="color: var(--accent);">👑 National Championship Game</strong><span style="font-size: 0.8rem; color: var(--accent);">Mid-January</span></div>
                 <div class="games-grid" style="grid-template-columns: 1fr;" id="cfpChampionshipGrid"></div>
             </div>
         </div>
     </main>
 
-    <!-- SECTION 5: SUGGESTIONS & FEEDBACK TAB -->
+    <!-- TAB 5: SUGGESTIONS -->
     <main id="suggestions" class="tab-content">
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div>
                 <h2 style="font-size: 1.35rem; font-weight: 800;">💡 Feature Requests & Poll Suggestions</h2>
                 <p style="font-size: 0.85rem; color: var(--text-muted);">Have ideas for new metrics, UI enhancements, or poll improvements? Send feedback directly.</p>
             </div>
-            <a id="externalFormLink" href="https://docs.google.com/forms/d/e/1FAIpQLScPwSRw6iGPA-YGnGXLIvaC4EfbzO7-Hje0Le00VpDOtVHahQ/viewform" target="_blank" class="btn btn-outline" style="text-decoration: none;">Open in New Tab ↗</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScPwSRw6iGPA-YGnGXLIvaC4EfbzO7-Hje0Le00VpDOtVHahQ/viewform" target="_blank" class="btn btn-outline">Open in New Tab ↗</a>
         </div>
-        
         <div style="background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; min-height: 720px; display: flex; align-items: center; justify-content: center;">
-            <iframe id="googleFormIframe" src="https://docs.google.com/forms/d/e/1FAIpQLScPwSRw6iGPA-YGnGXLIvaC4EfbzO7-Hje0Le00VpDOtVHahQ/viewform?embedded=true" width="100%" height="720" frameborder="0" marginheight="0" marginwidth="0" style="border: none;">Loading Suggestions Form…</iframe>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScPwSRw6iGPA-YGnGXLIvaC4EfbzO7-Hje0Le00VpDOtVHahQ/viewform?embedded=true" width="100%" height="720" frameborder="0" marginheight="0" marginwidth="0" style="border: none;">Loading Suggestions Form…</iframe>
         </div>
     </main>
 </div>
 
-<!-- LIVE BOXSCORE / GAMECAST MODAL -->
+<!-- MODALS -->
 <div class="modal-overlay" id="boxscoreModal">
-    <div class="modal-card boxscore-modal-card">
-        <div class="modal-header">
-            <h3 id="boxModalTitle">Live Gamecast & Team Statistics</h3>
-            <button class="modal-close" onclick="closeBoxscoreModal()">&times;</button>
-        </div>
-        <div id="boxscoreBody">
-            <p style="color: var(--text-muted); text-align: center; padding: 25px;">Loading live game stats...</p>
-        </div>
+    <div class="modal-card">
+        <div class="modal-header"><h3>Live Gamecast & Team Statistics</h3><button class="modal-close" onclick="closeBoxscoreModal()">&times;</button></div>
+        <div id="boxscoreBody"><p style="color: var(--text-muted);">Loading live game stats...</p></div>
     </div>
 </div>
 
-<!-- INDIVIDUAL BALLOT INSPECTOR MODAL -->
 <div class="modal-overlay" id="voterBallotModal">
     <div class="modal-card">
-        <div class="modal-header">
-            <h3 id="voterBallotTitle">Voter Ballot</h3>
-            <button class="modal-close" onclick="closeVoterBallotModal()">&times;</button>
-        </div>
-        <div id="voterBallotBody" style="max-height: 480px; overflow-y: auto;"></div>
+        <div class="modal-header"><h3 id="voterBallotTitle">Voter Ballot</h3><button class="modal-close" onclick="closeVoterBallotModal()">&times;</button></div>
+        <div id="voterBallotBody"></div>
     </div>
 </div>
 
-<!-- GRAPHIC EXPORT MODAL -->
 <div class="modal-overlay" id="graphicModal">
-    <div class="modal-card" style="max-width: 650px; text-align: center;">
-        <div class="modal-header">
-            <h3>Associated BEST Poll Graphic</h3>
-            <button class="modal-close" onclick="closeGraphicModal()">&times;</button>
-        </div>
+    <div class="modal-card" style="text-align: center;">
+        <div class="modal-header"><h3>Associated BEST Poll Graphic</h3><button class="modal-close" onclick="closeGraphicModal()">&times;</button></div>
         <canvas id="pollCanvas" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border);"></canvas>
         <div style="display: flex; justify-content: center; gap: 10px;">
             <a id="downloadGraphicBtn" class="btn btn-success" download="Associated_BEST_Poll.png">⬇ Download Image</a>
@@ -642,28 +412,24 @@
     </div>
 </div>
 
-<!-- ACCOUNT / PROFILE MODAL -->
 <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
-        <div class="modal-header">
-            <h3>User Account & Preferences</h3>
-            <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+        <div class="modal-header"><h3>User Account & Preferences</h3><button class="modal-close" onclick="closeProfileModal()">&times;</button></div>
+        <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Your Name / Handle</label>
+            <input type="text" id="profileNameInput" class="form-input">
         </div>
-        <div class="form-group">
-            <label>Your Name / Handle</label>
-            <input type="text" id="profileNameInput" class="form-input" placeholder="e.g., Alex Carter">
+        <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Avatar Emoji</label>
+            <input type="text" id="profileAvatarInput" class="form-input" maxlength="4">
         </div>
-        <div class="form-group">
-            <label>Avatar Emoji</label>
-            <input type="text" id="profileAvatarInput" class="form-input" placeholder="e.g., 🐯, 🏈, 🦅" maxlength="4">
-        </div>
-        <div class="form-group">
-            <label>Add Favorite Teams (FBS & FCS)</label>
-            <input type="text" id="addFavTeamInput" list="allFavoritesDatalist" class="form-input" placeholder="Type any FBS or FCS school and press Enter..." onkeydown="handleFavInput(event)">
+        <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Add Favorite Teams (FBS & FCS)</label>
+            <input type="text" id="addFavTeamInput" list="allFavoritesDatalist" class="form-input" placeholder="Type school and press Enter..." onkeydown="handleFavInput(event)">
             <datalist id="allFavoritesDatalist"></datalist>
             <div class="fav-chips" id="favChipsContainer"></div>
         </div>
-        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;">
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
             <button class="btn btn-outline" onclick="closeProfileModal()">Cancel</button>
             <button class="btn btn-success" onclick="saveUserProfile()">Save Profile</button>
         </div>
@@ -671,89 +437,39 @@
 </div>
 
 <script>
-    // --- LIVE CLOUD SYNC CONFIG (JSONBin.io) ---
     const JSONBIN_CONFIG = {
         BIN_ID: "6a9733d5da38895dfe2c963f",
         API_KEY: "$2a$10$KgzmQJaMF6kVUe1BKpgvd.E2jKa4EWVWj6tuvZRcGQ/dxWjOrfpcm"
     };
 
-    // --- COMPREHENSIVE FBS CONFERENCE DIRECTORY ---
     const FBS_CONFERENCE_MAP = {
-        "SEC": [
-            "Alabama", "Arkansas", "Auburn", "Florida", "Georgia", "Kentucky", "LSU", "Mississippi State", 
-            "Missouri", "Oklahoma", "Ole Miss", "South Carolina", "Tennessee", "Texas", "Texas A&M", "Vanderbilt"
-        ],
-        "Big Ten": [
-            "Illinois", "Indiana", "Iowa", "Maryland", "Michigan", "Michigan State", "Minnesota", "Nebraska", 
-            "Northwestern", "Ohio State", "Oregon", "Penn State", "Purdue", "Rutgers", "UCLA", "USC", "Washington", "Wisconsin"
-        ],
-        "Big 12": [
-            "Arizona", "Arizona State", "Baylor", "BYU", "Cincinnati", "Colorado", "Houston", "Iowa State", 
-            "Kansas", "Kansas State", "Oklahoma State", "TCU", "Texas Tech", "UCF", "Utah", "West Virginia"
-        ],
-        "ACC": [
-            "Boston College", "California", "Clemson", "Duke", "Florida State", "Georgia Tech", "Louisville", 
-            "Miami (FL)", "NC State", "North Carolina", "Pittsburgh", "SMU", "Stanford", "Syracuse", "Virginia", "Virginia Tech", "Wake Forest"
-        ],
-        "Pac-12": [
-            "Boise State", "Colorado State", "Fresno State", "Oregon State", "San Diego State", "Texas State", "Utah State", "Washington State"
-        ],
-        "Mountain West": [
-            "Air Force", "Hawaii", "Nevada", "New Mexico", "North Dakota State", "Northern Illinois", "San Jose State", "UNLV", "UTEP", "Wyoming"
-        ],
-        "American": [
-            "Army", "Charlotte", "East Carolina", "Florida Atlantic", "Memphis", "Navy", "North Texas", 
-            "Rice", "South Florida", "Temple", "Tulane", "Tulsa", "UAB", "UTSA"
-        ],
-        "Sun Belt": [
-            "Appalachian State", "Arkansas State", "Coastal Carolina", "Georgia Southern", "Georgia State", 
-            "James Madison", "Louisiana", "Louisiana Tech", "Louisiana-Monroe", "Marshall", "Old Dominion", "South Alabama", "Southern Miss", "Troy"
-        ],
-        "MAC": [
-            "Akron", "Ball State", "Bowling Green", "Buffalo", "Central Michigan", "Eastern Michigan", 
-            "Kent State", "Miami (OH)", "Ohio", "Sacramento State", "Toledo", "UMass", "Western Michigan"
-        ],
-        "Conference USA": [
-            "Delaware", "Florida International", "Jacksonville State", "Kennesaw State", "Liberty", 
-            "Middle Tennessee", "Missouri State", "New Mexico State", "Sam Houston", "Western Kentucky"
-        ],
-        "Independents": [
-            "Notre Dame", "UConn"
-        ]
+        "SEC": ["Alabama","Arkansas","Auburn","Florida","Georgia","Kentucky","LSU","Mississippi State","Missouri","Oklahoma","Ole Miss","South Carolina","Tennessee","Texas","Texas A&M","Vanderbilt"],
+        "Big Ten": ["Illinois","Indiana","Iowa","Maryland","Michigan","Michigan State","Minnesota","Nebraska","Northwestern","Ohio State","Oregon","Penn State","Purdue","Rutgers","UCLA","USC","Washington","Wisconsin"],
+        "Big 12": ["Arizona","Arizona State","Baylor","BYU","Cincinnati","Colorado","Houston","Iowa State","Kansas","Kansas State","Oklahoma State","TCU","Texas Tech","UCF","Utah","West Virginia"],
+        "ACC": ["Boston College","California","Clemson","Duke","Florida State","Georgia Tech","Louisville","Miami (FL)","NC State","North Carolina","Pittsburgh","SMU","Stanford","Syracuse","Virginia","Virginia Tech","Wake Forest"],
+        "Pac-12": ["Boise State","Colorado State","Fresno State","Oregon State","San Diego State","Texas State","Utah State","Washington State"],
+        "Mountain West": ["Air Force","Hawaii","Nevada","New Mexico","North Dakota State","Northern Illinois","San Jose State","UNLV","UTEP","Wyoming"],
+        "American": ["Army","Charlotte","East Carolina","Florida Atlantic","Memphis","Navy","North Texas","Rice","South Florida","Temple","Tulane","Tulsa","UAB","UTSA"],
+        "Sun Belt": ["Appalachian State","Arkansas State","Coastal Carolina","Georgia Southern","Georgia State","James Madison","Louisiana","Louisiana Tech","Louisiana-Monroe","Marshall","Old Dominion","South Alabama","Southern Miss","Troy"],
+        "MAC": ["Akron","Ball State","Bowling Green","Buffalo","Central Michigan","Eastern Michigan","Kent State","Miami (OH)","Ohio","Sacramento State","Toledo","UMass","Western Michigan"],
+        "Conference USA": ["Delaware","Florida International","Jacksonville State","Kennesaw State","Liberty","Middle Tennessee","Missouri State","New Mexico State","Sam Houston","Western Kentucky"],
+        "Independents": ["Notre Dame","UConn"]
     };
 
-    const FCS_MASTER_POOL = [
-        "South Dakota State", "Montana", "Montana State", "Villanova", "Idaho", "South Dakota", 
-        "Southern Illinois", "Chattanooga", "Incarnate Word", "Richmond", "William & Mary", 
-        "Albany", "Tarleton State", "Central Arkansas", "Western Carolina", "Eastern Washington", 
-        "UC Davis", "Harvard", "Yale", "Dartmouth", "North Dakota", "Weber State", "Youngstown State", 
-        "Illinois State", "Florida A&M", "North Carolina Central", "Lafayette", "Holy Cross", "Mercer", "Furman"
-    ];
+    const FCS_MASTER_POOL = ["South Dakota State","Montana","Montana State","Villanova","Idaho","South Dakota","Southern Illinois","Chattanooga","Incarnate Word","Richmond","William & Mary","Albany","Tarleton State","Central Arkansas","Western Carolina","Eastern Washington","UC Davis","Harvard","Yale","Dartmouth","North Dakota","Weber State","Youngstown State","Illinois State","Florida A&M","North Carolina Central","Lafayette","Holy Cross","Mercer","Furman"];
 
     const FBS_MASTER_POOL = [];
     const TEAM_TO_CONF = {};
-
     Object.entries(FBS_CONFERENCE_MAP).forEach(([conf, teams]) => {
-        teams.forEach(t => {
-            FBS_MASTER_POOL.push(t);
-            TEAM_TO_CONF[t] = conf;
-        });
+        teams.forEach(t => { FBS_MASTER_POOL.push(t); TEAM_TO_CONF[t] = conf; });
     });
 
     const fbsTeamsSet = new Set(FBS_MASTER_POOL);
     const allDivOneTeamsSet = new Set([...FBS_MASTER_POOL, ...FCS_MASTER_POOL]);
-
     const teamResumes = {};
-    function getTeamResume(teamName) {
-        if (!teamResumes[teamName]) {
-            teamResumes[teamName] = {
-                overall: "0-0",
-                confRecord: "0-0",
-                prevResult: "Season Opener Pending",
-                prevOutcome: ""
-            };
-        }
-        return teamResumes[teamName];
+    function getTeamResume(t) {
+        if (!teamResumes[t]) teamResumes[t] = { overall: "0-0", confRecord: "0-0", prevResult: "Season Opener", prevOutcome: "" };
+        return teamResumes[t];
     }
 
     let activeIntelTeam = null;
@@ -761,217 +477,388 @@
     let currentConsensusRanking = [];
     let isPoolPopulated = false;
 
-    // --- APP STATE & STORAGE ---
-    let currentUser = JSON.parse(localStorage.getItem('cfb_user_profile')) || {
-        name: "Anonymous Fan",
-        avatar: "🏈",
-        favoriteTeams: ["Georgia", "South Dakota State"]
-    };
-
+    let currentUser = JSON.parse(localStorage.getItem('cfb_user_profile')) || { name: "Anonymous Fan", avatar: "🏈", favoriteTeams: ["Georgia", "South Dakota State"] };
     let communityBallots = JSON.parse(localStorage.getItem('cfb_community_ballots')) || [];
     let previousWeekTop25 = JSON.parse(localStorage.getItem('cfb_previous_week_top25')) || [];
     let gamesData = [];
     let currentFilter = 'all';
     let hideSpoilers = false;
 
-    function normalize(str) {
-        return (str || '').trim().toLowerCase();
-    }
-
+    function normalize(str) { return (str || '').trim().toLowerCase(); }
     function isTeamFavorite(teamObj) {
         if (!teamObj || !currentUser.favoriteTeams) return false;
         const favs = currentUser.favoriteTeams.map(f => normalize(f));
-        const identifiers = [
-            normalize(teamObj.name),
-            normalize(teamObj.location),
-            normalize(teamObj.displayName),
-            normalize(teamObj.shortDisplayName)
-        ].filter(Boolean);
-
-        return favs.some(fav => identifiers.includes(fav));
+        const idents = [normalize(teamObj.name), normalize(teamObj.location), normalize(teamObj.displayName), normalize(teamObj.shortDisplayName)].filter(Boolean);
+        return favs.some(fav => idents.includes(fav));
     }
 
-    // --- UNIVERSAL PARSER FOR ANY BALLOT JSON ---
     function parseAnyBallotPayload(data) {
         let ballots = [];
         let prevTop25 = [];
-
         if (Array.isArray(data)) {
             if (data.length > 0 && data[0].rank && data[0].team) {
-                ballots = [{
-                    voter: "Imported Voter",
-                    avatar: "🏈",
-                    favorites: [],
-                    submittedAt: new Date().toLocaleDateString(),
-                    ballot: data,
-                    heisman: []
-                }];
+                ballots = [{ voter: "Imported Voter", avatar: "🏈", favorites: [], submittedAt: new Date().toLocaleDateString(), ballot: data, heisman: [] }];
             } else {
                 ballots = data;
             }
         } else if (typeof data === 'object' && data !== null) {
-            if (data.record) {
-                return parseAnyBallotPayload(data.record);
-            }
-            if (data.communityBallots && Array.isArray(data.communityBallots)) {
-                ballots = data.communityBallots;
-            } else if (data.ballots && Array.isArray(data.ballots)) {
-                ballots = data.ballots;
-            } else if (data.ballot && Array.isArray(data.ballot)) {
-                ballots = [data];
-            }
-
+            if (data.record) return parseAnyBallotPayload(data.record);
+            if (data.communityBallots) ballots = data.communityBallots;
+            else if (data.ballots) ballots = data.ballots;
+            else if (data.ballot) ballots = [data];
             if (data.previousWeekTop25) prevTop25 = data.previousWeekTop25;
         }
-
         return { ballots, prevTop25 };
     }
 
-    // --- URL-BASED BALLOT IMPORT ---
-    function checkURLForSharedBallot() {
-        const params = new URLSearchParams(window.location.search);
-        const voterData = params.get('voter');
-        const ballotData = params.get('ballot');
-        const heismanData = params.get('heisman');
+    function switchTab(tabId, el) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if (target) target.classList.add('active');
+        if (el) el.classList.add('active');
+        if (tabId === 'community' || tabId === 'playoff') calculateCommunityPoll();
+        if (tabId === 'ballot') loadUserBallotIntoUI();
+    }
 
-        if (voterData && ballotData) {
-            try {
-                const parsedBallot = JSON.parse(decodeURIComponent(atob(ballotData)));
-                const parsedHeisman = heismanData ? JSON.parse(decodeURIComponent(atob(heismanData))) : [];
-                const voterName = decodeURIComponent(voterData);
+    function toggleSpoilers() {
+        hideSpoilers = !hideSpoilers;
+        const btn = document.getElementById('spoilerToggleBtn');
+        const grid = document.getElementById('gameGrid');
+        if (hideSpoilers) { grid.classList.add('hide-spoilers'); btn.innerText = '🙈 Spoilers: ON'; }
+        else { grid.classList.remove('hide-spoilers'); btn.innerText = '🙈 Spoilers: OFF'; }
+    }
 
-                const existingIdx = communityBallots.findIndex(b => b.voter.toLowerCase() === voterName.toLowerCase());
-                const newEntry = {
-                    voter: voterName,
-                    avatar: params.get('avatar') || '🏈',
-                    favorites: [],
-                    submittedAt: 'Imported via Link',
-                    ballot: parsedBallot,
-                    heisman: parsedHeisman
-                };
+    function calculateWatchability(game) {
+        try {
+            let score = 1;
+            const rank1 = (game.away && game.away.rank) ? Number(game.away.rank) : 99;
+            const rank2 = (game.home && game.home.rank) ? Number(game.home.rank) : 99;
+            if (rank1 <= 25 && rank2 <= 25) score += 3;
+            else if (rank1 <= 25 || rank2 <= 25) score += 1.5;
+            const sp = Number(game.spreadValue);
+            if (!isNaN(sp) && Math.abs(sp) <= 4.5) score += 1;
+            const aScore = Number(game.away && game.away.score);
+            const hScore = Number(game.home && game.home.score);
+            if (game.state === 'in' && Number(game.period) >= 3 && !isNaN(aScore) && !isNaN(hScore) && Math.abs(aScore - hScore) <= 8) score += 1.5;
+            if (game.situation && game.situation.isRedZone) score += 0.5;
+            return Math.min(5, Math.max(1, Math.round(score)));
+        } catch (e) { return 1; }
+    }
 
-                if (existingIdx >= 0) {
-                    communityBallots[existingIdx] = newEntry;
-                } else {
-                    communityBallots.push(newEntry);
-                }
+    function getNetworkClass(net) {
+        const n = (net || '').toLowerCase();
+        if (n.includes('abc')) return 'net-abc';
+        if (n.includes('fox') || n.includes('fs1')) return 'net-fox';
+        if (n.includes('cbs') || n.includes('sec')) return 'net-cbs';
+        if (n.includes('espn')) return 'net-espn';
+        if (n.includes('nbc') || n.includes('peacock')) return 'net-nbc';
+        return 'net-other';
+    }
 
-                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
-                pushToCloud();
-                
-                window.history.replaceState({}, document.title, window.location.pathname);
-                alert(`Successfully added ${voterName}'s ballot to your Associated BEST Poll!`);
-                calculateCommunityPoll();
-            } catch (err) {
-                console.error("Failed to parse shared ballot URL", err);
+    async function fetchLiveSchedule() {
+        const grid = document.getElementById('gameGrid');
+        const weekVal = document.getElementById('weekFilter') ? document.getElementById('weekFilter').value : 'current';
+        const currentYear = new Date().getFullYear();
+        const queryParams = (weekVal !== 'current') ? `&season=${currentYear}&week=${weekVal}&seasontype=2` : '';
+
+        let fbsData = { events: [] };
+        let fcsData = { events: [] };
+
+        try {
+            const fbsUrl = `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=300${queryParams}`;
+            const fcsUrl = `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=300${queryParams}`;
+            const [fbsRes, fcsRes] = await Promise.allSettled([
+                fetch(fbsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status)),
+                fetch(fcsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status))
+            ]);
+            if (fbsRes.status === 'fulfilled') fbsData = fbsRes.value;
+            if (fcsRes.status === 'fulfilled') fcsData = fcsRes.value;
+
+            if ((!fbsData.events || fbsData.events.length === 0) && (!fcsData.events || fcsData.events.length === 0)) {
+                const fbRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=300`);
+                if (fbRes.ok) fbsData = await fbRes.json();
             }
+        } catch (netErr) { console.error("Scoreboard fetch error:", netErr); }
+
+        try {
+            const seen = new Set();
+            const parseEvents = (events, defDiv) => {
+                const list = [];
+                (events || []).forEach(ev => {
+                    if (!ev || !ev.id || seen.has(ev.id)) return;
+                    seen.add(ev.id);
+                    const comp = ev.competitions && ev.competitions[0];
+                    if (!comp || !comp.competitors || comp.competitors.length < 2) return;
+                    const away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
+                    const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
+                    if (!away || !home || !away.team || !home.team) return;
+
+                    const odds = (comp.odds && comp.odds[0]) ? comp.odds[0] : null;
+                    const situation = comp.situation || null;
+                    let isRedZone = false;
+                    let downDistanceText = '';
+
+                    if (situation) {
+                        if (situation.isRedZone || (situation.possession && (situation.yardLine || 99) <= 20)) isRedZone = true;
+                        if (situation.down && situation.distance) downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance}`;
+                    }
+
+                    const extractTeam = (c, isAway) => {
+                        const loc = c.team.location || c.team.name || "Unknown";
+                        allDivOneTeamsSet.add(loc);
+                        return {
+                            id: c.id, name: loc, location: c.team.location || loc,
+                            displayName: c.team.displayName || loc, shortDisplayName: c.team.shortDisplayName || loc,
+                            rank: (c.curatedRank && c.curatedRank.current <= 25) ? c.curatedRank.current : null,
+                            score: c.score || '0', logo: c.team.logo || '',
+                            hasPossession: Boolean(situation && situation.possession === c.id),
+                            inRedZone: Boolean(isRedZone && situation && situation.possession === c.id)
+                        };
+                    };
+
+                    const gameDate = new Date(ev.date || Date.now());
+                    let broadcastName = 'TBD';
+                    if (comp.broadcasts && comp.broadcasts[0]) {
+                        const b = comp.broadcasts[0];
+                        broadcastName = (Array.isArray(b.names) && b.names[0]) ? b.names[0] : (b.name || 'TBD');
+                    }
+
+                    const isAwayFBS = fbsTeamsSet.has(away.team.location || away.team.name);
+                    const isHomeFBS = fbsTeamsSet.has(home.team.location || home.team.name);
+                    const finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
+
+                    const parsed = {
+                        id: ev.id, div: finalDiv, dateRaw: gameDate, hour: gameDate.getHours(),
+                        date: gameDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        network: broadcastName, state: comp.status ? comp.status.type.state : 'pre',
+                        clock: comp.status ? comp.status.type.detail : 'Scheduled', period: comp.status ? comp.status.period : 0,
+                        spread: odds ? (odds.details || 'N/A') : 'N/A', spreadValue: (odds && odds.spread) ? parseFloat(odds.spread) : null,
+                        situation: { isRedZone: isRedZone, text: downDistanceText },
+                        away: extractTeam(away, true), home: extractTeam(home, false)
+                    };
+                    parsed.rating = calculateWatchability(parsed);
+                    list.push(parsed);
+                });
+                return list;
+            };
+
+            gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
+            renderGames();
+            if (!isPoolPopulated) populateFBSQuickSelectPool();
+            else { filterTeamsByConference(); validateBallotDuplicates(); }
+        } catch (e) {
+            console.error("Scoreboard parsing error:", e);
+            if (grid) grid.innerHTML = `<p style="color: var(--live-red); padding: 20px;">Error loading schedule. Please refresh.</p>`;
         }
     }
 
-    function copyBallotShareLink() {
-        const ballot = [];
-        for (let i = 1; i <= 25; i++) {
-            const val = document.getElementById(`rank-${i}`).value.trim();
-            if (val) ballot.push({ rank: i, team: val });
-        }
+    function renderGames() {
+        const grid = document.getElementById('gameGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        const confFilter = document.getElementById('scoreConfFilter') ? document.getElementById('scoreConfFilter').value : 'ALL';
 
-        if (ballot.length === 0) {
-            alert('Fill out your ballot before creating a share link.');
+        const filtered = gamesData.filter(g => {
+            const hasFav = isTeamFavorite(g.away) || isTeamFavorite(g.home);
+            if (confFilter !== 'ALL') {
+                if (confFilter === 'FCS' && g.div !== 'FCS') return false;
+                if (confFilter !== 'FCS' && TEAM_TO_CONF[g.away.name] !== confFilter && TEAM_TO_CONF[g.home.name] !== confFilter) return false;
+            }
+            if (currentFilter === 'FBS') return g.div === 'FBS';
+            if (currentFilter === 'FCS') return g.div === 'FCS';
+            if (currentFilter === 'ranked') return (g.away.rank && g.away.rank <= 25) || (g.home.rank && g.home.rank <= 25);
+            if (currentFilter === 'favorites') return hasFav;
+            if (currentFilter === 'noon') return g.hour >= 11 && g.hour < 15;
+            if (currentFilter === 'afternoon') return g.hour >= 15 && g.hour < 18;
+            if (currentFilter === 'prime') return g.hour >= 18 && g.hour < 22;
+            if (currentFilter === 'live') return g.state === 'in';
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<p style="color: var(--text-muted); padding: 20px;">No games match current filter.</p>`;
             return;
         }
 
-        const heisman = [];
-        for (let i = 1; i <= 3; i++) {
-            const p = document.getElementById(`heisman-${i}-player`).value.trim();
-            const t = document.getElementById(`heisman-${i}-team`).value.trim();
-            if (p) heisman.push({ rank: i, player: p, team: t });
-        }
+        filtered.forEach(g => {
+            const card = document.createElement('div');
+            const isFav = isTeamFavorite(g.away) || isTeamFavorite(g.home);
+            card.className = `game-card ${isFav ? 'is-favorite-match' : ''} ${g.situation && g.situation.isRedZone ? 'in-redzone' : ''}`;
+            card.onclick = () => openBoxscoreModal(g.id);
+            const stars = Math.max(1, Math.min(5, g.rating || 1));
 
-        const encodedBallot = btoa(encodeURIComponent(JSON.stringify(ballot)));
-        const encodedHeisman = btoa(encodeURIComponent(JSON.stringify(heisman)));
-        const shareURL = `${window.location.origin}${window.location.pathname}?voter=${encodeURIComponent(currentUser.name)}&avatar=${encodeURIComponent(currentUser.avatar)}&ballot=${encodedBallot}&heisman=${encodedHeisman}`;
-
-        navigator.clipboard.writeText(shareURL).then(() => {
-            alert('1-Click Share Link copied to clipboard! Send this link to your friend and it will auto-add your ballot to their poll.');
-        }).catch(() => {
-            prompt('Copy this share link and send it to your friend:', shareURL);
+            card.innerHTML = `
+                <div>
+                    <div class="game-header">
+                        <span class="net-tag ${getNetworkClass(g.network)}">${g.network}</span>
+                        <span>${g.date} (${g.div})</span>
+                        <span class="status-badge ${g.state === 'in' ? 'status-in' : 'status-pre'} live-clock">${g.clock}</span>
+                    </div>
+                    <div class="team-row ${g.away.hasPossession ? 'has-possession' : ''}">
+                        <div class="team-meta">
+                            ${g.away.hasPossession ? `<span class="possession-dot"></span>` : ''}
+                            ${g.away.logo ? `<img src="${g.away.logo}" class="team-logo">` : ''}
+                            <span class="team-name ${isTeamFavorite(g.away) ? 'highlight-fav' : ''}">
+                                ${g.away.rank ? `<span class="team-rank">#${g.away.rank}</span>` : ''}${g.away.name}
+                            </span>
+                        </div>
+                        <span class="score">${g.state === 'pre' ? '-' : g.away.score}</span>
+                    </div>
+                    <div class="team-row ${g.home.hasPossession ? 'has-possession' : ''}">
+                        <div class="team-meta">
+                            ${g.home.hasPossession ? `<span class="possession-dot"></span>` : ''}
+                            ${g.home.logo ? `<img src="${g.home.logo}" class="team-logo">` : ''}
+                            <span class="team-name ${isTeamFavorite(g.home) ? 'highlight-fav' : ''}">
+                                ${g.home.rank ? `<span class="team-rank">#${g.home.rank}</span>` : ''}${g.home.name}
+                            </span>
+                        </div>
+                        <span class="score">${g.state === 'pre' ? '-' : g.home.score}</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 6px; margin-top: 6px;">
+                    <span>Spread: ${g.spread}</span>
+                    <span style="color: var(--accent); font-weight: bold;">${'🔥'.repeat(stars)}</span>
+                </div>
+            `;
+            grid.appendChild(card);
         });
     }
 
-    // --- CLOUD SYNC ENGINE (JSONBin.io) ---
-    async function syncWithCloud(silent = false) {
-        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+    function setFilter(type, el) {
+        currentFilter = type;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if (el) el.classList.add('active');
+        renderGames();
+    }
 
-        try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
-                headers: {
-                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
-                    'X-Access-Key': JSONBIN_CONFIG.API_KEY
-                }
-            });
-            
-            if (!res.ok) {
-                const errData = await res.json().catch(() => ({}));
-                throw new Error(errData.message || `HTTP error ${res.status}`);
-            }
-
-            const data = await res.json();
-            const parsed = parseAnyBallotPayload(data);
-
-            if (parsed.ballots.length > 0) {
-                communityBallots = parsed.ballots;
-                if (parsed.prevTop25.length > 0) previousWeekTop25 = parsed.prevTop25;
-
-                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
-                localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
-
-                calculateCommunityPoll();
-                loadUserBallotIntoUI();
-                if (!silent) alert('Successfully synced all ballots from cloud database!');
-            }
-        } catch (err) {
-            console.error("Cloud fetch failed", err);
-            if (!silent) alert(`Cloud Connection Notice: ${err.message}`);
+    function initBallotSlots() {
+        const container = document.getElementById('ballotSlots');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 1; i <= 25; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'ballot-slot';
+            slot.id = `slot-wrap-${i}`;
+            slot.innerHTML = `
+                <span class="rank-num">#${i}</span>
+                <input type="text" class="team-input" id="rank-${i}" placeholder="Select or type FBS team..." oninput="validateBallotDuplicates()" list="fbsDatalist">
+                <div class="slot-actions">
+                    <button class="slot-btn" onclick="shiftRank(${i}, -1)">▲</button>
+                    <button class="slot-btn" onclick="shiftRank(${i}, 1)">▼</button>
+                </div>
+            `;
+            container.appendChild(slot);
         }
     }
 
-    async function pushToCloud() {
-        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
-        try {
-            await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
-                    'X-Access-Key': JSONBIN_CONFIG.API_KEY
-                },
-                body: JSON.stringify({
-                    communityBallots: communityBallots,
-                    previousWeekTop25: previousWeekTop25
-                })
-            });
-        } catch (err) {
-            console.error("Cloud push failed", err);
+    function shiftRank(index, dir) {
+        const target = index + dir;
+        if (target < 1 || target > 25) return;
+        const cur = document.getElementById(`rank-${index}`).value;
+        const tgt = document.getElementById(`rank-${target}`).value;
+        document.getElementById(`rank-${index}`).value = tgt;
+        document.getElementById(`rank-${target}`).value = cur;
+        validateBallotDuplicates();
+    }
+
+    function populateFBSQuickSelectPool() {
+        const list = document.getElementById('quickTeamList');
+        if (!list) return;
+        list.innerHTML = '';
+
+        let datalist = document.getElementById('fbsDatalist');
+        if (!datalist) {
+            datalist = document.createElement('datalist');
+            datalist.id = 'fbsDatalist';
+            document.body.appendChild(datalist);
+        }
+        datalist.innerHTML = '';
+
+        Array.from(fbsTeamsSet).sort().forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            datalist.appendChild(opt);
+
+            const btn = document.createElement('button');
+            btn.className = 'quick-team-btn';
+            btn.id = `qbtn-${normalize(t).replace(/[^a-z0-9]/g, '')}`;
+            btn.innerText = t;
+            btn.onclick = () => showTeamIntel(t);
+            list.appendChild(btn);
+        });
+
+        isPoolPopulated = true;
+        showTeamIntel("Georgia");
+        filterTeamsByConference();
+        validateBallotDuplicates();
+    }
+
+    function showTeamIntel(teamName) {
+        activeIntelTeam = teamName;
+        const res = getTeamResume(teamName);
+        document.getElementById('intelTeamName').innerText = teamName;
+        document.getElementById('intelConfTag').innerText = TEAM_TO_CONF[teamName] || "FBS";
+        document.getElementById('intelOverall').innerText = res.overall;
+        document.getElementById('intelConfRecord').innerText = res.confRecord;
+        document.querySelectorAll('.quick-team-btn').forEach(b => b.classList.remove('active-selected'));
+        const activeBtn = document.getElementById(`qbtn-${normalize(teamName).replace(/[^a-z0-9]/g, '')}`);
+        if (activeBtn) activeBtn.classList.add('active-selected');
+    }
+
+    function slotActiveIntelTeam() {
+        if (!activeIntelTeam) return;
+        for (let i = 1; i <= 25; i++) {
+            const input = document.getElementById(`rank-${i}`);
+            if (input && !input.value.trim()) {
+                input.value = activeIntelTeam;
+                validateBallotDuplicates();
+                break;
+            }
         }
     }
 
-    // --- USER PROFILE SYSTEM ---
-    function updateProfileUI() {
-        document.getElementById('userNamePreview').innerText = currentUser.name;
-        document.getElementById('userAvatarPreview').innerText = currentUser.avatar;
-        populateVoterDropdown();
+    function filterTeamsByConference() {
+        const conf = document.getElementById('conferenceFilter').value;
+        const q = (document.getElementById('searchTeam').value || '').toLowerCase();
+        document.querySelectorAll('.quick-team-btn').forEach(btn => {
+            const t = btn.innerText;
+            const matchConf = (conf === 'ALL' || (TEAM_TO_CONF[t] || 'Independents') === conf);
+            const matchQ = t.toLowerCase().includes(q);
+            btn.style.display = (matchConf && matchQ) ? 'inline-block' : 'none';
+        });
+    }
+
+    function filterTeamList() { filterTeamsByConference(); }
+
+    function validateBallotDuplicates() {
+        const counts = {};
+        const slots = {};
+        for (let i = 1; i <= 25; i++) {
+            const input = document.getElementById(`rank-${i}`);
+            const wrap = document.getElementById(`slot-wrap-${i}`);
+            if (!input || !wrap) continue;
+            const val = normalize(input.value);
+            wrap.classList.remove('has-duplicate');
+            if (val) {
+                counts[val] = (counts[val] || 0) + 1;
+                if (!slots[val]) slots[val] = [];
+                slots[val].push(wrap);
+            }
+        }
+        Object.keys(counts).forEach(v => {
+            if (counts[v] > 1) slots[v].forEach(w => w.classList.add('has-duplicate'));
+        });
     }
 
     function populateVoterDropdown() {
         const dd = document.getElementById('voterSelectDropdown');
         if (!dd) return;
         dd.innerHTML = '';
-
         const myOpt = document.createElement('option');
         myOpt.value = currentUser.name;
         myOpt.innerText = `${currentUser.avatar} ${currentUser.name} (Active Profile)`;
         dd.appendChild(myOpt);
-
         communityBallots.forEach(b => {
             if (b.voter.toLowerCase() !== currentUser.name.toLowerCase()) {
                 const opt = document.createElement('option');
@@ -984,30 +871,24 @@
 
     function handleVoterSelectChange() {
         const dd = document.getElementById('voterSelectDropdown');
-        const selectedVoter = dd.value;
-        loadUserBallotIntoUI(selectedVoter);
+        if (dd) loadUserBallotIntoUI(dd.value);
     }
 
-    // Loads saved teams directly into ranks 1–25 and Heisman picks
     function loadUserBallotIntoUI(voterName = null) {
-        const targetName = voterName || currentUser.name;
-        const entry = communityBallots.find(b => b.voter.toLowerCase() === targetName.toLowerCase());
-
+        const target = voterName || currentUser.name;
+        const entry = communityBallots.find(b => b.voter.toLowerCase() === target.toLowerCase());
         clearBallotFieldsOnly();
-
         if (entry) {
             (entry.ballot || []).forEach(item => {
                 const input = document.getElementById(`rank-${item.rank}`);
                 if (input) input.value = item.team;
             });
-
             (entry.heisman || []).forEach(h => {
-                const pInput = document.getElementById(`heisman-${h.rank}-player`);
-                const tInput = document.getElementById(`heisman-${h.rank}-team`);
-                if (pInput) pInput.value = h.player || '';
-                if (tInput) tInput.value = h.team || '';
+                const p = document.getElementById(`heisman-${h.rank}-player`);
+                const t = document.getElementById(`heisman-${h.rank}-team`);
+                if (p) p.value = h.player || '';
+                if (t) t.value = h.team || '';
             });
-
             validateBallotDuplicates();
         }
     }
@@ -1026,656 +907,31 @@
         validateBallotDuplicates();
     }
 
-    function openProfileModal() {
-        document.getElementById('profileNameInput').value = currentUser.name;
-        document.getElementById('profileAvatarInput').value = currentUser.avatar;
-        renderFavChips();
-        updateFavoritesDatalist();
-        document.getElementById('profileModal').classList.add('open');
-    }
-
-    function closeProfileModal() {
-        document.getElementById('profileModal').classList.remove('open');
-    }
-
-    function updateFavoritesDatalist() {
-        const datalist = document.getElementById('allFavoritesDatalist');
-        datalist.innerHTML = '';
-        Array.from(allDivOneTeamsSet).sort().forEach(team => {
-            const opt = document.createElement('option');
-            opt.value = team;
-            datalist.appendChild(opt);
-        });
-    }
-
-    function renderFavChips() {
-        const container = document.getElementById('favChipsContainer');
-        container.innerHTML = '';
-        currentUser.favoriteTeams.forEach((team, idx) => {
-            const chip = document.createElement('div');
-            chip.className = 'fav-chip';
-            chip.innerHTML = `${team} <span onclick="removeFavTeam(${idx})">&times;</span>`;
-            container.appendChild(chip);
-        });
-    }
-
-    function handleFavInput(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const val = e.target.value.trim();
-            if (val && !currentUser.favoriteTeams.some(t => normalize(t) === normalize(val))) {
-                currentUser.favoriteTeams.push(val);
-                allDivOneTeamsSet.add(val);
-                e.target.value = '';
-                renderFavChips();
-            }
-        }
-    }
-
-    function removeFavTeam(index) {
-        currentUser.favoriteTeams.splice(index, 1);
-        renderFavChips();
-    }
-
-    function saveUserProfile() {
-        currentUser.name = document.getElementById('profileNameInput').value.trim() || 'Anonymous Fan';
-        currentUser.avatar = document.getElementById('profileAvatarInput').value.trim() || '🏈';
-        localStorage.setItem('cfb_user_profile', JSON.stringify(currentUser));
-        updateProfileUI();
-        closeProfileModal();
-        renderGames();
-        loadUserBallotIntoUI();
-    }
-
-    // --- TAB NAVIGATION ---
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        
-        const target = document.getElementById(tabId);
-        if (target) target.classList.add('active');
-
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
-                btn.classList.add('active');
-            }
-        });
-
-        if (tabId === 'community' || tabId === 'playoff') calculateCommunityPoll();
-        if (tabId === 'ballot') loadUserBallotIntoUI();
-    }
-
-    // --- SPOILERS TOGGLE ---
-    function toggleSpoilers() {
-        hideSpoilers = !hideSpoilers;
-        const btn = document.getElementById('spoilerToggleBtn');
-        const grid = document.getElementById('gameGrid');
-        if (hideSpoilers) {
-            grid.classList.add('hide-spoilers');
-            btn.classList.add('active');
-            btn.innerText = '🙈 Hide Spoilers: ON (Hover to peek)';
-        } else {
-            grid.classList.remove('hide-spoilers');
-            btn.classList.remove('active');
-            btn.innerText = '🙈 Hide Spoilers: OFF';
-        }
-    }
-
-    // --- WATCHABILITY SCORING (CRASH-PROOF) ---
-    function calculateWatchability(game) {
-        try {
-            let score = 1;
-            const rank1 = (game.away && game.away.rank) ? Number(game.away.rank) : 99;
-            const rank2 = (game.home && game.home.rank) ? Number(game.home.rank) : 99;
-
-            if (rank1 <= 25 && rank2 <= 25) score += 3;
-            else if (rank1 <= 25 || rank2 <= 25) score += 1.5;
-
-            const sp = Number(game.spreadValue);
-            if (!isNaN(sp) && Math.abs(sp) <= 4.5) score += 1;
-
-            const aScore = Number(game.away && game.away.score);
-            const hScore = Number(game.home && game.home.score);
-            if (game.state === 'in' && Number(game.period) >= 3 && !isNaN(aScore) && !isNaN(hScore) && Math.abs(aScore - hScore) <= 8) {
-                score += 1.5;
-            }
-
-            if (game.situation && game.situation.isRedZone) {
-                score += 0.5;
-            }
-
-            const finalScore = Math.min(5, Math.max(1, Math.round(score)));
-            return isNaN(finalScore) ? 1 : finalScore;
-        } catch (e) {
-            return 1;
-        }
-    }
-
-    function getNetworkClass(net) {
-        const n = (net || '').toLowerCase();
-        if (n.includes('abc')) return 'net-abc';
-        if (n.includes('fox') || n.includes('fs1')) return 'net-fox';
-        if (n.includes('cbs') || n.includes('sec')) return 'net-cbs';
-        if (n.includes('espn')) return 'net-espn';
-        if (n.includes('nbc') || n.includes('peacock')) return 'net-nbc';
-        return 'net-other';
-    }
-
-    // --- LIVE SCHEDULE FETCH (ESPN API) ---
-    async function fetchLiveSchedule() {
-        const grid = document.getElementById('gameGrid');
-        const weekVal = document.getElementById('weekFilter') ? document.getElementById('weekFilter').value : 'current';
-        const currentYear = new Date().getFullYear();
-        
-        const queryParams = (weekVal !== 'current') 
-            ? `&season=${currentYear}&week=${weekVal}&seasontype=2` 
-            : '';
-
-        let fbsData = { events: [] };
-        let fcsData = { events: [] };
-
-        try {
-            const fbsUrl = `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=300${queryParams}`;
-            const fcsUrl = `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=300${queryParams}`;
-
-            const [fbsRes, fcsRes] = await Promise.allSettled([
-                fetch(fbsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status)),
-                fetch(fcsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status))
-            ]);
-
-            if (fbsRes.status === 'fulfilled') fbsData = fbsRes.value;
-            if (fcsRes.status === 'fulfilled') fcsData = fcsRes.value;
-
-            if ((!fbsData.events || fbsData.events.length === 0) && (!fcsData.events || fcsData.events.length === 0)) {
-                const fallbackRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=300`);
-                if (fallbackRes.ok) {
-                    fbsData = await fallbackRes.json();
-                }
-            }
-        } catch (netErr) {
-            console.error("Network fetch failure:", netErr);
-        }
-
-        try {
-            const seenEventIds = new Set();
-
-            const parseEvents = (events, defaultDiv) => {
-                const parsedList = [];
-                (events || []).forEach(ev => {
-                    if (!ev || !ev.id || seenEventIds.has(ev.id)) return;
-                    seenEventIds.add(ev.id);
-
-                    const comp = ev.competitions && ev.competitions[0];
-                    if (!comp || !comp.competitors || comp.competitors.length < 2) return;
-
-                    const away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
-                    const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0];
-                    if (!away || !home || !away.team || !home.team) return;
-
-                    const odds = (comp.odds && comp.odds[0]) ? comp.odds[0] : null;
-                    const situation = comp.situation || null;
-
-                    let isRedZone = false;
-                    let downDistanceText = '';
-
-                    if (situation) {
-                        const yardLine = situation.yardLine || 99;
-                        if (situation.isRedZone || (situation.possession && yardLine <= 20)) {
-                            isRedZone = true;
-                        }
-                        if (situation.down && situation.distance) {
-                            downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance} at ${situation.possessionText || ''}`;
-                        }
-                    }
-
-                    const extractTeam = (competitor, isAway) => {
-                        const loc = competitor.team.location || competitor.team.name || "Unknown";
-                        const opp = isAway ? (home.team.location || home.team.name || "") : (away.team.location || away.team.name || "");
-
-                        allDivOneTeamsSet.add(loc);
-
-                        if (comp.status && comp.status.type && comp.status.type.state === 'post') {
-                            const win = competitor.winner;
-                            const tRes = getTeamResume(loc);
-                            tRes.prevOutcome = win ? 'W' : 'L';
-                            tRes.prevResult = `${win ? 'W' : 'L'} ${competitor.score || '0'}-${(isAway ? home.score : away.score) || '0'} vs ${opp}`;
-                        }
-
-                        const hasPossession = Boolean(situation && situation.possession === competitor.id);
-                        const teamInRedZone = Boolean(isRedZone && situation && situation.possession === competitor.id);
-
-                        return {
-                            id: competitor.id,
-                            name: loc,
-                            conference: TEAM_TO_CONF[loc] || (defaultDiv === 'FCS' ? 'FCS' : 'FBS'),
-                            location: competitor.team.location || loc,
-                            displayName: competitor.team.displayName || loc,
-                            shortDisplayName: competitor.team.shortDisplayName || loc,
-                            rank: (competitor.curatedRank && competitor.curatedRank.current <= 25) ? competitor.curatedRank.current : null,
-                            score: competitor.score || '0',
-                            linescores: competitor.linescores || [],
-                            logo: competitor.team.logo || '',
-                            hasPossession: hasPossession,
-                            inRedZone: teamInRedZone
-                        };
-                    };
-
-                    const gameDate = new Date(ev.date || Date.now());
-                    const hour = gameDate.getHours();
-
-                    const awayScore = parseInt(away.score || '0', 10);
-                    const homeScore = parseInt(home.score || '0', 10);
-                    const isUnderdogLeading = Boolean(comp.status && comp.status.type && comp.status.type.state === 'in' && comp.status.period >= 3 && (
-                        (away.curatedRank && away.curatedRank.current <= 15 && (!home.curatedRank || home.curatedRank.current > 25) && homeScore >= awayScore - 7) ||
-                        (home.curatedRank && home.curatedRank.current <= 15 && (!away.curatedRank || away.curatedRank.current > 25) && awayScore >= homeScore - 7)
-                    ));
-
-                    let broadcastName = 'TBD';
-                    if (comp.broadcasts && comp.broadcasts[0]) {
-                        const b = comp.broadcasts[0];
-                        if (Array.isArray(b.names) && b.names[0]) broadcastName = b.names[0];
-                        else if (b.media && b.media.shortName) broadcastName = b.media.shortName;
-                        else if (b.name) broadcastName = b.name;
-                    }
-
-                    const isAwayFBS = fbsTeamsSet.has(away.team.location || away.team.name);
-                    const isHomeFBS = fbsTeamsSet.has(home.team.location || home.team.name);
-                    const finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
-
-                    const parsed = {
-                        id: ev.id,
-                        div: finalDiv,
-                        dateRaw: gameDate,
-                        hour: hour,
-                        date: gameDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                        network: broadcastName,
-                        state: (comp.status && comp.status.type) ? comp.status.type.state : 'pre',
-                        clock: (comp.status && comp.status.type) ? comp.status.type.detail : 'Scheduled',
-                        period: comp.status ? comp.status.period : 0,
-                        spread: odds ? (odds.details || 'N/A') : 'N/A',
-                        spreadValue: (odds && odds.spread) ? parseFloat(odds.spread) : null,
-                        isUpsetAlert: isUnderdogLeading,
-                        situation: {
-                            isRedZone: isRedZone,
-                            text: downDistanceText,
-                            raw: situation
-                        },
-                        away: extractTeam(away, true),
-                        home: extractTeam(home, false)
-                    };
-
-                    parsed.rating = calculateWatchability(parsed);
-                    parsedList.push(parsed);
-                });
-                return parsedList;
-            };
-
-            gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
-            renderGames();
-            
-            if (!isPoolPopulated) {
-                populateFBSQuickSelectPool();
-            } else {
-                filterTeamsByConference();
-                validateBallotDuplicates();
-            }
-        } catch (parseErr) {
-            console.error("Scoreboard render error:", parseErr);
-            grid.innerHTML = `<p style="color: var(--live-red); padding: 20px;">Error processing schedule data.</p>`;
-        }
-    }
-
-    // --- RENDER MATCHUPS WITH SAFE REPEAT COUNTS ---
-    function renderGames() {
-        const grid = document.getElementById('gameGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-
-        const confFilter = document.getElementById('scoreConfFilter') ? document.getElementById('scoreConfFilter').value : 'ALL';
-
-        const filtered = gamesData.filter(g => {
-            const hasFav = isTeamFavorite(g.away) || isTeamFavorite(g.home);
-            
-            if (confFilter !== 'ALL') {
-                if (confFilter === 'FCS') {
-                    if (g.div !== 'FCS') return false;
-                } else {
-                    const awayConf = TEAM_TO_CONF[g.away.name];
-                    const homeConf = TEAM_TO_CONF[g.home.name];
-                    if (awayConf !== confFilter && homeConf !== confFilter) return false;
-                }
-            }
-
-            if (currentFilter === 'FBS') return g.div === 'FBS';
-            if (currentFilter === 'FCS') return g.div === 'FCS';
-            if (currentFilter === 'ranked') return (g.away.rank && g.away.rank <= 25) || (g.home.rank && g.home.rank <= 25);
-            if (currentFilter === 'favorites') return hasFav;
-            if (currentFilter === 'redzone') return g.situation && g.situation.isRedZone;
-            if (currentFilter === 'upset') return g.isUpsetAlert;
-            if (currentFilter === 'noon') return g.hour >= 11 && g.hour < 15;
-            if (currentFilter === 'afternoon') return g.hour >= 15 && g.hour < 18;
-            if (currentFilter === 'prime') return g.hour >= 18 && g.hour < 22;
-            if (currentFilter === 'afterdark') return g.hour >= 22 || g.hour < 5;
-            if (currentFilter === 'live') return g.state === 'in';
-            return true;
-        });
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `<p style="color: var(--text-muted); padding: 20px;">No games match the current filters.</p>`;
-            return;
-        }
-
-        filtered.forEach(g => {
-            const card = document.createElement('div');
-            const isAwayFav = isTeamFavorite(g.away);
-            const isHomeFav = isTeamFavorite(g.home);
-            const isFavMatch = isAwayFav || isHomeFav;
-            const hasRedZone = g.situation && g.situation.isRedZone && g.state === 'in';
-
-            const prevAway = previousScores[`${g.id}_away`];
-            const prevHome = previousScores[`${g.id}_home`];
-            const awayUpdated = prevAway !== undefined && prevAway !== g.away.score;
-            const homeUpdated = prevHome !== undefined && prevHome !== g.home.score;
-            
-            previousScores[`${g.id}_away`] = g.away.score;
-            previousScores[`${g.id}_home`] = g.home.score;
-
-            card.className = `game-card ${isFavMatch ? 'is-favorite-match' : ''} ${hasRedZone ? 'in-redzone' : ''}`;
-            card.onclick = () => openBoxscoreModal(g.id);
-
-            let statusClass = 'status-pre';
-            if (g.state === 'in') statusClass = 'status-in';
-            if (g.state === 'post') statusClass = 'status-post';
-
-            const starCount = Math.max(1, Math.min(5, Number(g.rating) || 1));
-
-            card.innerHTML = `
-                ${isFavMatch ? `<div class="fav-badge">★ Favorite</div>` : ''}
-                <div>
-                    <div class="game-header">
-                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                            <span class="net-tag ${getNetworkClass(g.network)}">${g.network}</span>
-                            <span>${g.date} (${g.div})</span>
-                            ${hasRedZone ? `<span class="redzone-banner">🔴 Red Zone</span>` : ''}
-                            ${g.isUpsetAlert ? `<span class="upset-banner">🚨 Upset Alert</span>` : ''}
-                        </div>
-                        <span class="status-badge ${statusClass} live-clock">${g.clock}</span>
-                    </div>
-                    
-                    <div class="team-row ${g.away.hasPossession ? 'has-possession' : ''} ${g.away.inRedZone ? 'team-in-redzone' : ''}">
-                        <div class="team-meta">
-                            ${g.away.hasPossession ? `<span class="possession-dot" title="Has possession"></span>` : ''}
-                            ${g.away.logo ? `<img src="${g.away.logo}" class="team-logo">` : ''}
-                            <span class="team-name ${isAwayFav ? 'highlight-fav' : ''}">
-                                ${g.away.rank ? `<span class="team-rank">#${g.away.rank}</span>` : ''}${g.away.name}
-                            </span>
-                        </div>
-                        <span class="score ${awayUpdated ? 'score-updated' : ''}">${g.state === 'pre' ? '-' : g.away.score}</span>
-                    </div>
-
-                    <div class="team-row ${g.home.hasPossession ? 'has-possession' : ''} ${g.home.inRedZone ? 'team-in-redzone' : ''}">
-                        <div class="team-meta">
-                            ${g.home.hasPossession ? `<span class="possession-dot" title="Has possession"></span>` : ''}
-                            ${g.home.logo ? `<img src="${g.home.logo}" class="team-logo">` : ''}
-                            <span class="team-name ${isHomeFav ? 'highlight-fav' : ''}">
-                                ${g.home.rank ? `<span class="team-rank">#${g.home.rank}</span>` : ''}${g.home.name}
-                            </span>
-                        </div>
-                        <span class="score ${homeUpdated ? 'score-updated' : ''}">${g.state === 'pre' ? '-' : g.home.score}</span>
-                    </div>
-
-                    ${g.situation && g.situation.text ? `<div class="situation-text">🏈 ${g.situation.text}</div>` : ''}
-                    <div class="click-hint">Click for boxscore & team stats ↗</div>
-                </div>
-
-                <div class="game-footer">
-                    <span>Spread: ${g.spread}</span>
-                    <span class="fire-rating">${'🔥'.repeat(starCount)} (${starCount}/5)</span>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    // --- BALLOT BUILDER (DRAG & DROP REORDERING) ---
-    function initBallotSlots() {
-        const container = document.getElementById('ballotSlots');
-        container.innerHTML = '';
-        for (let i = 1; i <= 25; i++) {
-            container.innerHTML += `
-                <div class="ballot-slot" id="slot-wrap-${i}" draggable="true" ondragstart="handleDragStart(event, ${i})" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, ${i})">
-                    <span class="drag-handle">⠿</span>
-                    <span class="rank-num">#${i}</span>
-                    <input type="text" class="team-input" id="rank-${i}" placeholder="Enter FBS team..." oninput="validateBallotDuplicates()" list="fbsDatalist">
-                    <div class="slot-actions">
-                        <button class="slot-btn" title="Move Up" onclick="shiftRank(${i}, -1)">▲</button>
-                        <button class="slot-btn" title="Move Down" onclick="shiftRank(${i}, 1)">▼</button>
-                    </div>
-                </div>
-            `;
-        }
-    }
-
-    let draggedSlotIndex = null;
-    function handleDragStart(e, index) {
-        draggedSlotIndex = index;
-        e.currentTarget.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', index);
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault();
-        e.currentTarget.classList.add('drag-over');
-    }
-
-    function handleDragLeave(e) {
-        e.currentTarget.classList.remove('drag-over');
-    }
-
-    function handleDrop(e, targetIndex) {
-        e.preventDefault();
-        e.currentTarget.classList.remove('drag-over');
-        document.querySelectorAll('.ballot-slot').forEach(s => s.classList.remove('dragging'));
-
-        if (draggedSlotIndex !== null && draggedSlotIndex !== targetIndex) {
-            const srcVal = document.getElementById(`rank-${draggedSlotIndex}`).value;
-            const tgtVal = document.getElementById(`rank-${targetIndex}`).value;
-            document.getElementById(`rank-${draggedSlotIndex}`).value = tgtVal;
-            document.getElementById(`rank-${targetIndex}`).value = srcVal;
-            validateBallotDuplicates();
-        }
-    }
-
-    function shiftRank(index, dir) {
-        const targetIndex = index + dir;
-        if (targetIndex < 1 || targetIndex > 25) return;
-        const curVal = document.getElementById(`rank-${index}`).value;
-        const tgtVal = document.getElementById(`rank-${targetIndex}`).value;
-        document.getElementById(`rank-${index}`).value = tgtVal;
-        document.getElementById(`rank-${targetIndex}`).value = curVal;
-        validateBallotDuplicates();
-    }
-
-    function populateFBSQuickSelectPool() {
-        const quickList = document.getElementById('quickTeamList');
-        quickList.innerHTML = '';
-
-        let datalist = document.getElementById('fbsDatalist');
-        if (!datalist) {
-            datalist = document.createElement('datalist');
-            datalist.id = 'fbsDatalist';
-            document.body.appendChild(datalist);
-        }
-        datalist.innerHTML = '';
-
-        Array.from(fbsTeamsSet).sort().forEach(team => {
-            const opt = document.createElement('option');
-            opt.value = team;
-            datalist.appendChild(opt);
-
-            const btn = document.createElement('button');
-            btn.className = 'quick-team-btn';
-            btn.id = `qbtn-${normalize(team).replace(/[^a-z0-9]/g, '')}`;
-            btn.innerText = team;
-            btn.onclick = () => showTeamIntel(team);
-            quickList.appendChild(btn);
-        });
-
-        isPoolPopulated = true;
-        showTeamIntel("Georgia");
-        filterTeamsByConference();
-        validateBallotDuplicates();
-    }
-
-    function showTeamIntel(teamName) {
-        activeIntelTeam = teamName;
-        const res = getTeamResume(teamName);
-        const conf = TEAM_TO_CONF[teamName] || "FBS";
-
-        document.getElementById('intelTeamName').innerText = teamName;
-        document.getElementById('intelConfTag').innerText = conf;
-        document.getElementById('intelOverall').innerText = res.overall;
-        document.getElementById('intelConfRecord').innerText = res.confRecord;
-        
-        const prevEl = document.getElementById('intelPrevResult');
-        if (res.prevOutcome === 'W') {
-            prevEl.innerHTML = `<span class="res-win">W</span> ${res.prevResult.replace('W ', '')}`;
-        } else if (res.prevOutcome === 'L') {
-            prevEl.innerHTML = `<span class="res-loss">L</span> ${res.prevResult.replace('L ', '')}`;
-        } else {
-            prevEl.innerText = res.prevResult;
-        }
-
-        document.querySelectorAll('.quick-team-btn').forEach(b => b.classList.remove('active-selected'));
-        const activeBtn = document.getElementById(`qbtn-${normalize(teamName).replace(/[^a-z0-9]/g, '')}`);
-        if (activeBtn) activeBtn.classList.add('active-selected');
-    }
-
-    function slotActiveIntelTeam() {
-        if (!activeIntelTeam) return;
-        
-        const currentRanked = getCurrentRankedTeams();
-        if (currentRanked.some(t => normalize(t.name) === normalize(activeIntelTeam))) {
-            alert(`"${activeIntelTeam}" is already slotted on your ballot.`);
-            return;
-        }
-
-        for (let i = 1; i <= 25; i++) {
-            const input = document.getElementById(`rank-${i}`);
-            if (!input.value.trim()) {
-                input.value = activeIntelTeam;
-                validateBallotDuplicates();
-                break;
-            }
-        }
-    }
-
-    function filterTeamsByConference() {
-        const conf = document.getElementById('conferenceFilter').value;
-        const query = document.getElementById('searchTeam').value.toLowerCase();
-
-        document.querySelectorAll('.quick-team-btn').forEach(btn => {
-            const teamName = btn.innerText;
-            const teamConf = TEAM_TO_CONF[teamName] || "Independents";
-            
-            const matchesConf = (conf === 'ALL' || teamConf === conf);
-            const matchesQuery = teamName.toLowerCase().includes(query);
-
-            btn.style.display = (matchesConf && matchesQuery) ? 'inline-block' : 'none';
-        });
-    }
-
-    function filterTeamList() {
-        filterTeamsByConference();
-    }
-
-    function getCurrentRankedTeams() {
-        const list = [];
-        for (let i = 1; i <= 25; i++) {
-            const val = document.getElementById(`rank-${i}`).value.trim();
-            if (val) list.push({ rank: i, name: val });
-        }
-        return list;
-    }
-
-    function validateBallotDuplicates() {
-        const counts = {};
-        const slots = {};
-
-        for (let i = 1; i <= 25; i++) {
-            const input = document.getElementById(`rank-${i}`);
-            const wrap = document.getElementById(`slot-wrap-${i}`);
-            if (!input || !wrap) continue;
-            const val = normalize(input.value);
-
-            wrap.classList.remove('has-duplicate');
-
-            if (val) {
-                counts[val] = (counts[val] || 0) + 1;
-                if (!slots[val]) slots[val] = [];
-                slots[val].push(wrap);
-            }
-        }
-
-        Object.keys(counts).forEach(val => {
-            if (counts[val] > 1) {
-                slots[val].forEach(w => w.classList.add('has-duplicate'));
-            }
-        });
-
-        const currentNorms = Object.keys(counts);
-        Array.from(fbsTeamsSet).forEach(team => {
-            const btnId = `qbtn-${normalize(team).replace(/[^a-z0-9]/g, '')}`;
-            const btn = document.getElementById(btnId);
-            if (btn) {
-                if (currentNorms.includes(normalize(team))) {
-                    btn.classList.add('is-slotted');
-                } else {
-                    btn.classList.remove('is-slotted');
-                }
-            }
-        });
+    function clearBallot() {
+        if (confirm('Clear ballot entries?')) clearBallotFieldsOnly();
     }
 
     function saveBallot() {
         const ballot = [];
-        const seenTeams = new Set();
-        const duplicates = new Set();
-        const nonFBSTeams = [];
+        const seen = new Set();
+        const dupes = new Set();
+        const nonFBS = [];
 
         for (let i = 1; i <= 25; i++) {
-            const rawVal = document.getElementById(`rank-${i}`).value.trim();
-            if (rawVal) {
-                const norm = normalize(rawVal);
-
-                if (seenTeams.has(norm)) {
-                    duplicates.add(rawVal);
-                }
-                seenTeams.add(norm);
-
-                let canonicalName = Array.from(fbsTeamsSet).find(t => normalize(t) === norm);
-                if (!canonicalName) {
-                    nonFBSTeams.push(rawVal);
-                } else {
-                    ballot.push({ rank: i, team: canonicalName });
-                }
+            const val = document.getElementById(`rank-${i}`).value.trim();
+            if (val) {
+                const norm = normalize(val);
+                if (seen.has(norm)) dupes.add(val);
+                seen.add(norm);
+                const canon = Array.from(fbsTeamsSet).find(t => normalize(t) === norm);
+                if (!canon) nonFBS.push(val);
+                else ballot.push({ rank: i, team: canon });
             }
         }
 
-        if (ballot.length === 0 && nonFBSTeams.length === 0) {
-            alert('Please rank at least one team before submitting.');
-            return;
-        }
-
-        if (duplicates.size > 0) {
-            alert(`Duplicate rule violation: The following team(s) were voted for more than once:\n• ${Array.from(duplicates).join('\n• ')}\n\nEach team can only appear once per ballot.`);
-            return;
-        }
-
-        if (nonFBSTeams.length > 0) {
-            alert(`FBS rule violation: Only FBS schools can receive votes.\nThe following are not recognized as FBS teams:\n• ${nonFBSTeams.join('\n• ')}`);
-            return;
-        }
+        if (ballot.length === 0) { alert('Please enter teams before saving.'); return; }
+        if (dupes.size > 0) { alert(`Duplicate teams found:\n• ${Array.from(dupes).join('\n• ')}`); return; }
+        if (nonFBS.length > 0) { alert(`Only FBS teams allowed:\n• ${nonFBS.join('\n• ')}`); return; }
 
         const heisman = [];
         for (let i = 1; i <= 3; i++) {
@@ -1686,382 +942,283 @@
 
         const dd = document.getElementById('voterSelectDropdown');
         const activeVoter = (dd && dd.value) ? dd.value : currentUser.name;
-
-        const ballotEntry = {
-            voter: activeVoter,
-            avatar: currentUser.avatar,
-            favorites: currentUser.favoriteTeams,
+        const entry = {
+            voter: activeVoter, avatar: currentUser.avatar, favorites: currentUser.favoriteTeams,
             submittedAt: new Date().toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-            ballot: ballot,
-            heisman: heisman
+            ballot: ballot, heisman: heisman
         };
 
-        const existingIdx = communityBallots.findIndex(b => b.voter.toLowerCase() === activeVoter.toLowerCase());
-        if (existingIdx >= 0) {
-            communityBallots[existingIdx] = ballotEntry;
-        } else {
-            communityBallots.push(ballotEntry);
-        }
+        const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === activeVoter.toLowerCase());
+        if (idx >= 0) communityBallots[idx] = entry;
+        else communityBallots.push(entry);
 
         localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
         pushToCloud();
         populateVoterDropdown();
         calculateCommunityPoll();
-        alert(`Ballot successfully saved under "${activeVoter}"!`);
+        alert(`Ballot saved for ${activeVoter}!`);
     }
 
-    function clearBallot() {
-        if (confirm('Clear all fields on this ballot?')) {
+    function calculateCommunityPoll() {
+        const scores = {};
+        const voters = {};
+        const heismanScores = {};
+
+        communityBallots.forEach(b => {
+            (b.ballot || []).forEach(item => {
+                const pts = 26 - item.rank;
+                if (!scores[item.team]) scores[item.team] = { points: 0, firstPlace: 0 };
+                if (!voters[item.team]) voters[item.team] = [];
+                scores[item.team].points += pts;
+                if (item.rank === 1) scores[item.team].firstPlace += 1;
+                voters[item.team].push(`${b.voter} (#${item.rank})`);
+            });
+
+            (b.heisman || []).forEach(h => {
+                if (!h.player) return;
+                const k = h.player.trim();
+                const pts = h.rank === 1 ? 3 : h.rank === 2 ? 2 : 1;
+                if (!heismanScores[k]) heismanScores[k] = { player: k, team: h.team || 'N/A', points: 0, firstPlace: 0 };
+                heismanScores[k].points += pts;
+                if (h.rank === 1) heismanScores[k].firstPlace += 1;
+            });
+        });
+
+        const sorted = Object.keys(scores).map(t => ({ team: t, voters: voters[t], ...scores[t] }))
+            .sort((a,b) => b.points - a.points || b.firstPlace - a.firstPlace);
+
+        currentConsensusRanking = sorted;
+        document.getElementById('ballotCounter').innerText = `${communityBallots.length} Ballot(s) Aggregated`;
+
+        const tbody = document.getElementById('pollResultsBody');
+        tbody.innerHTML = '';
+        sorted.slice(0, 25).forEach((t, i) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>#${i+1}</strong></td><td><strong>${t.team}</strong></td><td><strong>${t.points}</strong></td><td>${t.firstPlace > 0 ? `🥇 ${t.firstPlace}` : '-'}</td><td style="font-size: 0.78rem; color: var(--text-muted);">${(t.voters || []).join(', ')}</td>`;
+            tbody.appendChild(tr);
+        });
+
+        const orv = sorted.slice(25).map(t => `${t.team} (${t.points})`).join(', ');
+        document.getElementById('orvContent').innerText = orv || 'None';
+
+        const hBody = document.getElementById('heismanResultsBody');
+        hBody.innerHTML = '';
+        const sortedH = Object.values(heismanScores).sort((a,b) => b.points - a.points || b.firstPlace - a.firstPlace);
+        sortedH.slice(0, 5).forEach((h, i) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>#${i+1}</strong></td><td><strong>${h.player}</strong></td><td>${h.team}</td><td><strong>${h.points}</strong></td><td>${h.firstPlace > 0 ? `🥇 ${h.firstPlace}` : '-'}</td>`;
+            hBody.appendChild(tr);
+        });
+
+        const dir = document.getElementById('votersDirectoryList');
+        dir.innerHTML = '';
+        communityBallots.forEach((b, idx) => {
+            const card = document.createElement('div');
+            card.className = 'voter-card';
+            card.onclick = () => openVoterBallotModal(idx);
+            card.innerHTML = `<div><strong>${b.avatar || '👤'} ${b.voter}</strong><div style="font-size: 0.75rem; color: var(--text-muted);">${b.submittedAt || 'Recent'}</div></div><span style="color: var(--accent-blue);">Inspect ↗</span>`;
+            dir.appendChild(card);
+        });
+
+        project12TeamPlayoff(sorted);
+    }
+
+    function project12TeamPlayoff(sorted) {
+        const firstRound = document.getElementById('cfpFirstRoundGrid');
+        const quarters = document.getElementById('cfpQuarterfinalsGrid');
+        const semis = document.getElementById('cfpSemifinalsGrid');
+        const champ = document.getElementById('cfpChampionshipGrid');
+
+        firstRound.innerHTML = ''; quarters.innerHTML = ''; semis.innerHTML = ''; champ.innerHTML = '';
+        if (sorted.length < 12) { firstRound.innerHTML = `<p style="color: var(--text-muted);">Requires 12+ ranked teams to project playoff.</p>`; return; }
+
+        const confChamps = [];
+        const nonChamps = [];
+        const seenConf = new Set();
+
+        sorted.forEach(t => {
+            const conf = TEAM_TO_CONF[t.team] || "Independents";
+            if (!seenConf.has(conf) && conf !== "Independents" && confChamps.length < 5) {
+                seenConf.add(conf); confChamps.push({ ...t, conf });
+            } else { nonChamps.push(t); }
+        });
+
+        const top4 = confChamps.slice(0, 4);
+        const pool = [...confChamps.slice(4), ...nonChamps].sort((a,b) => b.points - a.points);
+        const seeds = [...top4, ...pool.slice(0, 8)];
+
+        const matchups = [
+            { host: 5, away: 12, hostT: seeds[4], awayT: seeds[11] },
+            { host: 6, away: 11, hostT: seeds[5], awayT: seeds[10] },
+            { host: 7, away: 10, hostT: seeds[6], awayT: seeds[9] },
+            { host: 8, away: 9, hostT: seeds[7], awayT: seeds[8] }
+        ];
+
+        matchups.forEach(m => {
+            const box = document.createElement('div');
+            box.className = 'playoff-game-card';
+            box.innerHTML = `
+                <div class="bracket-team-slot higher-seed"><span>#${m.host} ${m.hostT ? m.hostT.team : 'TBD'}</span><span>HOST</span></div>
+                <div class="bracket-team-slot"><span>#${m.away} ${m.awayT ? m.awayT.team : 'TBD'}</span><span>AWAY</span></div>
+            `;
+            firstRound.appendChild(box);
+        });
+
+        const ny6 = [
+            { bowl: "Fiesta Bowl", seed: 1, t: top4[0] }, { bowl: "Peach Bowl", seed: 4, t: top4[3] },
+            { bowl: "Rose Bowl", seed: 3, t: top4[2] }, { bowl: "Sugar Bowl", seed: 2, t: top4[1] }
+        ];
+        ny6.forEach(q => {
+            const box = document.createElement('div');
+            box.className = 'playoff-game-card';
+            box.innerHTML = `<span style="font-size: 0.75rem; color: var(--accent-blue); font-weight: bold;">${q.bowl}</span><div class="bracket-team-slot bye-seed"><span>#${q.seed} ${q.t ? q.t.team : 'TBD'}</span><span>BYE</span></div>`;
+            quarters.appendChild(box);
+        });
+
+        semis.innerHTML = `<div class="playoff-game-card"><span style="font-size: 0.75rem; color: var(--accent-blue); font-weight: bold;">Orange Bowl</span><div class="bracket-team-slot"><span>Fiesta Winner vs Peach Winner</span></div></div><div class="playoff-game-card"><span style="font-size: 0.75rem; color: var(--accent-blue); font-weight: bold;">Cotton Bowl</span><div class="bracket-team-slot"><span>Sugar Winner vs Rose Winner</span></div></div>`;
+        champ.innerHTML = `<div class="playoff-game-card" style="border: 1.5px solid var(--accent);"><div class="bracket-team-slot"><span>Orange Bowl Winner vs Cotton Bowl Winner</span></div></div>`;
+    }
+
+    async function syncWithCloud() {
+        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
+                headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.API_KEY }
+            });
+            if (!res.ok) throw new Error(res.status);
+            const data = await res.json();
+            const parsed = parseAnyBallotPayload(data);
+            if (parsed.ballots.length > 0) {
+                communityBallots = parsed.ballots;
+                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
+                calculateCommunityPoll();
+                populateVoterDropdown();
+                loadUserBallotIntoUI();
+            }
+        } catch (e) { console.error("Sync error:", e); }
+    }
+
+    async function pushToCloud() {
+        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+        try {
+            await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.API_KEY },
+                body: JSON.stringify({ communityBallots: communityBallots, previousWeekTop25: previousWeekTop25 })
+            });
+        } catch (e) { console.error("Push error:", e); }
+    }
+
+    function exportData() {
+        const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ communityBallots, previousWeekTop25 }, null, 2));
+        const a = document.createElement('a'); a.href = str; a.download = "associated_best_poll_data.json"; a.click();
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const parsed = parseAnyBallotPayload(JSON.parse(e.target.result));
+                parsed.ballots.forEach(inB => {
+                    const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === (inB.voter || '').toLowerCase());
+                    if (idx >= 0) communityBallots[idx] = inB;
+                    else communityBallots.push(inB);
+                });
+                localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
+                pushToCloud();
+                calculateCommunityPoll();
+                populateVoterDropdown();
+                alert('Ballot imported successfully!');
+            } catch (err) { alert('Invalid JSON format.'); }
+        };
+        reader.readAsText(file);
+    }
+
+    function resetAllBallots() {
+        if (confirm('Clear all ballots?')) {
+            communityBallots = [];
+            localStorage.removeItem('cfb_community_ballots');
+            pushToCloud();
+            calculateCommunityPoll();
+            populateVoterDropdown();
             clearBallotFieldsOnly();
         }
     }
 
-    function setPreviousWeekBaseline() {
-        const scores = {};
-        communityBallots.forEach(entry => {
-            (entry.ballot || []).forEach(item => {
-                const team = item.team;
-                const points = 26 - item.rank;
-                if (!scores[team]) scores[team] = { points: 0, firstPlace: 0 };
-                scores[team].points += points;
-                if (item.rank === 1) scores[team].firstPlace += 1;
-            });
+    function openProfileModal() {
+        document.getElementById('profileNameInput').value = currentUser.name;
+        document.getElementById('profileAvatarInput').value = currentUser.avatar;
+        renderFavChips();
+        const dl = document.getElementById('allFavoritesDatalist');
+        dl.innerHTML = '';
+        Array.from(allDivOneTeamsSet).sort().forEach(t => { const opt = document.createElement('option'); opt.value = t; dl.appendChild(opt); });
+        document.getElementById('profileModal').classList.add('open');
+    }
+    function closeProfileModal() { document.getElementById('profileModal').classList.remove('open'); }
+    function renderFavChips() {
+        const c = document.getElementById('favChipsContainer'); c.innerHTML = '';
+        currentUser.favoriteTeams.forEach((t, i) => {
+            const sp = document.createElement('div'); sp.className = 'fav-chip';
+            sp.innerHTML = `${t} <span onclick="removeFavTeam(${i})" style="cursor:pointer;font-weight:bold;">&times;</span>`;
+            c.appendChild(sp);
         });
-
-        const sorted = Object.keys(scores).map(team => ({
-            team,
-            ...scores[team]
-        })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
-
-        if (sorted.length === 0) {
-            alert('Cannot set baseline: No ballots submitted yet.');
-            return;
+    }
+    function handleFavInput(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = e.target.value.trim();
+            if (val && !currentUser.favoriteTeams.includes(val)) {
+                currentUser.favoriteTeams.push(val);
+                e.target.value = '';
+                renderFavChips();
+            }
         }
-
-        previousWeekTop25 = sorted.slice(0, 25).map((t, idx) => ({
-            rank: idx + 1,
-            team: t.team
-        }));
-
-        localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
-        pushToCloud();
-        alert('Current Associated BEST Poll consensus saved as baseline!');
-        calculateCommunityPoll();
+    }
+    function removeFavTeam(i) { currentUser.favoriteTeams.splice(i, 1); renderFavChips(); }
+    function saveUserProfile() {
+        currentUser.name = document.getElementById('profileNameInput').value.trim() || 'Anonymous Fan';
+        currentUser.avatar = document.getElementById('profileAvatarInput').value.trim() || '🏈';
+        localStorage.setItem('cfb_user_profile', JSON.stringify(currentUser));
+        document.getElementById('userNamePreview').innerText = currentUser.name;
+        document.getElementById('userAvatarPreview').innerText = currentUser.avatar;
+        populateVoterDropdown();
+        closeProfileModal();
+        renderGames();
     }
 
-    // --- ASSOCIATED BEST POLL & HEISMAN AGGREGATION ENGINE ---
-    function calculateCommunityPoll() {
-        const scores = {};
-        const teamVoters = {};
-        const heismanScores = {};
-
-        communityBallots.forEach(entry => {
-            (entry.ballot || []).forEach(item => {
-                const team = item.team;
-                const points = 26 - item.rank;
-                
-                if (!scores[team]) scores[team] = { points: 0, firstPlace: 0, ballots: 0 };
-                if (!teamVoters[team]) teamVoters[team] = [];
-
-                scores[team].points += points;
-                scores[team].ballots += 1;
-                teamVoters[team].push(`${entry.voter} (#${item.rank})`);
-                if (item.rank === 1) scores[team].firstPlace += 1;
-            });
-
-            (entry.heisman || []).forEach(h => {
-                if (!h.player) return;
-                const key = h.player.trim();
-                const pts = h.rank === 1 ? 3 : h.rank === 2 ? 2 : 1;
-                if (!heismanScores[key]) {
-                    heismanScores[key] = { player: key, team: h.team || 'N/A', points: 0, firstPlace: 0 };
-                }
-                heismanScores[key].points += pts;
-                if (h.rank === 1) heismanScores[key].firstPlace += 1;
-            });
+    function openVoterBallotModal(idx) {
+        const b = communityBallots[idx];
+        if (!b) return;
+        document.getElementById('voterBallotTitle').innerText = `${b.avatar || '👤'} ${b.voter}'s Ballot`;
+        const body = document.getElementById('voterBallotBody');
+        body.innerHTML = '<h4>Team Rankings</h4>';
+        (b.ballot || []).forEach(item => {
+            body.innerHTML += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:0.85rem;"><span><strong>#${item.rank}</strong> ${item.team}</span><span>${26-item.rank} pts</span></div>`;
         });
-
-        const sorted = Object.keys(scores).map(team => ({
-            team,
-            voters: teamVoters[team],
-            ...scores[team]
-        })).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
-
-        currentConsensusRanking = sorted;
-        document.getElementById('ballotCounter').innerText = `${communityBallots.length} Ballot(s) Aggregated in Associated BEST Poll`;
-        
-        const tbody = document.getElementById('pollResultsBody');
-        tbody.innerHTML = '';
-
-        const currentTop25Teams = sorted.slice(0, 25);
-        const orvTeams = sorted.slice(25);
-
-        if (sorted.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 20px;">No ballots submitted to Associated BEST Poll yet.</td></tr>`;
-        } else {
-            currentTop25Teams.forEach((entry, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>#${idx + 1}</strong></td>
-                    <td><strong>${entry.team}</strong></td>
-                    <td><strong>${entry.points}</strong></td>
-                    <td>${entry.firstPlace > 0 ? `🥇 ${entry.firstPlace}` : '-'}</td>
-                    <td style="font-size: 0.8rem; color: var(--text-muted);">${(entry.voters || []).join(', ')}</td>
-                `;
-                tbody.appendChild(tr);
+        if (b.heisman && b.heisman.length > 0) {
+            body.innerHTML += '<h4 style="margin-top:12px;">Heisman Votes</h4>';
+            b.heisman.forEach(h => {
+                body.innerHTML += `<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.85rem;"><span>#${h.rank} ${h.player} (${h.team})</span></div>`;
             });
         }
-
-        // 1. Others Receiving Votes (ORV)
-        const orvContainer = document.getElementById('orvContent');
-        if (orvTeams.length === 0) {
-            orvContainer.innerText = "None";
-        } else {
-            orvContainer.innerHTML = orvTeams.map(t => {
-                const fp = t.firstPlace > 0 ? ` (${t.firstPlace})` : '';
-                return `<strong>${t.team}</strong> ${t.points}${fp}`;
-            }).join(', ');
-        }
-
-        // 2. Dropped Out Tracking
-        const droppedContainer = document.getElementById('droppedOutContent');
-        if (!previousWeekTop25 || previousWeekTop25.length === 0) {
-            droppedContainer.innerHTML = `<em>No previous week baseline saved. Click "Save Baseline" above to begin tracking.</em>`;
-        } else {
-            const currentNames = currentTop25Teams.map(t => normalize(t.team));
-            const droppedOut = previousWeekTop25.filter(prev => !currentNames.includes(normalize(prev.team)));
-
-            if (droppedOut.length === 0) {
-                droppedContainer.innerText = "None";
-            } else {
-                droppedContainer.innerHTML = droppedOut.map(t => `No. ${t.rank} <strong>${t.team}</strong>`).join(', ');
-            }
-        }
-
-        // 3. Render Heisman Leaderboard
-        const heismanTbody = document.getElementById('heismanResultsBody');
-        heismanTbody.innerHTML = '';
-        const sortedHeisman = Object.values(heismanScores).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
-
-        if (sortedHeisman.length === 0) {
-            heismanTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 15px;">No Heisman votes recorded yet. Submit names on the ballot tab.</td></tr>`;
-        } else {
-            sortedHeisman.slice(0, 10).forEach((h, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>#${idx + 1}</strong></td>
-                    <td><strong>${h.player}</strong></td>
-                    <td style="color: var(--text-muted);">${h.team}</td>
-                    <td><strong>${h.points}</strong></td>
-                    <td>${h.firstPlace > 0 ? `🥇 ${h.firstPlace}` : '-'}</td>
-                `;
-                heismanTbody.appendChild(tr);
-            });
-        }
-
-        // 4. Voter Analytics
-        calculateVoterAnalytics(currentTop25Teams);
-
-        // 5. Voter Directory
-        const vContainer = document.getElementById('votersDirectoryList');
-        vContainer.innerHTML = '';
-        if (communityBallots.length === 0) {
-            vContainer.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">No voters yet.</p>`;
-        } else {
-            communityBallots.forEach((b, idx) => {
-                const div = document.createElement('div');
-                div.className = 'voter-card';
-                div.onclick = () => openVoterBallotModal(idx);
-                div.innerHTML = `
-                    <div class="voter-info">
-                        <div class="voter-avatar">${b.avatar || '👤'}</div>
-                        <div>
-                            <div style="font-weight: 700; font-size: 0.95rem;">${b.voter}</div>
-                            <div class="voter-tag">★ ${(b.favorites || []).join(', ') || 'None'}</div>
-                            <div class="voter-tag">🕒 ${b.submittedAt || 'Recent'}</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 0.8rem; color: var(--accent-blue);">Inspect ↗</span>
-                `;
-                vContainer.appendChild(div);
-            });
-        }
-
-        // 6. Build 12-Team CFP Bracket
-        project12TeamPlayoff(sorted);
+        document.getElementById('voterBallotModal').classList.add('open');
     }
+    function closeVoterBallotModal() { document.getElementById('voterBallotModal').classList.remove('open'); }
+    function closeBoxscoreModal() { document.getElementById('boxscoreModal').classList.remove('open'); }
 
-    function calculateVoterAnalytics(consensusTop25) {
-        if (communityBallots.length < 2 || consensusTop25.length === 0) {
-            document.getElementById('consensusChampName').innerText = "Requires 2+ Ballots";
-            document.getElementById('outlierChampName').innerText = "Requires 2+ Ballots";
-            return;
-        }
-
-        const consensusRankMap = {};
-        consensusTop25.forEach((t, i) => consensusRankMap[t.team] = i + 1);
-
-        let lowestDiff = 999999;
-        let highestDiff = -1;
-        let champ = "";
-        let outlier = "";
-
-        communityBallots.forEach(b => {
-            let diff = 0;
-            (b.ballot || []).forEach(item => {
-                const consensusRank = consensusRankMap[item.team] || 35;
-                diff += Math.abs(item.rank - consensusRank);
-            });
-
-            if (diff < lowestDiff) {
-                lowestDiff = diff;
-                champ = `${b.avatar || '👤'} ${b.voter}`;
-            }
-            if (diff > highestDiff) {
-                highestDiff = diff;
-                outlier = `${b.avatar || '👤'} ${b.voter}`;
-            }
-        });
-
-        document.getElementById('consensusChampName').innerText = champ || "TBD";
-        document.getElementById('outlierChampName').innerText = outlier || "TBD";
-    }
-
-    // --- 12-TEAM CFP BRACKET (FULL MULTI-ROUND PIPELINE WITH NY6 BOWLS) ---
-    function project12TeamPlayoff(sortedTeams) {
-        const firstRoundGrid = document.getElementById('cfpFirstRoundGrid');
-        const quartersGrid = document.getElementById('cfpQuarterfinalsGrid');
-        const semisGrid = document.getElementById('cfpSemifinalsGrid');
-        const champGrid = document.getElementById('cfpChampionshipGrid');
-
-        firstRoundGrid.innerHTML = '';
-        quartersGrid.innerHTML = '';
-        semisGrid.innerHTML = '';
-        champGrid.innerHTML = '';
-
-        if (sortedTeams.length < 12) {
-            firstRoundGrid.innerHTML = `<p style="color: var(--text-muted); padding: 10px;">Requires at least 12 ranked teams in Associated BEST Poll to project bracket.</p>`;
-            return;
-        }
-
-        const seenConfs = new Set();
-        const confChamps = [];
-        const nonChamps = [];
-
-        sortedTeams.forEach(t => {
-            const conf = TEAM_TO_CONF[t.team] || "Independents";
-            if (!seenConfs.has(conf) && conf !== "Independents" && confChamps.length < 5) {
-                seenConfs.add(conf);
-                confChamps.push({ ...t, conf });
-            } else {
-                nonChamps.push(t);
-            }
-        });
-
-        const top4Byes = confChamps.slice(0, 4);
-        const fifthChamp = confChamps[4] || null;
-
-        let remainingPool = [...nonChamps];
-        if (fifthChamp) remainingPool.push(fifthChamp);
-        remainingPool.sort((a, b) => (b.points || 0) - (a.points || 0) || (b.firstPlace || 0) - (a.firstPlace || 0));
-
-        const playoffField = [...top4Byes, ...remainingPool.slice(0, 8)];
-
-        // ROUND 1: FIRST ROUND (ON-CAMPUS)
-        const firstRoundMatchups = [
-            { id: "G1", hostSeed: 5, host: playoffField[4], awaySeed: 12, away: playoffField[11], winnerTo: "Peach Bowl vs #4" },
-            { id: "G2", hostSeed: 6, host: playoffField[5], awaySeed: 11, away: playoffField[10], winnerTo: "Rose Bowl vs #3" },
-            { id: "G3", hostSeed: 7, host: playoffField[6], awaySeed: 10, away: playoffField[9], winnerTo: "Sugar Bowl vs #2" },
-            { id: "G4", hostSeed: 8, host: playoffField[7], awaySeed: 9, away: playoffField[8], winnerTo: "Fiesta Bowl vs #1" }
-        ];
-
-        firstRoundMatchups.forEach(m => {
-            const card = document.createElement('div');
-            card.className = 'playoff-game-card';
-            card.innerHTML = `
-                <div class="game-meta-info">
-                    <span>Higher Seed Campus</span>
-                    <span style="color: var(--accent);">Winner to ${m.winnerTo}</span>
-                </div>
-                <div class="bracket-team-slot higher-seed">
-                    <span>#${m.hostSeed} ${m.host ? m.host.team : 'TBD'}</span>
-                    <span style="font-size: 0.75rem; color: var(--accent-blue);">HOST</span>
-                </div>
-                <div class="bracket-team-slot">
-                    <span>#${m.awaySeed} ${m.away ? m.away.team : 'TBD'}</span>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">AWAY</span>
-                </div>
-            `;
-            firstRoundGrid.appendChild(card);
-        });
-
-        // ROUND 2: QUARTERFINALS (NEW YEAR'S SIX)
-        const quarterfinalBowls = [
-            { bowl: "Vrbo Fiesta Bowl", loc: "Glendale, AZ • State Farm Stadium", date: "Dec 31 • Evening", seed: 1, team: top4Byes[0], opp: "Winner #9 vs #8" },
-            { bowl: "Chick-fil-A Peach Bowl", loc: "Atlanta, GA • Mercedes-Benz Stadium", date: "Jan 1 • 1:00 PM ET", seed: 4, team: top4Byes[3], opp: "Winner #12 vs #5" },
-            { bowl: "Rose Bowl Game", loc: "Pasadena, CA • Rose Bowl", date: "Jan 1 • 5:00 PM ET", seed: 3, team: top4Byes[2], opp: "Winner #11 vs #6" },
-            { bowl: "Allstate Sugar Bowl", loc: "New Orleans, LA • Caesars Superdome", date: "Jan 1 • 8:45 PM ET", seed: 2, team: top4Byes[1], opp: "Winner #10 vs #7" }
-        ];
-
-        quarterfinalBowls.forEach(q => {
-            const card = document.createElement('div');
-            card.className = 'playoff-game-card';
-            card.innerHTML = `
-                <div class="game-meta-info">
-                    <span class="bowl-name">${q.bowl}</span>
-                    <span>${q.date}</span>
-                </div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">📍 ${q.loc}</div>
-                <div class="bracket-team-slot bye-seed">
-                    <span>#${q.seed} ${q.team ? q.team.team : 'TBD'} (${q.team ? q.team.conf + ' Champ' : 'Bye'})</span>
-                    <span style="font-size: 0.72rem; color: var(--accent);">BYE</span>
-                </div>
-                <div class="bracket-team-slot">
-                    <span style="color: var(--text-muted);">${q.opp}</span>
-                    <span style="font-size: 0.72rem; color: var(--text-muted);">TBD</span>
-                </div>
-            `;
-            quartersGrid.appendChild(card);
-        });
-
-        // ROUND 3: SEMIFINALS
-        const semifinalBowls = [
-            { bowl: "Capital One Orange Bowl", loc: "Miami Gardens, FL • Hard Rock Stadium", date: "Jan 8 • 7:30 PM ET", matchup: "Fiesta Bowl Winner vs. Peach Bowl Winner" },
-            { bowl: "Goodyear Cotton Bowl Classic", loc: "Arlington, TX • AT&T Stadium", date: "Jan 9 • 7:30 PM ET", matchup: "Sugar Bowl Winner vs. Rose Bowl Winner" }
-        ];
-
-        semifinalBowls.forEach(s => {
-            const card = document.createElement('div');
-            card.className = 'playoff-game-card';
-            card.innerHTML = `
-                <div class="game-meta-info">
-                    <span class="bowl-name">${s.bowl}</span>
-                    <span>${s.date}</span>
-                </div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">📍 ${s.loc}</div>
-                <div class="bracket-team-slot">
-                    <span style="color: #fff; font-weight: 700;">${s.matchup.split(' vs. ')[0]}</span>
-                    <span style="font-size: 0.72rem; color: var(--accent-blue);">SEMIFINALIST</span>
-                </div>
-                <div class="bracket-team-slot">
-                    <span style="color: #fff; font-weight: 700;">${s.matchup.split(' vs. ')[1]}</span>
-                    <span style="font-size: 0.72rem; color: var(--accent-blue);">SEMIFINALIST</span>
-                </div>
-            `;
-            semisGrid.appendChild(card);
-        });
-
-        // ROUND 4: NATIONAL CHAMPIONSHIP
-        const champCard = document.createElement('div');
-        champCard.className = 'playoff-game-card';
-        champCard.style.cssText = "background: linear-gradient(180deg, #151e2e, #0b0f19); border: 1.5px solid var(--accent);";
-        champCard.innerHTML = `
-            <div class="game-meta-info">
-                <span style="color: var(--accent); font-weight: 800; font-size: 0.95rem;">🏆 CFP NATIONAL CHAMPIONSHIP</span>
-                <span style="color: #fff;">Mid-January • 7:30 PM ET (ESPN)</span>
-            </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">📍 Neutral Site Mega-Venue</div>
-            <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 15px; text-align: center; padding: 10px 0;">
-                <div style="font-weight: 800; font-size: 1.1rem; color: #fff;">Orange Bowl Champion</div>
-                <div style="font-weight: 900; color: var(--accent); font-size: 1.4rem;">VS</div>
-                <div style="font-weight: 800; font-size: 1.I'm having a hard time fulfilling your request. Can I help you with something else instead?
+    // INITIALIZATION
+    document.getElementById('userNamePreview').innerText = currentUser.name;
+    document.getElementById('userAvatarPreview').innerText = currentUser.avatar;
+    initBallotSlots();
+    populateFBSQuickSelectPool();
+    populateVoterDropdown();
+    loadUserBallotIntoUI();
+    calculateCommunityPoll();
+    fetchLiveSchedule();
+    syncWithCloud();
+    setInterval(fetchLiveSchedule, 30000);
+</script>
+</body>
+</html>
