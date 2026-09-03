@@ -18,6 +18,7 @@
             --live-red: #ef4444;
             --fav-gold: #fbbf24;
             --redzone-glow: #dc2626;
+            --heisman-bronze: #cd7f32;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -29,7 +30,7 @@
         h1 { font-size: 1.55rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
         .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         nav { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tab-btn { background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem; transition: 0.2s; }
+        .tab-btn { background: var(--card-bg); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
         .tab-btn.active, .tab-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
         .user-account-btn { display: flex; align-items: center; gap: 6px; background: #1e293b; border: 1px solid var(--border); color: #fff; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
@@ -166,6 +167,20 @@
         .slot-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 2px 4px; border-radius: 3px; }
         .slot-btn:hover { background: var(--card-hover); color: #fff; }
 
+        /* Heisman Inputs & Cards */
+        .heisman-ballot-card { background: var(--card-bg); border: 1.5px solid rgba(205, 127, 50, 0.4); border-radius: 10px; padding: 16px; margin-top: 20px; }
+        .heisman-title { font-size: 1.05rem; font-weight: 800; color: #f59e0b; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .heisman-input-row { display: grid; grid-template-columns: 80px 1.5fr 1.2fr; gap: 8px; margin-bottom: 8px; align-items: center; }
+        @media (max-width: 600px) { .heisman-input-row { grid-template-columns: 1fr; } }
+        .heisman-rank-badge { font-weight: 800; font-size: 0.85rem; padding: 6px 10px; border-radius: 6px; text-align: center; }
+        .h-gold { background: rgba(245, 158, 11, 0.15); color: var(--accent); border: 1px solid var(--accent); }
+        .h-silver { background: rgba(148, 163, 184, 0.15); color: #e2e8f0; border: 1px solid #94a3b8; }
+        .h-bronze { background: rgba(205, 127, 50, 0.15); color: var(--heisman-bronze); border: 1px solid var(--heisman-bronze); }
+        .heisman-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); margin-top: 15px; }
+        .heisman-table th, .heisman-table td { padding: 8px 12px; text-align: left; }
+        .heisman-table th { background: #090d16; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+        .heisman-table tr { border-bottom: 1px solid var(--border); }
+
         .team-picker { background: var(--card-bg); padding: 16px; border-radius: 10px; border: 1px solid var(--border); height: fit-content; display: flex; flex-direction: column; gap: 12px; }
         .picker-controls { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; }
         @media (max-width: 500px) { .picker-controls { grid-template-columns: 1fr; } }
@@ -216,7 +231,7 @@
         .voter-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .voter-tag { font-size: 0.75rem; color: var(--text-muted); }
 
-        /* 12-TEAM CFP BRACKET (FULL MULTI-ROUND PIPELINE WITH NY6 BOWLS) */
+        /* 12-TEAM CFP BRACKET */
         .cfp-bracket-wrap { display: flex; flex-direction: column; gap: 25px; }
         .bracket-round-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
         .bracket-round-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 6px; }
@@ -262,6 +277,7 @@
                 <button class="tab-btn" onclick="switchTab('ballot')">My Ballot</button>
                 <button class="tab-btn" onclick="switchTab('community')">Associated BEST Poll</button>
                 <button class="tab-btn" onclick="switchTab('playoff')">12-Team CFP Bracket</button>
+                <button class="tab-btn" onclick="switchTab('suggestions')">💡 Suggestions</button>
             </nav>
             <button class="user-account-btn" onclick="openProfileModal()">
                 <span id="userAvatarPreview">👤</span>
@@ -341,22 +357,49 @@
         </div>
     </main>
 
-    <!-- SECTION 2: TOP 25 BALLOT BUILDER -->
+    <!-- SECTION 2: TOP 25 & HEISMAN BALLOT BUILDER -->
     <main id="ballot" class="tab-content">
-        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 10px;">
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div style="font-size: 0.9rem; color: var(--text-muted);">
                 Submitting Ballot as: <strong style="color: #fff;" id="ballotSubmittingAs">Anonymous</strong>
                 <span style="display: block; font-size: 0.75rem; color: var(--accent);">Drag & drop slots or use ▲ / ▼ to reorder teams. Only FBS schools allowed in Top 25.</span>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn btn-success" onclick="saveBallot()">Submit Ballot</button>
+                <button class="btn btn-success" onclick="saveBallot()">Submit All Ballots</button>
                 <button class="btn btn-outline" onclick="copyBallotShareLink()">🔗 Copy Ballot Link</button>
                 <button class="btn btn-outline" onclick="clearBallot()">Clear Fields</button>
             </div>
         </div>
         
         <div class="poll-layout">
-            <div class="ballot-list" id="ballotSlots"></div>
+            <div>
+                <h3 style="font-size: 1.05rem; margin-bottom: 8px;">Top 25 Team Rankings</h3>
+                <div class="ballot-list" id="ballotSlots"></div>
+
+                <!-- HEISMAN TROPHY VOTER SECTION (TOP 3 RANKINGS) -->
+                <div class="heisman-ballot-card">
+                    <div class="heisman-title">🏆 Official Heisman Trophy Ballot</div>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Vote for your top 3 individual players in college football (1st = 3 pts, 2nd = 2 pts, 3rd = 1 pt).</p>
+
+                    <div class="heisman-input-row">
+                        <span class="heisman-rank-badge h-gold">1st Place (3 pts)</span>
+                        <input type="text" id="heisman-1-player" class="form-input" placeholder="Player Name (e.g., Diego Pavia)">
+                        <input type="text" id="heisman-1-team" class="form-input" placeholder="School (e.g., Vanderbilt)" list="allFavoritesDatalist">
+                    </div>
+
+                    <div class="heisman-input-row">
+                        <span class="heisman-rank-badge h-silver">2nd Place (2 pts)</span>
+                        <input type="text" id="heisman-2-player" class="form-input" placeholder="Player Name (e.g., Jeremiyah Love)">
+                        <input type="text" id="heisman-2-team" class="form-input" placeholder="School (e.g., Notre Dame)" list="allFavoritesDatalist">
+                    </div>
+
+                    <div class="heisman-input-row">
+                        <span class="heisman-rank-badge h-bronze">3rd Place (1 pt)</span>
+                        <input type="text" id="heisman-3-player" class="form-input" placeholder="Player Name (e.g., Julian Sayin)">
+                        <input type="text" id="heisman-3-team" class="form-input" placeholder="School (e.g., Ohio State)" list="allFavoritesDatalist">
+                    </div>
+                </div>
+            </div>
             
             <div class="team-picker">
                 <div>
@@ -402,7 +445,7 @@
         </div>
     </main>
 
-    <!-- SECTION 3: ASSOCIATED BEST POLL RESULTS -->
+    <!-- SECTION 3: ASSOCIATED BEST POLL & HEISMAN RESULTS -->
     <main id="community" class="tab-content">
         <div class="community-section">
             <div>
@@ -439,6 +482,26 @@
                 <div class="poll-metadata-box">
                     <div class="poll-metadata-title">Dropped Out</div>
                     <div class="poll-metadata-content" id="droppedOutContent">None</div>
+                </div>
+
+                <!-- COMMUNITY HEISMAN RACE LEADERBOARD -->
+                <div style="margin-top: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1.15rem; font-weight: 800; color: #f59e0b; display: flex; align-items: center; gap: 6px;">🏆 Associated BEST Heisman Leaderboard</h3>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Points: 1st (3), 2nd (2), 3rd (1)</span>
+                    </div>
+                    <table class="heisman-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px;">Rank</th>
+                                <th>Candidate</th>
+                                <th>School</th>
+                                <th style="width: 70px;">Pts</th>
+                                <th style="width: 70px;">1st</th>
+                            </tr>
+                        </thead>
+                        <tbody id="heismanResultsBody"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -485,7 +548,6 @@
         </div>
 
         <div class="cfp-bracket-wrap">
-            <!-- ROUND 1: FIRST ROUND (ON-CAMPUS) -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🏈 First Round (On-Campus at Higher Seeds)</div>
@@ -494,7 +556,6 @@
                 <div class="games-grid" id="cfpFirstRoundGrid"></div>
             </div>
 
-            <!-- ROUND 2: QUARTERFINALS (NEW YEAR'S SIX BOWLS) -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🏆 Quarterfinals (New Year's Six Bowls)</div>
@@ -503,7 +564,6 @@
                 <div class="games-grid" id="cfpQuarterfinalsGrid"></div>
             </div>
 
-            <!-- ROUND 3: SEMIFINALS -->
             <div class="bracket-round-section">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title">🌟 Semifinals</div>
@@ -512,7 +572,6 @@
                 <div class="games-grid" id="cfpSemifinalsGrid"></div>
             </div>
 
-            <!-- ROUND 4: NATIONAL CHAMPIONSHIP -->
             <div class="bracket-round-section" style="border-color: var(--accent);">
                 <div class="bracket-round-header">
                     <div class="bracket-round-title" style="color: var(--accent);">👑 CFP National Championship Game</div>
@@ -520,6 +579,21 @@
                 </div>
                 <div class="games-grid" style="grid-template-columns: 1fr;" id="cfpChampionshipGrid"></div>
             </div>
+        </div>
+    </main>
+
+    <!-- SECTION 5: SUGGESTIONS & FEEDBACK TAB (GOOGLE FORM) -->
+    <main id="suggestions" class="tab-content">
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h2 style="font-size: 1.35rem; font-weight: 800;">💡 Feature Requests & Poll Suggestions</h2>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Have ideas for new metrics, UI enhancements, or poll improvements? Send feedback directly.</p>
+            </div>
+            <a id="externalFormLink" href="https://forms.gle/2Up9oVPvajpxifco6" target="_blank" class="btn btn-outline" style="text-decoration: none;">Open in New Tab ↗</a>
+        </div>
+        
+        <div style="background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; min-height: 650px; display: flex; align-items: center; justify-content: center;">
+            <iframe id="googleFormIframe" src="https://docs.google.com/forms/d/e/1FAIpQLSdOQW1Fq-1R55L-sQ68Lq5nB0y0aH6v9aI/viewform?embedded=true" width="100%" height="700" frameborder="0" marginheight="0" marginwidth="0" style="border: none;">Loading Suggestions Form…</iframe>
         </div>
     </main>
 </div>
@@ -712,15 +786,53 @@
         return favs.some(fav => identifiers.includes(fav));
     }
 
+    // --- UNIVERSAL PARSER FOR ANY BALLOT JSON ---
+    function parseAnyBallotPayload(data) {
+        let ballots = [];
+        let prevTop25 = [];
+
+        if (Array.isArray(data)) {
+            if (data.length > 0 && data[0].rank && data[0].team) {
+                ballots = [{
+                    voter: "Imported Voter",
+                    avatar: "🏈",
+                    favorites: [],
+                    submittedAt: new Date().toLocaleDateString(),
+                    ballot: data,
+                    heisman: []
+                }];
+            } else {
+                ballots = data;
+            }
+        } else if (typeof data === 'object' && data !== null) {
+            if (data.record) {
+                return parseAnyBallotPayload(data.record);
+            }
+            if (data.communityBallots && Array.isArray(data.communityBallots)) {
+                ballots = data.communityBallots;
+            } else if (data.ballots && Array.isArray(data.ballots)) {
+                ballots = data.ballots;
+            } else if (data.ballot && Array.isArray(data.ballot)) {
+                ballots = [data];
+            }
+
+            if (data.previousWeekTop25) prevTop25 = data.previousWeekTop25;
+        }
+
+        return { ballots, prevTop25 };
+    }
+
     // --- URL-BASED BALLOT IMPORT ---
     function checkURLForSharedBallot() {
         const params = new URLSearchParams(window.location.search);
         const voterData = params.get('voter');
         const ballotData = params.get('ballot');
+        const heismanData = params.get('heisman');
 
         if (voterData && ballotData) {
             try {
                 const parsedBallot = JSON.parse(decodeURIComponent(atob(ballotData)));
+                const parsedHeisman = heismanData ? JSON.parse(decodeURIComponent(atob(heismanData))) : [];
                 const voterName = decodeURIComponent(voterData);
 
                 const existingIdx = communityBallots.findIndex(b => b.voter.toLowerCase() === voterName.toLowerCase());
@@ -729,7 +841,8 @@
                     avatar: params.get('avatar') || '🏈',
                     favorites: [],
                     submittedAt: 'Imported via Link',
-                    ballot: parsedBallot
+                    ballot: parsedBallot,
+                    heisman: parsedHeisman
                 };
 
                 if (existingIdx >= 0) {
@@ -762,8 +875,16 @@
             return;
         }
 
+        const heisman = [];
+        for (let i = 1; i <= 3; i++) {
+            const p = document.getElementById(`heisman-${i}-player`).value.trim();
+            const t = document.getElementById(`heisman-${i}-team`).value.trim();
+            if (p) heisman.push({ rank: i, player: p, team: t });
+        }
+
         const encodedBallot = btoa(encodeURIComponent(JSON.stringify(ballot)));
-        const shareURL = `${window.location.origin}${window.location.pathname}?voter=${encodeURIComponent(currentUser.name)}&avatar=${encodeURIComponent(currentUser.avatar)}&ballot=${encodedBallot}`;
+        const encodedHeisman = btoa(encodeURIComponent(JSON.stringify(heisman)));
+        const shareURL = `${window.location.origin}${window.location.pathname}?voter=${encodeURIComponent(currentUser.name)}&avatar=${encodeURIComponent(currentUser.avatar)}&ballot=${encodedBallot}&heisman=${encodedHeisman}`;
 
         navigator.clipboard.writeText(shareURL).then(() => {
             alert('1-Click Share Link copied to clipboard! Send this link to your friend and it will auto-add your ballot to their poll.');
@@ -778,14 +899,23 @@
 
         try {
             const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
-                headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY }
+                headers: {
+                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
+                    'X-Access-Key': JSONBIN_CONFIG.API_KEY
+                }
             });
-            const data = await res.json();
             
-            if (data && data.record) {
-                const ballots = Array.isArray(data.record) ? data.record : (data.record.communityBallots || data.record.ballots || []);
-                communityBallots = ballots;
-                if (data.record.previousWeekTop25) previousWeekTop25 = data.record.previousWeekTop25;
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.message || `HTTP error ${res.status}`);
+            }
+
+            const data = await res.json();
+            const parsed = parseAnyBallotPayload(data);
+
+            if (parsed.ballots.length > 0) {
+                communityBallots = parsed.ballots;
+                if (parsed.prevTop25.length > 0) previousWeekTop25 = parsed.prevTop25;
 
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
                 localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
@@ -795,7 +925,7 @@
             }
         } catch (err) {
             console.error("Cloud fetch failed", err);
-            if (!silent) alert('Failed to connect to Cloud Database.');
+            if (!silent) alert(`Cloud Connection Notice: ${err.message}`);
         }
     }
 
@@ -806,7 +936,8 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_CONFIG.API_KEY
+                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
+                    'X-Access-Key': JSONBIN_CONFIG.API_KEY
                 },
                 body: JSON.stringify({
                     communityBallots: communityBallots,
@@ -890,7 +1021,7 @@
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-        event.target.classList.add('active');
+        event.currentTarget.classList.add('active');
         if (tabId === 'community' || tabId === 'playoff') calculateCommunityPoll();
     }
 
@@ -1599,12 +1730,21 @@
             return;
         }
 
+        // Collect Heisman Votes
+        const heisman = [];
+        for (let i = 1; i <= 3; i++) {
+            const p = document.getElementById(`heisman-${i}-player`).value.trim();
+            const t = document.getElementById(`heisman-${i}-team`).value.trim();
+            if (p) heisman.push({ rank: i, player: p, team: t || 'N/A' });
+        }
+
         const ballotEntry = {
             voter: currentUser.name,
             avatar: currentUser.avatar,
             favorites: currentUser.favoriteTeams,
             submittedAt: new Date().toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-            ballot: ballot
+            ballot: ballot,
+            heisman: heisman
         };
 
         const existingIdx = communityBallots.findIndex(b => b.voter.toLowerCase() === currentUser.name.toLowerCase());
@@ -1622,6 +1762,10 @@
     function clearBallot() {
         for (let i = 1; i <= 25; i++) {
             document.getElementById(`rank-${i}`).value = '';
+        }
+        for (let i = 1; i <= 3; i++) {
+            document.getElementById(`heisman-${i}-player`).value = '';
+            document.getElementById(`heisman-${i}-team`).value = '';
         }
         validateBallotDuplicates();
     }
@@ -1659,13 +1803,15 @@
         calculateCommunityPoll();
     }
 
-    // --- ASSOCIATED BEST POLL ENGINE & VOTER ANALYTICS ---
+    // --- ASSOCIATED BEST POLL & HEISMAN AGGREGATION ENGINE ---
     function calculateCommunityPoll() {
         const scores = {};
         const teamVoters = {};
+        const heismanScores = {};
 
         communityBallots.forEach(entry => {
-            entry.ballot.forEach(item => {
+            // Team Ballot Scoring
+            (entry.ballot || []).forEach(item => {
                 const team = item.team;
                 const points = 26 - item.rank;
                 
@@ -1676,6 +1822,17 @@
                 scores[team].ballots += 1;
                 teamVoters[team].push(`${entry.voter} (#${item.rank})`);
                 if (item.rank === 1) scores[team].firstPlace += 1;
+            });
+
+            // Heisman Scoring (3 for 1st, 2 for 2nd, 1 for 3rd)
+            (entry.heisman || []).forEach(h => {
+                const key = h.player.trim();
+                const pts = h.rank === 1 ? 3 : h.rank === 2 ? 2 : 1; // Official Heisman weighting
+                if (!heismanScores[key]) {
+                    heismanScores[key] = { player: key, team: h.team, points: 0, firstPlace: 0 };
+                }
+                heismanScores[key].points += pts;
+                if (h.rank === 1) heismanScores[key].firstPlace += 1;
             });
         });
 
@@ -1736,10 +1893,31 @@
             }
         }
 
-        // 3. Voter Analytics
+        // 3. Render Heisman Leaderboard
+        const heismanTbody = document.getElementById('heismanResultsBody');
+        heismanTbody.innerHTML = '';
+        const sortedHeisman = Object.values(heismanScores).sort((a, b) => b.points - a.points || b.firstPlace - a.firstPlace);
+
+        if (sortedHeisman.length === 0) {
+            heismanTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 15px;">No Heisman votes recorded yet. Submit names on the ballot tab.</td></tr>`;
+        } else {
+            sortedHeisman.slice(0, 10).forEach((h, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${idx + 1}</strong></td>
+                    <td><strong>${h.player}</strong></td>
+                    <td style="color: var(--text-muted);">${h.team}</td>
+                    <td><strong>${h.points}</strong></td>
+                    <td>${h.firstPlace > 0 ? `🥇 ${h.firstPlace}` : '-'}</td>
+                `;
+                heismanTbody.appendChild(tr);
+            });
+        }
+
+        // 4. Voter Analytics
         calculateVoterAnalytics(currentTop25Teams);
 
-        // 4. Voter Directory
+        // 5. Voter Directory
         const vContainer = document.getElementById('votersDirectoryList');
         vContainer.innerHTML = '';
         if (communityBallots.length === 0) {
@@ -1764,7 +1942,7 @@
             });
         }
 
-        // 5. Build 12-Team CFP Bracket
+        // 6. Build 12-Team CFP Bracket
         project12TeamPlayoff(sorted);
     }
 
@@ -1956,15 +2134,39 @@
         const body = document.getElementById('voterBallotBody');
         body.innerHTML = '';
 
-        b.ballot.forEach(item => {
+        // Top 25 Teams
+        const teamHeader = document.createElement('h4');
+        teamHeader.style.cssText = "color: var(--accent); margin-bottom: 8px; font-size: 0.95rem;";
+        teamHeader.innerText = "🏈 Top 25 Team Ballot";
+        body.appendChild(teamHeader);
+
+        (b.ballot || []).forEach(item => {
             const div = document.createElement('div');
-            div.style.cssText = "display: flex; justify-content: space-between; padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem;";
+            div.style.cssText = "display: flex; justify-content: space-between; padding: 5px 8px; border-bottom: 1px solid var(--border); font-size: 0.85rem;";
             div.innerHTML = `
-                <span><strong style="color: var(--accent); width: 30px; display: inline-block;">#${item.rank}</strong> ${item.team}</span>
+                <span><strong style="color: var(--accent); width: 25px; display: inline-block;">#${item.rank}</strong> ${item.team}</span>
                 <span style="color: var(--text-muted); font-size: 0.8rem;">${26 - item.rank} pts</span>
             `;
             body.appendChild(div);
         });
+
+        // Heisman Votes
+        if (b.heisman && b.heisman.length > 0) {
+            const heismanHeader = document.createElement('h4');
+            heismanHeader.style.cssText = "color: #f59e0b; margin-top: 15px; margin-bottom: 8px; font-size: 0.95rem;";
+            heismanHeader.innerText = "🏆 Heisman Votes";
+            body.appendChild(heismanHeader);
+
+            b.heisman.forEach(h => {
+                const div = document.createElement('div');
+                div.style.cssText = "display: flex; justify-content: space-between; padding: 5px 8px; border-bottom: 1px solid var(--border); font-size: 0.85rem;";
+                div.innerHTML = `
+                    <span><strong style="color: var(--accent);">#${h.rank}</strong> ${h.player} (${h.team})</span>
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">${h.rank === 1 ? '3 pts' : h.rank === 2 ? '2 pts' : '1 pt'}</span>
+                `;
+                body.appendChild(div);
+            });
+        }
 
         document.getElementById('voterBallotModal').classList.add('open');
     }
@@ -2048,7 +2250,7 @@
         document.getElementById('graphicModal').classList.remove('open');
     }
 
-    // --- JSON IMPORT / EXPORT (CLEAN ORIGINAL LOGIC WITH COMPATIBILITY) ---
+    // --- JSON IMPORT / EXPORT (SMART MERGE) ---
     function exportData() {
         const exportPayload = {
             communityBallots,
@@ -2067,26 +2269,35 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const imported = JSON.parse(e.target.result);
-                if (Array.isArray(imported)) {
-                    communityBallots = imported;
-                } else if (imported.communityBallots) {
-                    communityBallots = imported.communityBallots;
-                    if (imported.previousWeekTop25) previousWeekTop25 = imported.previousWeekTop25;
-                } else if (imported.ballot && Array.isArray(imported.ballot)) {
-                    const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === (imported.voter || '').toLowerCase());
-                    if (idx >= 0) {
-                        communityBallots[idx] = imported;
-                    } else {
-                        communityBallots.push(imported);
-                    }
+                const rawJson = JSON.parse(e.target.result);
+                const parsed = parseAnyBallotPayload(rawJson);
+
+                if (parsed.ballots.length === 0) {
+                    alert('No valid ballots found in this JSON file.');
+                    return;
                 }
+
+                parsed.ballots.forEach(inBallot => {
+                    const idx = communityBallots.findIndex(b => b.voter.toLowerCase() === (inBallot.voter || '').toLowerCase());
+                    if (idx >= 0) {
+                        communityBallots[idx] = inBallot;
+                    } else {
+                        communityBallots.push(inBallot);
+                    }
+                });
+
+                if (parsed.prevTop25.length > 0) {
+                    previousWeekTop25 = parsed.prevTop25;
+                }
+
                 localStorage.setItem('cfb_community_ballots', JSON.stringify(communityBallots));
                 localStorage.setItem('cfb_previous_week_top25', JSON.stringify(previousWeekTop25));
+
                 pushToCloud();
                 calculateCommunityPoll();
-                alert('Associated BEST Poll data loaded successfully!');
+                alert(`Successfully imported & merged ${parsed.ballots.length} ballot(s)!`);
             } catch (err) {
+                console.error(err);
                 alert('Invalid JSON file format.');
             }
         };
