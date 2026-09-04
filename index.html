@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curry, College Football.</title>
+    <title>Curry, College & Pro Football.</title>
     <style>
         :root {
             --bg: #0b0f19;
@@ -35,6 +35,16 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* Top 5 Showcase Carousel */
+        .top5-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; }
+        .top5-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .top5-title { font-size: 0.95rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 6px; }
+        .top5-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+        .top5-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: 0.15s; }
+        .top5-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .top5-matchup { font-size: 0.88rem; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .top5-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; display: flex; justify-content: space-between; }
+
         .controls-bar { display: flex; flex-direction: column; gap: 12px; background: var(--card-bg); padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
         .controls-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .filters { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -48,17 +58,18 @@
         .net-cbs { background: #0369a1; color: #fff; }
         .net-espn { background: #b91c1c; color: #fff; }
         .net-nbc { background: #4338ca; color: #fff; }
+        .net-nfln { background: #013369; color: #fff; border: 1px solid #d50a0a; }
         .net-other { background: #334155; color: #cbd5e1; }
 
         .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px; }
         .game-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform 0.15s; }
         .game-card:hover { transform: translateY(-2px); border-color: var(--accent-blue); }
         .game-card.is-favorite-match { border: 1.5px solid var(--fav-gold); }
-        .game-card.in-redzone { border: 1.5px solid var(--live-red); box-shadow: 0 0 12px rgba(220, 38, 38, 0.4); }
+        .game-card.in-redzone { border: 1.5px solid var(--live-red); box-shadow: 0 0 14px rgba(220, 38, 38, 0.45); }
 
         .redzone-banner { background: #dc2626; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
         .upset-banner { background: #ea580c; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
-        .fav-badge { font-size: 0.7rem; font-weight: 800; color: var(--fav-gold); }
+        .league-badge { font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; background: #1e293b; color: #94a3b8; }
 
         .game-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
         .status-badge { font-weight: 700; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
@@ -77,6 +88,43 @@
 
         .hide-spoilers .score, .hide-spoilers .live-clock { filter: blur(5px); user-select: none; transition: filter 0.2s; }
         .hide-spoilers .game-card:hover .score, .hide-spoilers .game-card:hover .live-clock { filter: blur(0); }
+
+        /* DIRECTIONAL FIELD GRAPHIC STYLES */
+        .field-container { margin: 16px 0; background: #071e16; border: 1.5px solid #0f5132; border-radius: 8px; padding: 12px 14px; }
+        .field-track { position: relative; height: 24px; background: #0d3829; border-radius: 12px; overflow: hidden; margin: 10px 0 6px 0; border: 1px solid #14532d; }
+        .field-indicator-arrow {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #fbbf24;
+            box-shadow: 0 0 10px #fbbf24;
+            transition: left 0.3s ease;
+            z-index: 5;
+        }
+        .field-pointer-head {
+            position: absolute;
+            top: -5px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #fbbf24;
+            text-shadow: 0 0 6px rgba(0,0,0,0.9);
+        }
+        .field-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: #6ee7b7; font-weight: 700; padding: 0 4px; }
+
+        /* BOXSCORE MODAL & TEAM STATS */
+        .linescore-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem; text-align: center; background: var(--bg); border-radius: 6px; overflow: hidden; }
+        .linescore-table th, .linescore-table td { padding: 8px 10px; border: 1px solid var(--border); }
+        .linescore-table th { background: #070a12; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+
+        .stat-comp-container { margin: 15px 0; background: var(--bg); border-radius: 8px; padding: 14px 18px; border: 1px solid var(--border); }
+        .stat-comp-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .stat-comp-table tr { border-bottom: 1px solid var(--border); }
+        .stat-comp-table tr:last-child { border-bottom: none; }
+        .stat-comp-table td { padding: 8px 6px; }
+        .stat-label { color: var(--text-muted); text-align: center; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; }
+        .stat-val-left { font-weight: 800; text-align: center; width: 30%; color: #fff; }
+        .stat-val-right { font-weight: 800; text-align: center; width: 30%; color: #fff; }
 
         .poll-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
         @media (max-width: 900px) { .poll-layout { grid-template-columns: 1fr; } }
@@ -135,6 +183,14 @@
         .bracket-team-slot.higher-seed { border-left: 3px solid var(--accent-blue); }
         .bracket-team-slot.bye-seed { border-left: 3px solid var(--accent); }
 
+        /* Underdog Layout & Cell styling */
+        .ud-submit-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; }
+        .ud-pick-cell { cursor: pointer; border-radius: 4px; padding: 4px 6px; transition: background 0.15s; }
+        .ud-pick-cell:hover { background: var(--card-hover); }
+        .ud-win { color: var(--success); font-weight: 800; border-left: 3px solid var(--success); }
+        .ud-loss { color: var(--live-red); text-decoration: line-through; opacity: 0.75; border-left: 3px solid var(--live-red); }
+        .ud-pending { color: var(--text); border-left: 3px solid var(--border); }
+
         .btn { background: var(--accent-blue); color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
         .btn-success { background: var(--success); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
@@ -142,7 +198,7 @@
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.open { display: flex; }
-        .modal-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; max-width: 600px; width: 100%; padding: 20px; max-height: 90vh; overflow-y: auto; }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; max-width: 650px; width: 100%; padding: 20px; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-close { background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
         .form-input { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 0.9rem; }
@@ -154,13 +210,15 @@
 
 <div class="container">
     <header>
-        <h1>🏈 Curry, College Football.</h1>
+        <h1>🏈 Curry, College & Pro Football.</h1>
         <div class="header-actions">
             <nav>
                 <button class="tab-btn active" onclick="switchTab('guide', this)">Live Slate</button>
                 <button class="tab-btn" onclick="switchTab('ballot', this)">My Ballot</button>
                 <button class="tab-btn" onclick="switchTab('community', this)">Associated BEST Poll</button>
                 <button class="tab-btn" onclick="switchTab('playoff', this)">12-Team CFP Bracket</button>
+                <button class="tab-btn" onclick="switchTab('underdog', this)">🐶 Underdogs</button>
+                <button class="tab-btn" onclick="switchTab('postseason', this)">🎳 Postseason</button>
                 <button class="tab-btn" onclick="switchTab('suggestions', this)">💡 Suggestions</button>
             </nav>
             <button class="user-account-btn" onclick="openProfileModal()">
@@ -172,6 +230,17 @@
 
     <!-- TAB 1: LIVE SLATE -->
     <main id="guide" class="tab-content active">
+        <!-- TOP 5 GAMES OF THE WEEK SHOWCASE -->
+        <div class="top5-section">
+            <div class="top5-header">
+                <div class="top5-title">🔥 Top 5 Must-Watch Games of the Week (CFB & NFL)</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Ranked by Watchability Index & Competitiveness</span>
+            </div>
+            <div class="top5-grid" id="top5Grid">
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Calculating top matchups...</p>
+            </div>
+        </div>
+
         <div class="controls-bar">
             <div class="controls-row">
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -184,15 +253,23 @@
                         <option value="10">Week 10</option><option value="11">Week 11</option><option value="12">Week 12</option>
                         <option value="13">Week 13</option><option value="14">Week 14</option><option value="15">Week 15</option>
                     </select>
-                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted);">Conf:</label>
+                    <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted);">League / Conf:</label>
                     <select id="scoreConfFilter" class="select-filter" onchange="renderGames()">
-                        <option value="ALL">All Conferences</option>
-                        <option value="SEC">SEC</option><option value="Big Ten">Big Ten</option>
-                        <option value="Big 12">Big 12</option><option value="ACC">ACC</option>
-                        <option value="Pac-12">Pac-12</option><option value="Mountain West">Mountain West</option>
-                        <option value="American">American</option><option value="Sun Belt">Sun Belt</option>
-                        <option value="MAC">MAC</option><option value="Conference USA">Conference USA</option>
-                        <option value="FCS">FCS Matchups</option>
+                        <option value="ALL">All Leagues & Conferences</option>
+                        <option value="NFL">All NFL</option>
+                        <option value="AFC">NFL - AFC</option>
+                        <option value="NFC">NFL - NFC</option>
+                        <option value="SEC">CFB - SEC</option>
+                        <option value="Big Ten">CFB - Big Ten</option>
+                        <option value="Big 12">CFB - Big 12</option>
+                        <option value="ACC">CFB - ACC</option>
+                        <option value="Pac-12">CFB - Pac-12</option>
+                        <option value="Mountain West">CFB - Mountain West</option>
+                        <option value="American">CFB - American</option>
+                        <option value="Sun Belt">CFB - Sun Belt</option>
+                        <option value="MAC">CFB - MAC</option>
+                        <option value="Conference USA">CFB - Conference USA</option>
+                        <option value="FCS">CFB - FCS Matchups</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 8px;">
@@ -202,13 +279,14 @@
             </div>
             <div class="controls-row">
                 <div class="filters">
-                    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                    <button class="filter-btn active" onclick="setFilter('all', this)">All Games</button>
+                    <button class="filter-btn" onclick="setFilter('NFL', this)">🏈 NFL</button>
+                    <button class="filter-btn" onclick="setFilter('CFB', this)">🎓 All CFB</button>
                     <button class="filter-btn" onclick="setFilter('FBS', this)">FBS</button>
                     <button class="filter-btn" onclick="setFilter('FCS', this)">FCS</button>
                     <button class="filter-btn" onclick="setFilter('ranked', this)">Top 25</button>
                     <button class="filter-btn" onclick="setFilter('favorites', this)">★ Favorites</button>
-                    <button class="filter-btn" onclick="setFilter('noon', this)">☀️ Noon</button>
-                    <button class="filter-btn" onclick="setFilter('afternoon', this)">⛅ 3:30 PM</button>
+                    <button class="filter-btn" onclick="setFilter('redzone', this)">🔴 Red Zone</button>
                     <button class="filter-btn" onclick="setFilter('prime', this)">🌙 Primetime</button>
                     <button class="filter-btn" onclick="setFilter('upset', this)">🚨 Upset Alert</button>
                     <button class="filter-btn" onclick="setFilter('live', this)">Live Now</button>
@@ -371,7 +449,147 @@
         </div>
     </main>
 
-    <!-- TAB 5: SUGGESTIONS -->
+    <!-- TAB 5: UNDERDOG POOL -->
+    <main id="underdog" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+            <div>
+                <h2 style="font-size: 1.4rem; font-weight: 900; color: #fff;">🐶 Underdog Football League (2026–27)</h2>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Outright upset wins award point spread. Double Shocks (3 total) double points on wins, deduct on losses. Click any matrix cell to manually override.</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-outline" onclick="openRulesModal()">📜 League Rules</button>
+                <button class="btn btn-outline" onclick="exportUnderdogData()">⬇ Export Underdog Data</button>
+            </div>
+        </div>
+
+        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <span style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--accent); letter-spacing: 0.5px;">👑 Certified Ball Knowers (CBK)</span>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #fff; margin-top: 2px;">
+                    Colin Charles <span style="font-size: 0.75rem; color: var(--text-muted);">(Founder & Commish)</span> • Braxton Hewitt <span style="font-size: 0.75rem; color: var(--accent);">(Reigning Champ 2025–26)</span>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                Active Season: <strong style="color: #fff;">2026–2027</strong>
+            </div>
+        </div>
+
+        <!-- FULL-WIDTH PICK SUBMITTER COMMAND BAR -->
+        <div class="ud-submit-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
+                <div>
+                    <h3 style="font-size: 1.05rem; font-weight: 800; color: #fff;">🎯 Submit / Lock Weekly Pick</h3>
+                    <p style="font-size: 0.78rem; color: var(--text-muted);">Choose 1 Underdog from CFB (School Name) or NFL (Mascot Name). Deadline: Friday 8:00 PM (or kickoff for weekday/TNF).</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="udDsCheckbox" style="width: 17px; height: 17px; cursor: pointer;">
+                    <label for="udDsCheckbox" style="font-size: 0.88rem; font-weight: 700; color: var(--fav-gold); cursor: pointer;">⚡ Double Shock (DS)</label>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr 2fr 1fr 140px; gap: 12px; align-items: end;">
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 4px;">Participant</label>
+                    <select id="udPlayerSelect" class="form-select" style="width: 100%;"></select>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 4px;">Week</label>
+                    <select id="udWeekSelect" class="form-select" style="width: 100%;">
+                        <option value="1">Week 1</option><option value="2">Week 2</option>
+                        <option value="3">Week 3</option><option value="4">Week 4</option>
+                        <option value="5">Week 5</option><option value="6">Week 6</option>
+                        <option value="7">Week 7</option><option value="8">Week 8</option>
+                        <option value="9">Week 9</option><option value="10">Week 10</option>
+                        <option value="11">Week 11</option><option value="12">Week 12</option>
+                        <option value="13">Week 13</option><option value="14">Rivalry & 14</option>
+                        <option value="15">Conf Champs & 15</option><option value="16">Army-Navy & 16</option>
+                        <option value="17">Week 17</option><option value="18">Week 18</option>
+                        <option value="19">Week 19</option><option value="WC">Wild Card</option>
+                        <option value="DIV">Divisional</option><option value="CONF">Conference Champ</option>
+                        <option value="SB">Super Bowl</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 4px;">Underdog Pick (CFB School or NFL Mascot)</label>
+                    <input type="text" id="udTeamInput" class="form-input" placeholder="e.g. Colorado, Baylor, Bengals, Ravens">
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 4px;">Spread</label>
+                    <input type="number" step="0.5" id="udSpreadInput" class="form-input" placeholder="+7.5">
+                </div>
+                <div>
+                    <button class="btn btn-success" style="width: 100%; height: 38px;" onclick="saveUnderdogPick()">Submit Pick</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDE-BY-SIDE: LEADERBOARD & SEASON MATRIX -->
+        <div style="display: grid; grid-template-columns: 1fr 1.9fr; gap: 20px; align-items: start;">
+            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
+                <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 12px;">📊 Season Leaderboard</h3>
+                <table class="poll-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Points</th>
+                            <th>Record</th>
+                            <th>DS Left</th>
+                        </tr>
+                    </thead>
+                    <tbody id="underdogStandingsBody"></tbody>
+                </table>
+            </div>
+
+            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; overflow-x: auto;">
+                <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 6px;">🗓️ Season Pick Matrix</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Auto-graded live via ESPN API. Click any pick cell to toggle outcome (Pending $\to$ Win $\to$ Loss).</p>
+                <table class="poll-table" style="font-size: 0.8rem; white-space: nowrap;">
+                    <thead>
+                        <tr id="udMatrixHeader"><th>Week</th></tr>
+                    </thead>
+                    <tbody id="udMatrixBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- TAB 6: POSTSEASON (BOWL-POCALYPSE & NIL INVITATIONAL) -->
+    <main id="postseason" class="tab-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+            <!-- BOWL-POCALYPSE -->
+            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--accent);">🎳 Bowl-pocalypse</h3>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">Pick 6 Non-NY6 Bowls + 1 Postseason DS</span>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Winner determined by highest win percentage (tiebreaker: total points won).</p>
+                <table class="poll-table" style="font-size: 0.8rem;">
+                    <thead>
+                        <tr><th>Player</th><th>Bowl 1</th><th>Bowl 2</th><th>Bowl 3</th><th>Bowl 4</th><th>Bowl 5</th><th>DS Bowl</th><th>Pts</th></tr>
+                    </thead>
+                    <tbody id="bowlTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- NIL INVITATIONAL -->
+            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #60a5fa;">🏆 The NIL Invitational (CFP)</h3>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">1 Pick Per Round + Champ Game Tiebreaker</span>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Highest amount of correct upsets picked is NIL Invitational Champion.</p>
+                <table class="poll-table" style="font-size: 0.8rem;">
+                    <thead>
+                        <tr><th>Player</th><th>Campus Rd</th><th>Quarters</th><th>Semis</th><th>Champ Pick</th><th>Score</th><th>Pts</th></tr>
+                    </thead>
+                    <tbody id="nilTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- TAB 7: SUGGESTIONS -->
     <main id="suggestions" class="tab-content">
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div>
@@ -401,6 +619,18 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="rulesModal">
+    <div class="modal-card" style="max-width: 700px;">
+        <div class="modal-header"><h3>📜 Underdog Football League Rules</h3><button class="modal-close" onclick="closeRulesModal()">&times;</button></div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; max-height: 65vh; overflow-y: auto; padding-right: 8px;">
+            <p><strong>• Weekly Pick:</strong> Choose 1 game from NFL or FBS CFB. Wins must be outright upsets to gain point spread as points. Covering spread means nothing.</p>
+            <p style="margin-top: 8px;"><strong>• Double Shocks (DS):</strong> 3 DS allotted for the entire season. Winning doubles the spread. If the underdog loses, the point spread is subtracted from participant total.</p>
+            <p style="margin-top: 8px;"><strong>• Deadlines:</strong> Picks must be locked before Friday 8:00 PM (or kickoff for weekday / TNF games).</p>
+            <p style="margin-top: 8px;"><strong>• Postseason Mini-Tournaments:</strong> Bowl-pocalypse (6 non-NY6 bowls) + The NIL Invitational (CFP round-by-round picks + National Championship tiebreaker).</p>
+        </div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="graphicModal">
     <div class="modal-card" style="text-align: center;">
         <div class="modal-header"><h3>Associated BEST Poll Graphic</h3><button class="modal-close" onclick="closeGraphicModal()">&times;</button></div>
@@ -424,8 +654,8 @@
             <input type="text" id="profileAvatarInput" class="form-input" maxlength="4">
         </div>
         <div style="margin-bottom: 12px;">
-            <label style="font-size: 0.85rem; color: var(--text-muted);">Add Favorite Teams (FBS & FCS)</label>
-            <input type="text" id="addFavTeamInput" list="allFavoritesDatalist" class="form-input" placeholder="Type school and press Enter..." onkeydown="handleFavInput(event)">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Add Favorite Teams (CFB & NFL)</label>
+            <input type="text" id="addFavTeamInput" list="allFavoritesDatalist" class="form-input" placeholder="Type team and press Enter..." onkeydown="handleFavInput(event)">
             <datalist id="allFavoritesDatalist"></datalist>
             <div class="fav-chips" id="favChipsContainer"></div>
         </div>
@@ -440,6 +670,11 @@
     const JSONBIN_CONFIG = {
         BIN_ID: "6a9733d5da38895dfe2c963f",
         API_KEY: "$2a$10$KgzmQJaMF6kVUe1BKpgvd.E2jKa4EWVWj6tuvZRcGQ/dxWjOrfpcm"
+    };
+
+    const NFL_TEAMS_MAP = {
+        "AFC": ["Bills", "Dolphins", "Patriots", "Jets", "Ravens", "Bengals", "Browns", "Steelers", "Texans", "Colts", "Jaguars", "Titans", "Broncos", "Chiefs", "Raiders", "Chargers"],
+        "NFC": ["Cowboys", "Giants", "Eagles", "Commanders", "Bears", "Lions", "Packers", "Vikings", "Falcons", "Panthers", "Saints", "Buccaneers", "Cardinals", "Rams", "49ers", "Seahawks"]
     };
 
     const FBS_CONFERENCE_MAP = {
@@ -464,8 +699,14 @@
         teams.forEach(t => { FBS_MASTER_POOL.push(t); TEAM_TO_CONF[t] = conf; });
     });
 
+    Object.entries(NFL_TEAMS_MAP).forEach(([conf, teams]) => {
+        teams.forEach(t => {
+            TEAM_TO_CONF[t] = conf;
+        });
+    });
+
     const fbsTeamsSet = new Set(FBS_MASTER_POOL);
-    const allDivOneTeamsSet = new Set([...FBS_MASTER_POOL, ...FCS_MASTER_POOL]);
+    const allDivOneTeamsSet = new Set([...FBS_MASTER_POOL, ...FCS_MASTER_POOL, ...NFL_TEAMS_MAP.AFC, ...NFL_TEAMS_MAP.NFC]);
     const teamResumes = {};
     function getTeamResume(t) {
         if (!teamResumes[t]) teamResumes[t] = { overall: "0-0", confRecord: "0-0", prevResult: "Season Opener", prevOutcome: "" };
@@ -483,6 +724,26 @@
     let gamesData = [];
     let currentFilter = 'all';
     let hideSpoilers = false;
+
+    // --- UNDERDOG LEAGUE PARTICIPANTS & DATA (FROM SPREADSHEET) ---
+    const UNDERDOG_PLAYERS = ["Aiden", "Braxton", "Carson", "Colin", "Curry", "Elijah", "Ethan", "Gabe", "Jeff", "Kylie", "Sam"];
+    const UNDERDOG_WEEKS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "WC", "DIV", "CONF", "SB"];
+
+    let underdogSeasonPicks = JSON.parse(localStorage.getItem('ud_season_picks')) || {
+        "Braxton": { "1": { team: "Baylor", spread: 7, isDS: false, result: "pending" } },
+        "Carson": { "1": { team: "Louisville", spread: 7, isDS: false, result: "pending" } },
+        "Curry": { "1": { team: "Colorado", spread: 6.5, isDS: false, result: "pending" } },
+        "Elijah": { "1": { team: "Tulane", spread: 7.5, isDS: false, result: "pending" } },
+        "Kylie": { "1": { team: "Clemson", spread: 10, isDS: false, result: "pending" } }
+    };
+
+    let bowlPocalypseData = JSON.parse(localStorage.getItem('ud_bowl_data')) || {
+        "Braxton": { b1: "Fenway", b2: "Gasparilla", b3: "Alamo", b4: "Gator", b5: "Birmingham (DS)", ds: "Mayo", points: 19.5 }
+    };
+
+    let nilInviteData = JSON.parse(localStorage.getItem('ud_nil_data')) || {
+        "Colin": { campus: "Miami +4", quarters: "Miami +9.5", semis: "Ole Miss +3", champ: "IU", score: "28-17", points: 13.5 }
+    };
 
     function normalize(str) { return (str || '').trim().toLowerCase(); }
     function isTeamFavorite(teamObj) {
@@ -519,6 +780,7 @@
         if (el) el.classList.add('active');
         if (tabId === 'community' || tabId === 'playoff') calculateCommunityPoll();
         if (tabId === 'ballot') loadUserBallotIntoUI();
+        if (tabId === 'underdog' || tabId === 'postseason') initUnderdogUI();
     }
 
     function toggleSpoilers() {
@@ -536,6 +798,7 @@
             const rank2 = (game.home && game.home.rank) ? Number(game.home.rank) : 99;
             if (rank1 <= 25 && rank2 <= 25) score += 3;
             else if (rank1 <= 25 || rank2 <= 25) score += 1.5;
+            if (game.league === 'NFL') score += 1;
             const sp = Number(game.spreadValue);
             if (!isNaN(sp) && Math.abs(sp) <= 4.5) score += 1;
             const aScore = Number(game.away && game.away.score);
@@ -553,6 +816,7 @@
         if (n.includes('cbs') || n.includes('sec')) return 'net-cbs';
         if (n.includes('espn')) return 'net-espn';
         if (n.includes('nbc') || n.includes('peacock')) return 'net-nbc';
+        if (n.includes('nfl')) return 'net-nfln';
         return 'net-other';
     }
 
@@ -564,16 +828,22 @@
 
         let fbsData = { events: [] };
         let fcsData = { events: [] };
+        let nflData = { events: [] };
 
         try {
             const fbsUrl = `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=300${queryParams}`;
             const fcsUrl = `https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=81&limit=300${queryParams}`;
-            const [fbsRes, fcsRes] = await Promise.allSettled([
+            const nflUrl = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100${queryParams}`;
+
+            const [fbsRes, fcsRes, nflRes] = await Promise.allSettled([
                 fetch(fbsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status)),
-                fetch(fcsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status))
+                fetch(fcsUrl).then(r => r.ok ? r.json() : Promise.reject(r.status)),
+                fetch(nflUrl).then(r => r.ok ? r.json() : Promise.reject(r.status))
             ]);
+
             if (fbsRes.status === 'fulfilled') fbsData = fbsRes.value;
             if (fcsRes.status === 'fulfilled') fcsData = fcsRes.value;
+            if (nflRes.status === 'fulfilled') nflData = nflRes.value;
 
             if ((!fbsData.events || fbsData.events.length === 0) && (!fcsData.events || fcsData.events.length === 0)) {
                 const fbRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=300`);
@@ -583,7 +853,7 @@
 
         try {
             const seen = new Set();
-            const parseEvents = (events, defDiv) => {
+            const parseEvents = (events, defDiv, leagueType = 'CFB') => {
                 const list = [];
                 (events || []).forEach(ev => {
                     if (!ev || !ev.id || seen.has(ev.id)) return;
@@ -600,16 +870,24 @@
                     let downDistanceText = '';
 
                     if (situation) {
-                        if (situation.isRedZone || (situation.possession && (situation.yardLine || 99) <= 20)) isRedZone = true;
-                        if (situation.down && situation.distance) downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance}`;
+                        const yLine = situation.yardLine || 99;
+                        if (situation.isRedZone || (situation.possession && yLine <= 20)) isRedZone = true;
+                        if (situation.down && situation.distance) downDistanceText = `${situation.down === 1 ? '1st' : situation.down === 2 ? '2nd' : situation.down === 3 ? '3rd' : '4th'} & ${situation.distance} at ${situation.possessionText || ''}`;
                     }
 
-                    const extractTeam = (c, isAway) => {
-                        const loc = c.team.location || c.team.name || "Unknown";
-                        allDivOneTeamsSet.add(loc);
+                    const extractTeam = (c) => {
+                        // FOR NFL: Identify by Mascot. FOR CFB: Identify by School Location
+                        const displayName = leagueType === 'NFL' 
+                            ? (c.team.name || c.team.shortDisplayName || c.team.location)
+                            : (c.team.location || c.team.name || "Unknown");
+
+                        allDivOneTeamsSet.add(displayName);
+                        if (c.team.displayName) allDivOneTeamsSet.add(c.team.displayName);
+
                         return {
-                            id: c.id, name: loc, location: c.team.location || loc,
-                            displayName: c.team.displayName || loc, shortDisplayName: c.team.shortDisplayName || loc,
+                            id: c.id, name: displayName, location: c.team.location || displayName,
+                            mascot: c.team.name || '',
+                            displayName: c.team.displayName || displayName, shortDisplayName: c.team.shortDisplayName || displayName,
                             rank: (c.curatedRank && c.curatedRank.current <= 25) ? c.curatedRank.current : null,
                             score: c.score || '0', logo: c.team.logo || '',
                             hasPossession: Boolean(situation && situation.possession === c.id),
@@ -624,18 +902,21 @@
                         broadcastName = (Array.isArray(b.names) && b.names[0]) ? b.names[0] : (b.name || 'TBD');
                     }
 
-                    const isAwayFBS = fbsTeamsSet.has(away.team.location || away.team.name);
-                    const isHomeFBS = fbsTeamsSet.has(home.team.location || home.team.name);
-                    const finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
+                    let finalDiv = defDiv;
+                    if (leagueType === 'CFB') {
+                        const isAwayFBS = fbsTeamsSet.has(away.team.location || away.team.name);
+                        const isHomeFBS = fbsTeamsSet.has(home.team.location || home.team.name);
+                        finalDiv = (isAwayFBS || isHomeFBS) ? 'FBS' : 'FCS';
+                    }
 
                     const parsed = {
-                        id: ev.id, div: finalDiv, dateRaw: gameDate, hour: gameDate.getHours(),
+                        id: ev.id, league: leagueType, div: finalDiv, dateRaw: gameDate, hour: gameDate.getHours(),
                         date: gameDate.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' • ' + gameDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         network: broadcastName, state: comp.status ? comp.status.type.state : 'pre',
                         clock: comp.status ? comp.status.type.detail : 'Scheduled', period: comp.status ? comp.status.period : 0,
                         spread: odds ? (odds.details || 'N/A') : 'N/A', spreadValue: (odds && odds.spread) ? parseFloat(odds.spread) : null,
-                        situation: { isRedZone: isRedZone, text: downDistanceText },
-                        away: extractTeam(away, true), home: extractTeam(home, false)
+                        situation: { isRedZone: isRedZone, text: downDistanceText, raw: situation },
+                        away: extractTeam(away), home: extractTeam(home)
                     };
                     parsed.rating = calculateWatchability(parsed);
                     list.push(parsed);
@@ -643,14 +924,56 @@
                 return list;
             };
 
-            gamesData = [...parseEvents(fbsData.events, 'FBS'), ...parseEvents(fcsData.events, 'FCS')];
+            gamesData = [
+                ...parseEvents(fbsData.events, 'FBS', 'CFB'),
+                ...parseEvents(fcsData.events, 'FCS', 'CFB'),
+                ...parseEvents(nflData.events, 'NFL', 'NFL')
+            ];
+
+            renderTop5Showcase();
             renderGames();
+            gradeUnderdogPicks();
             if (!isPoolPopulated) populateFBSQuickSelectPool();
             else { filterTeamsByConference(); validateBallotDuplicates(); }
         } catch (e) {
             console.error("Scoreboard parsing error:", e);
             if (grid) grid.innerHTML = `<p style="color: var(--live-red); padding: 20px;">Error loading schedule. Please refresh.</p>`;
         }
+    }
+
+    function renderTop5Showcase() {
+        const top5Container = document.getElementById('top5Grid');
+        if (!top5Container) return;
+        top5Container.innerHTML = '';
+
+        const sortedTopGames = [...gamesData].sort((a, b) => {
+            if (b.rating !== a.rating) return b.rating - a.rating;
+            const spA = Math.abs(a.spreadValue || 99);
+            const spB = Math.abs(b.spreadValue || 99);
+            return spA - spB;
+        }).slice(0, 5);
+
+        if (sortedTopGames.length === 0) {
+            top5Container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.8rem;">No featured games scheduled.</p>`;
+            return;
+        }
+
+        sortedTopGames.forEach(g => {
+            const card = document.createElement('div');
+            card.className = 'top5-card';
+            card.onclick = () => openBoxscoreModal(g.id, g.league);
+            card.innerHTML = `
+                <div class="top5-matchup">
+                    <span><span class="league-badge">${g.league}</span> ${g.away.rank ? '#' + g.away.rank + ' ' : ''}${g.away.name} @ ${g.home.rank ? '#' + g.home.rank + ' ' : ''}${g.home.name}</span>
+                    <span style="color: var(--accent); font-size: 0.8rem;">${'🔥'.repeat(Math.max(1, Math.min(5, g.rating || 1)))}</span>
+                </div>
+                <div class="top5-meta">
+                    <span>${g.network} • ${g.clock}</span>
+                    <span style="color: #fff;">${g.spread}</span>
+                </div>
+            `;
+            top5Container.appendChild(card);
+        });
     }
 
     function renderGames() {
@@ -662,13 +985,18 @@
         const filtered = gamesData.filter(g => {
             const hasFav = isTeamFavorite(g.away) || isTeamFavorite(g.home);
             if (confFilter !== 'ALL') {
+                if (confFilter === 'NFL' && g.league !== 'NFL') return false;
+                if ((confFilter === 'AFC' || confFilter === 'NFC') && (TEAM_TO_CONF[g.away.name] !== confFilter && TEAM_TO_CONF[g.home.name] !== confFilter)) return false;
                 if (confFilter === 'FCS' && g.div !== 'FCS') return false;
-                if (confFilter !== 'FCS' && TEAM_TO_CONF[g.away.name] !== confFilter && TEAM_TO_CONF[g.home.name] !== confFilter) return false;
+                if (!['NFL', 'AFC', 'NFC', 'FCS'].includes(confFilter) && TEAM_TO_CONF[g.away.name] !== confFilter && TEAM_TO_CONF[g.home.name] !== confFilter) return false;
             }
+            if (currentFilter === 'NFL') return g.league === 'NFL';
+            if (currentFilter === 'CFB') return g.league === 'CFB';
             if (currentFilter === 'FBS') return g.div === 'FBS';
             if (currentFilter === 'FCS') return g.div === 'FCS';
             if (currentFilter === 'ranked') return (g.away.rank && g.away.rank <= 25) || (g.home.rank && g.home.rank <= 25);
             if (currentFilter === 'favorites') return hasFav;
+            if (currentFilter === 'redzone') return g.situation && g.situation.isRedZone && g.state === 'in';
             if (currentFilter === 'noon') return g.hour >= 11 && g.hour < 15;
             if (currentFilter === 'afternoon') return g.hour >= 15 && g.hour < 18;
             if (currentFilter === 'prime') return g.hour >= 18 && g.hour < 22;
@@ -684,15 +1012,20 @@
         filtered.forEach(g => {
             const card = document.createElement('div');
             const isFav = isTeamFavorite(g.away) || isTeamFavorite(g.home);
-            card.className = `game-card ${isFav ? 'is-favorite-match' : ''} ${g.situation && g.situation.isRedZone ? 'in-redzone' : ''}`;
-            card.onclick = () => openBoxscoreModal(g.id);
+            const isRz = g.situation && g.situation.isRedZone && g.state === 'in';
+            card.className = `game-card ${isFav ? 'is-favorite-match' : ''} ${isRz ? 'in-redzone' : ''}`;
+            card.onclick = () => openBoxscoreModal(g.id, g.league);
             const stars = Math.max(1, Math.min(5, g.rating || 1));
 
             card.innerHTML = `
                 <div>
                     <div class="game-header">
-                        <span class="net-tag ${getNetworkClass(g.network)}">${g.network}</span>
-                        <span>${g.date} (${g.div})</span>
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span class="league-badge">${g.league}</span>
+                            <span class="net-tag ${getNetworkClass(g.network)}">${g.network}</span>
+                            <span>${g.date}</span>
+                            ${isRz ? `<span class="redzone-banner">🔴 RED ZONE</span>` : ''}
+                        </div>
                         <span class="status-badge ${g.state === 'in' ? 'status-in' : 'status-pre'} live-clock">${g.clock}</span>
                     </div>
                     <div class="team-row ${g.away.hasPossession ? 'has-possession' : ''}">
@@ -715,6 +1048,7 @@
                         </div>
                         <span class="score">${g.state === 'pre' ? '-' : g.home.score}</span>
                     </div>
+                    ${g.situation && g.situation.text ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">🏈 ${g.situation.text}</div>` : ''}
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 6px; margin-top: 6px;">
                     <span>Spread: ${g.spread}</span>
@@ -730,6 +1064,128 @@
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         if (el) el.classList.add('active');
         renderGames();
+    }
+
+    /* BOXSCORE, DIRECTIONAL LINE GRAPHIC & TEAM STATS */
+    async function openBoxscoreModal(gameId, league = 'CFB') {
+        const modal = document.getElementById('boxscoreModal');
+        const body = document.getElementById('boxscoreBody');
+        modal.classList.add('open');
+        body.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 25px;">Loading live gamecast & team stats...</p>`;
+
+        try {
+            const sportPath = league === 'NFL' ? 'football/nfl' : 'football/college-football';
+            const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${gameId}`);
+            const data = await res.json();
+            const header = data.header;
+            const comp = header.competitions[0];
+            const away = comp.competitors.find(c => c.homeAway === 'away');
+            const home = comp.competitors.find(c => c.homeAway === 'home');
+            const situation = data.situation || comp.situation;
+            const boxscore = data.boxscore;
+
+            const awayLines = away.linescores || [];
+            const homeLines = home.linescores || [];
+            const periodsCount = Math.max(4, awayLines.length, homeLines.length);
+            let ths = '<th>Team</th>';
+            let awayTds = `<td><strong>${away.team.abbreviation || away.team.location}</strong></td>`;
+            let homeTds = `<td><strong>${home.team.abbreviation || home.team.location}</strong></td>`;
+
+            for (let i = 1; i <= periodsCount; i++) {
+                ths += `<th>${i <= 4 ? 'Q' + i : 'OT' + (i - 4 || '')}</th>`;
+                awayTds += `<td>${awayLines[i - 1] ? awayLines[i - 1].displayValue : (comp.status.type.state === 'pre' ? '-' : '0')}</td>`;
+                homeTds += `<td>${homeLines[i - 1] ? homeLines[i - 1].displayValue : (comp.status.type.state === 'pre' ? '-' : '0')}</td>`;
+            }
+            ths += '<th>T</th>';
+            awayTds += `<td><strong>${away.score || '0'}</strong></td>`;
+            homeTds += `<td><strong>${home.score || '0'}</strong></td>`;
+
+            let fieldHTML = '';
+            if (situation && comp.status.type.state === 'in') {
+                const yLine = situation.yardLine || 50;
+                const isHomePoss = situation.possession === home.id;
+                const ballPercent = isHomePoss ? (100 - yLine) : yLine;
+                const arrowDirection = isHomePoss ? '◀' : '▶';
+                const isRz = situation.isRedZone || yLine <= 20;
+
+                fieldHTML = `
+                    <div class="field-container">
+                        <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:800; margin-bottom:4px;">
+                            <span>🏈 ${situation.possessionText || 'Drive in Progress'}</span>
+                            <span style="color:${isRz ? 'var(--live-red)' : 'var(--accent)'};">${isRz ? '🔴 IN THE RED ZONE' : (situation.down ? situation.down + ' & ' + situation.distance : '')}</span>
+                        </div>
+                        <div class="field-track">
+                            <div class="field-indicator-arrow" style="left: ${ballPercent}%; ${isRz ? 'background: var(--live-red); box-shadow: 0 0 10px var(--live-red);' : ''}">
+                                <div class="field-pointer-head">${arrowDirection}</div>
+                            </div>
+                        </div>
+                        <div class="field-labels">
+                            <span>${away.team.abbreviation || 'AWAY'} GOAL</span>
+                            <span>20</span><span>30</span><span>40</span><span>50</span><span>40</span><span>30</span><span>20</span>
+                            <span>${home.team.abbreviation || 'HOME'} GOAL</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let teamStatsHTML = '';
+            if (boxscore && boxscore.teams && boxscore.teams.length >= 2) {
+                const t1 = boxscore.teams[0];
+                const t2 = boxscore.teams[1];
+                const s1 = t1.statistics || [];
+                const s2 = t2.statistics || [];
+                const getStat = (arr, name) => {
+                    const st = arr.find(x => x.name === name || x.label === name);
+                    return st ? st.displayValue : '--';
+                };
+
+                const statRows = [
+                    { label: "1st Downs", k: "firstDowns" },
+                    { label: "Total Yards", k: "totalYards" },
+                    { label: "Passing Yards", k: "netPassingYards" },
+                    { label: "Rushing Yards", k: "rushingYards" },
+                    { label: "Yards / Play", k: "yardsPerPlay" },
+                    { label: "Turnovers", k: "turnovers" },
+                    { label: "Penalties", k: "totalPenaltiesYards" },
+                    { label: "Possession", k: "possessionTime" }
+                ];
+
+                const rows = statRows.map(r => `
+                    <tr>
+                        <td class="stat-val-left">${getStat(s1, r.k)}</td>
+                        <td class="stat-label">${r.label}</td>
+                        <td class="stat-val-right">${getStat(s2, r.k)}</td>
+                    </tr>
+                `).join('');
+
+                teamStatsHTML = `
+                    <div class="stat-comp-container">
+                        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.9rem; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">
+                            <span>${t1.team.displayName}</span>
+                            <span style="color:var(--accent);">TEAM COMPARISON</span>
+                            <span>${t2.team.displayName}</span>
+                        </div>
+                        <table class="stat-comp-table"><tbody>${rows}</tbody></table>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = `
+                <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:15px; text-align:center;">
+                    <div><img src="${away.team.logo}" width="40"><div style="font-weight:800;">${away.team.location}</div><div>${away.score}</div></div>
+                    <div style="font-size:1.4rem; font-weight:900;">VS<div style="font-size:0.75rem; color:var(--text-muted);">${comp.status.type.detail}</div></div>
+                    <div><img src="${home.team.logo}" width="40"><div style="font-weight:800;">${home.team.location}</div><div>${home.score}</div></div>
+                </div>
+                ${fieldHTML}
+                <table class="linescore-table">
+                    <thead><tr>${ths}</tr></thead>
+                    <tbody><tr>${awayTds}</tr><tr>${homeTds}</tr></tbody>
+                </table>
+                ${teamStatsHTML || '<p style="text-align:center; color:var(--text-muted); font-size:0.85rem;">Team statistics will populate during game.</p>'}
+            `;
+        } catch (e) {
+            body.innerHTML = `<p style="color:var(--live-red); text-align:center;">Failed to load live gamecast.</p>`;
+        }
     }
 
     function initBallotSlots() {
@@ -1079,6 +1535,232 @@
         champ.innerHTML = `<div class="playoff-game-card" style="border: 1.5px solid var(--accent);"><div class="bracket-team-slot"><span>Orange Bowl Winner vs Cotton Bowl Winner</span></div></div>`;
     }
 
+    // --- UNDERDOG LEAGUE ENGINE (CFB SCHOOL / NFL MASCOT) ---
+    function initUnderdogUI() {
+        const playerSelect = document.getElementById('udPlayerSelect');
+        if (playerSelect) {
+            playerSelect.innerHTML = '';
+            UNDERDOG_PLAYERS.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.innerText = p;
+                playerSelect.appendChild(opt);
+            });
+        }
+
+        const matrixHeader = document.getElementById('udMatrixHeader');
+        if (matrixHeader) {
+            matrixHeader.innerHTML = '<th>Week</th>' + UNDERDOG_PLAYERS.map(p => `<th>${p}</th>`).join('');
+        }
+
+        renderUnderdogStandings();
+        renderUnderdogMatrix();
+        renderPostseasonTables();
+    }
+
+    function gradeUnderdogPicks() {
+        let updated = false;
+
+        Object.keys(underdogSeasonPicks).forEach(player => {
+            const picks = underdogSeasonPicks[player];
+            Object.keys(picks).forEach(week => {
+                const pick = picks[week];
+                if (!pick || pick.result === 'win' || pick.result === 'loss') return;
+
+                const pickedNorm = normalize(pick.team);
+
+                // Check games across CFB and NFL
+                const game = gamesData.find(g => {
+                    const awayN = normalize(g.away.name);
+                    const homeN = normalize(g.home.name);
+                    const awayM = normalize(g.away.mascot || '');
+                    const homeM = normalize(g.home.mascot || '');
+                    return awayN === pickedNorm || homeN === pickedNorm ||
+                           awayM === pickedNorm || homeM === pickedNorm ||
+                           awayN.includes(pickedNorm) || homeN.includes(pickedNorm);
+                });
+
+                if (game && game.state === 'post') {
+                    const isAway = normalize(g.away.name).includes(pickedNorm) || normalize(g.away.mascot || '').includes(pickedNorm);
+                    const pickScore = parseInt(isAway ? game.away.score : game.home.score, 10);
+                    const oppScore = parseInt(isAway ? game.home.score : game.away.score, 10);
+
+                    if (pickScore > oppScore) {
+                        pick.result = 'win';
+                        updated = true;
+                    } else {
+                        pick.result = 'loss';
+                        updated = true;
+                    }
+                }
+            });
+        });
+
+        if (updated) {
+            localStorage.setItem('ud_season_picks', JSON.stringify(underdogSeasonPicks));
+            renderUnderdogStandings();
+            renderUnderdogMatrix();
+        }
+    }
+
+    function togglePickOutcome(player, week) {
+        if (!underdogSeasonPicks[player] || !underdogSeasonPicks[player][week]) return;
+        const p = underdogSeasonPicks[player][week];
+        if (p.result === 'pending') p.result = 'win';
+        else if (p.result === 'win') p.result = 'loss';
+        else p.result = 'pending';
+
+        localStorage.setItem('ud_season_picks', JSON.stringify(underdogSeasonPicks));
+        renderUnderdogStandings();
+        renderUnderdogMatrix();
+    }
+
+    function renderUnderdogStandings() {
+        const tbody = document.getElementById('underdogStandingsBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const standings = UNDERDOG_PLAYERS.map(player => {
+            const userPicks = underdogSeasonPicks[player] || {};
+            let points = 0;
+            let wins = 0;
+            let losses = 0;
+            let dsUsed = 0;
+
+            Object.values(userPicks).forEach(p => {
+                if (p.isDS) dsUsed += 1;
+                if (p.result === 'win') {
+                    points += p.isDS ? (p.spread * 2) : p.spread;
+                    wins += 1;
+                } else if (p.result === 'loss') {
+                    if (p.isDS) points -= p.spread;
+                    losses += 1;
+                }
+            });
+
+            return {
+                player,
+                points,
+                record: `${wins}-${losses}`,
+                dsLeft: Math.max(0, 3 - dsUsed)
+            };
+        }).sort((a, b) => b.points - a.points);
+
+        standings.forEach((s, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>#${idx + 1}</strong></td>
+                <td><strong>${s.player}</strong></td>
+                <td style="color: var(--accent); font-weight: 800;">${s.points}</td>
+                <td>${s.record}</td>
+                <td><span style="background: rgba(245,158,11,0.15); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-weight: 800;">${s.dsLeft}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderUnderdogMatrix() {
+        const tbody = document.getElementById('udMatrixBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        UNDERDOG_WEEKS.forEach(w => {
+            const tr = document.createElement('tr');
+            let rowHTML = `<td><strong>Wk ${w}</strong></td>`;
+
+            UNDERDOG_PLAYERS.forEach(player => {
+                const pick = (underdogSeasonPicks[player] && underdogSeasonPicks[player][w]) ? underdogSeasonPicks[player][w] : null;
+                if (pick) {
+                    const dsTag = pick.isDS ? '<span style="color: var(--fav-gold); font-weight: 800;"> ⚡DS</span>' : '';
+                    let statusClass = 'ud-pending';
+                    let statusIcon = '🕒';
+                    if (pick.result === 'win') { statusClass = 'ud-win'; statusIcon = '✅'; }
+                    if (pick.result === 'loss') { statusClass = 'ud-loss'; statusIcon = '❌'; }
+
+                    rowHTML += `
+                        <td>
+                            <div class="ud-pick-cell ${statusClass}" onclick="togglePickOutcome('${player}', '${w}')" title="Click to manually toggle Outcome (Win/Loss/Pending)">
+                                ${statusIcon} ${pick.team} +${pick.spread}${dsTag}
+                            </div>
+                        </td>
+                    `;
+                } else {
+                    rowHTML += `<td style="color: var(--text-muted);">-</td>`;
+                }
+            });
+
+            tr.innerHTML = rowHTML;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function saveUnderdogPick() {
+        const player = document.getElementById('udPlayerSelect').value;
+        const week = document.getElementById('udWeekSelect').value;
+        const team = document.getElementById('udTeamInput').value.trim();
+        const spread = parseFloat(document.getElementById('udSpreadInput').value);
+        const isDS = document.getElementById('udDsCheckbox').checked;
+
+        if (!team || isNaN(spread)) {
+            alert('Please provide both an underdog team name and a point spread.');
+            return;
+        }
+
+        if (!underdogSeasonPicks[player]) underdogSeasonPicks[player] = {};
+        underdogSeasonPicks[player][week] = { team, spread, isDS, result: "pending" };
+
+        localStorage.setItem('ud_season_picks', JSON.stringify(underdogSeasonPicks));
+        renderUnderdogStandings();
+        renderUnderdogMatrix();
+        alert(`Pick saved for ${player} (Week ${week}): ${team} +${spread}${isDS ? ' (Double Shock)' : ''}`);
+    }
+
+    function renderPostseasonTables() {
+        const bowlBody = document.getElementById('bowlTableBody');
+        if (bowlBody) {
+            bowlBody.innerHTML = '';
+            UNDERDOG_PLAYERS.forEach(p => {
+                const b = bowlPocalypseData[p] || {};
+                bowlBody.innerHTML += `
+                    <tr>
+                        <td><strong>${p}</strong></td>
+                        <td>${b.b1 || '-'}</td><td>${b.b2 || '-'}</td><td>${b.b3 || '-'}</td>
+                        <td>${b.b4 || '-'}</td><td>${b.b5 || '-'}</td><td>${b.ds || '-'}</td>
+                        <td><strong>${b.points || 0}</strong></td>
+                    </tr>
+                `;
+            });
+        }
+
+        const nilBody = document.getElementById('nilTableBody');
+        if (nilBody) {
+            nilBody.innerHTML = '';
+            UNDERDOG_PLAYERS.forEach(p => {
+                const n = nilInviteData[p] || {};
+                nilBody.innerHTML += `
+                    <tr>
+                        <td><strong>${p}</strong></td>
+                        <td>${n.campus || '-'}</td><td>${n.quarters || '-'}</td><td>${n.semis || '-'}</td>
+                        <td>${n.champ || '-'}</td><td>${n.score || '-'}</td>
+                        <td><strong>${n.points || 0}</strong></td>
+                    </tr>
+                `;
+            });
+        }
+    }
+
+    function openRulesModal() { document.getElementById('rulesModal').classList.add('open'); }
+    function closeRulesModal() { document.getElementById('rulesModal').classList.remove('open'); }
+
+    function exportUnderdogData() {
+        const payload = { standings: underdogSeasonPicks, bowlPocalypse: bowlPocalypseData, nilInvite: nilInviteData };
+        const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+        const dl = document.createElement('a');
+        dl.href = str;
+        dl.download = "underdogs_26_27_export.json";
+        dl.click();
+    }
+
     async function syncWithCloud() {
         if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
         try {
@@ -1216,6 +1898,7 @@
     populateVoterDropdown();
     loadUserBallotIntoUI();
     calculateCommunityPoll();
+    initUnderdogUI();
     fetchLiveSchedule();
     syncWithCloud();
     setInterval(fetchLiveSchedule, 30000);
